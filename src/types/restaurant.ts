@@ -1,6 +1,7 @@
 export interface IRestaurant {
+  _Id?: string;
   name: string;
-  categories: Category[];
+  categories: string[];
   shortDescription: string;
   mainPhoto: string;
   address: IRestaurantAddress;
@@ -9,28 +10,35 @@ export interface IRestaurant {
     lat: number;
     lng: number;
   };
-  openingHours: []; // calendar interface @@@
+  openingHours: IOpeningHours[]; // calendar interface @@@
   about?: {
     longDescription?: string;
     menus: IRestaurantMenu[];
     photos: string[];
     reservations: IReservation[];
   };
+  tables: ITable[];
 }
-
-export type Category = "italian" | "meat" | "greek" | "fish";
+export interface IOpeningHours {
+  day: string;
+  open: string;
+  close: string;
+}
 
 export interface IReservation {
-  guestsNumber: number;
+  _id?: string;
+  partySize: number;
   guestInfo: IGuestInfo;
-  reservationTimeData: {
-    date: string;
-    hour: string;
-  };
-  tablePlace: "inside" | "outside" | "bar" | "no preference";
+  reservationTime: Date;
+  position: string[];
   notes?: string;
 }
-
+interface ITable {
+  tableId: string;
+  position: string;
+  partySize: number;
+  reservations: IReservation[];
+}
 export interface IGuestInfo {
   guestFirstName: string;
   guestLastName: string;
@@ -40,7 +48,7 @@ export interface IGuestInfo {
 
 export interface IRestaurantMenu {
   title: string;
-  menuUrl: string; // renamed for clarity
+  menuUrl: string;
 }
 
 export interface IRestaurantAddress {
@@ -53,6 +61,6 @@ export interface IRestaurantAddress {
 export interface IRestaurantContactInfo {
   phoneNumber?: string;
   websiteURL?: string;
-  instagram?: string; // corrected type
+  instagram?: string;
   facebook?: string;
 }
