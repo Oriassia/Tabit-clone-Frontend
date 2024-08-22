@@ -34,7 +34,7 @@ export interface IReservation {
   notes?: string;
 }
 interface ITable {
-  tableId: string;
+  _id?: string;
   position: string;
   partySize: number;
   reservations: IReservation[];
