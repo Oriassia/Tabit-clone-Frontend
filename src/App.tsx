@@ -1,9 +1,9 @@
 import { Route, Routes } from "react-router";
 import MainLayout from "./context/MainLayout";
-import LandingPage from "./Pages/LandingPage";
-import DeliveriesPage from "./Pages/DeliveriesPage";
-import RestaurantsPage from "./Pages/RestaurantsPage";
-import BookATablePage from "./Pages/BookATablePage";
+import LandingPage from "./pages/LandingPage";
+import DeliveriesPage from "./pages/DeliveriesPage";
+import RestaurantsPage from "./pages/RestaurantsPage";
+import BookATablePage from "./pages/BookATablePage";
 
 function App() {
   return (
