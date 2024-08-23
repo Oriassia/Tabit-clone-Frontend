@@ -13,9 +13,13 @@ function NavBar() {
         {!isInputVisible ? (
           <>
             <SideMenu />
-            <div title="Logo" className="text-3xl font-semibold">
+            <img
+              src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
+              className="w-20"
+            ></img>
+            {/* <div title="Logo" className="text-3xl font-semibold">
               tabit
-            </div>
+            </div> */}
             <div className="flex gap-4 items-center">
               <div
                 className="p-2 rounded-full border border-gray-300 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
@@ -46,9 +50,10 @@ function NavBar() {
 
       {/* Desktop View */}
       <div className="hidden sm:flex items-center justify-between w-full">
-        <div title="Logo" className="text-3xl font-semibold">
-          tabit
-        </div>
+        <img
+          src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
+          className="w-20"
+        ></img>
 
         <div className="flex justify-center gap-8 font-semibold text-sm">
           <Link
