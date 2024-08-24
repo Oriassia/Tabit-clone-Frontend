@@ -25,6 +25,7 @@ module.exports = {
         greenButton: "#0ca3a6",
         greenHamburger: "#14888a",
         greenReservation: "#a6e3e4",
+        footerBg: "#A6E3E4",
       },
       fontFamily: {
         sans: ["Roboto", "sans-serif"],
