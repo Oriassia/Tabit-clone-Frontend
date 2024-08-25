@@ -15,10 +15,12 @@ function NavBar() {
         {!isInputVisible ? (
           <>
             <SideMenu />
-            <img
-              src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
-              className="w-20"
-            />
+            <Link to={"/"}>
+              <img
+                src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
+                className="w-20"
+              />
+            </Link>
             <div className="flex gap-2 items-center">
               <div
                 className="p-[1px] rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
@@ -49,10 +51,12 @@ function NavBar() {
 
       {/* Desktop View */}
       <div className="hidden sm:flex items-center justify-between w-full">
-        <img
-          src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
-          className="w-20"
-        />
+        <Link to={"/"}>
+          <img
+            src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
+            className="w-20"
+          />
+        </Link>
 
         <div className="flex justify-center gap-8 font-semibold text-sm">
           <Link
