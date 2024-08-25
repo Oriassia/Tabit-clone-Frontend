@@ -34,15 +34,15 @@ function ReservationSelector({
 }: ReservationSelectorProps) {
   return (
     <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenBorder w-[400px] lg:min-w-[450px] bg-greenBg">
-      <div className="flex flex-col items-center px-[37px] lg:px-[45px] py-[0.5em] text-[19px] border-r-2 border-greenBorder">
+      <div className="flex flex-col items-center px-[37px] lg:px-[45px] py-[0.5em] lg:text-[19px] border-r-2 border-greenBorder">
         <p className="text-sm font-medium">{reservation.dateDay}</p>
         <p>{reservation.dateDayNumber}</p>
       </div>
-      <div className="flex flex-col text-[19px] px-[37px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenBorder">
+      <div className="flex flex-col lg:text-[19px] px-[37px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenBorder">
         <p className="text-sm font-medium">Hour</p>
         <p>{reservation.time}</p>
       </div>
-      <div className="flex flex-col items-center justify-center text-[19px] px-[37px] lg:px-[45px] py-[0.5em]">
+      <div className="flex flex-col items-center justify-center lg:text-[19px] px-[37px] lg:px-[45px] py-[0.5em]">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-sm font-medium">Guests</p>
@@ -202,9 +202,9 @@ function LandingPage() {
       </section>
 
       {/*GIVE THE GIFT OF GOOD FOOD PART*/}
-      <div className="bg-black">
+      <div className="dark:bg-black bg-white">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.5em] font-rubik text-white font-normal text-center md:flex-grow">
+          <h2 className=" col-start-2 py-7 text-[2.5em] font-rubik dark:text-white font-medium text-center md:flex-grow">
             Give the gift of good food
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
