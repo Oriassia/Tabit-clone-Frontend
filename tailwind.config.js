@@ -28,7 +28,7 @@ module.exports = {
         greenHamburger: "#14888a",
         greenReservationActive: "#a6e3e4",
         greenBg: "#00C8C933",
-        greenBorderForIcon: "#689390"
+        greenBorderForIcon: "#689390",
         footerBg: "#A6E3E4",
       },
       fontFamily: {
