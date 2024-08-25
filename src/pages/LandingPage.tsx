@@ -199,7 +199,7 @@ function LandingPage() {
       </section>
 
       <div className="bg-black">
-        <div className="grid grid-cols-[20%_60%_20%] items-center justify-between py-8">
+        <div className="lg:grid lg:grid-cols-[20%_60%_20%] items-center py-8">
           <h2 className="w-full col-start-2 md:w-auto text-3xl font-rubik text-white font-bold text-center md:flex-grow">
             Give the gift of good food
           </h2>
