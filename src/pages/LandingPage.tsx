@@ -251,30 +251,9 @@ function LandingPage() {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4">
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="MASHAV Food Trucks"
-              categories="Meat | Hamburger"
-              description="Short Description"
-              distance="5 km"
-              address="123 Main St"
-            />
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="Gourmet Burgers"
-              categories="Burger | Fast Food"
-              description="Short Description"
-              distance="2 km"
-              address="456 Elm St"
-            />
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="Fancy Steakhouse"
-              categories="Steak | Fine Dining"
-              description="Short Description"
-              distance="10 km"
-              address="789 Oak St"
-            />
+            {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
+              <RestaurantCard restaurant={restaurant} />
+            ))}
           </div>
 
           <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
@@ -296,30 +275,9 @@ function LandingPage() {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4">
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="MASHAV Food Trucks"
-              categories="Meat | Hamburger"
-              description="Short Description"
-              distance="5 km"
-              address="123 Main St"
-            />
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="Gourmet Burgers"
-              categories="Burger | Fast Food"
-              description="Short Description"
-              distance="2 km"
-              address="456 Elm St"
-            />
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="Fancy Steakhouse"
-              categories="Steak | Fine Dining"
-              description="Short Description"
-              distance="10 km"
-              address="789 Oak St"
-            />
+            {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
+              <RestaurantCard restaurant={restaurant} />
+            ))}
           </div>
 
           <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
@@ -341,30 +299,9 @@ function LandingPage() {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4">
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="MASHAV Food Trucks"
-              categories="Meat | Hamburger"
-              description="Short Description"
-              distance="5 km"
-              address="123 Main St"
-            />
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="Gourmet Burgers"
-              categories="Burger | Fast Food"
-              description="Short Description"
-              distance="2 km"
-              address="456 Elm St"
-            />
-            <RestaurantCard
-              image="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
-              title="Fancy Steakhouse"
-              categories="Steak | Fine Dining"
-              description="Short Description"
-              distance="10 km"
-              address="789 Oak St"
-            />
+            {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
+              <RestaurantCard restaurant={restaurant} />
+            ))}
           </div>
 
           <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
