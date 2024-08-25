@@ -38,8 +38,8 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className="bg-footerBg text-black px-4 py-8 md:px-8">
-      <div className="container mx-auto">
+    <footer className=" text-black ">
+      <div className="container mx-auto bg-footerBg">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start">
           <div className="mb-6 md:mb-0 text-center md:text-left">
             <h3 className="font-extrabold mb-2">Featured areas</h3>
@@ -83,6 +83,24 @@ const Footer: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <div className="container  py-10 bg-black text-sm">
+        <div className="flex flex-col gap-2 items-center">
+          <div className="flex gap-2">
+            <span className="text-gray-500">v4.11.1</span>
+            <span className="text-white">|</span>
+            <span className="text-white">
+              Copyright @ 2024 Final project Team - IITC college
+            </span>
+          </div>
+          <div className="text-gray-500">
+            This site is protected by reCAPTCHA and the Google Privacy Policy
+            and Terms of Service apply. (clone)
+          </div>
+        </div>
+      </div>
+
+      <div title="spacer" className="bg-black max-h-80 min-h-20"></div>
     </footer>
   );
 };
