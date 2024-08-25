@@ -11,7 +11,6 @@ import {
 import { MdMyLocation } from "react-icons/md";
 import { FaPlus } from "react-icons/fa6";
 
-import { Link } from "react-router-dom";
 import GiftCard from "@/components/costum/CardsForRestaurants/GiftCard";
 import ShowMore from "@/components/costum/CardsForRestaurants/ShowMore";
 import RestaurantCard from "@/components/costum/CardsForRestaurants/RestaurantCard";
@@ -144,7 +143,7 @@ function AreaDropdown({
 function LandingPage() {
   const [reservation, setReservation] = useState<Reservation>({
     dateDay: "Friday",
-    dateDayNumber: "23/08",
+    dateDayNumber: "23 / 08",
     time: "08:00",
     guests: 2,
     area: "Around you",
@@ -179,7 +178,7 @@ function LandingPage() {
           boxShadow: "inset 0 0 1rem #000",
         }}
       >
-        <h1 className="lg:text-[3.55em] text-[2em] text-white font-rubik font-normal pt-14">
+        <h1 className="lg:text-[3.55em] text-[2.7em] text-white font-rubik font-normal pt-14">
           Reserve a table!
         </h1>
         <p className="pb-4 text-white font-rubik px-[2.8em] lg:px-0 lg:text-[1.5em] w-[400px] lg:max-w-[450px] text-center">
@@ -205,7 +204,7 @@ function LandingPage() {
       {/*GIVE THE GIFT OF GOOD FOOD PART*/}
       <div className="bg-black">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.5em] font-rubik text-white font-normal text-center md:flex-grow">
             Give the gift of good food
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
@@ -250,7 +249,7 @@ function LandingPage() {
       {/* TAKEOUT OR DELIVERY PART */}
       <div className="bg-black">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
             Takeout or Delivery{" "}
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
@@ -295,7 +294,7 @@ function LandingPage() {
       {/* NEW RESTAURANTS AT TABIT PART */}
       <div className="bg-black">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
             New Restaurants at Tabit
           </h2>
           <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
@@ -338,9 +337,9 @@ function LandingPage() {
       </div>
 
       {/* NEAR ME PART */}
-      <div className="bg-black">
+      <div className="bg-black pb-12">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
             Near Me{" "}
           </h2>
           <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">

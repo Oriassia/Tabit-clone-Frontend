@@ -20,11 +20,11 @@ const GiftCard: React.FC<GiftCardProps> = ({
   linkUrl,
 }) => {
   return (
-    <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center">
+    <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[340px] text-center">
       <img
         src={image}
         alt={title}
-        className="rounded-md h-[128px] w-full object-cover"
+        className="rounded-md h-[130px] w-full object-cover"
       />
       <div>
         <h3 className="text-[1em] font-rubik pt-2 text-white font-normal">
