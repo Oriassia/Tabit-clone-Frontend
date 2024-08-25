@@ -4,6 +4,7 @@ import LandingPage from "./pages/LandingPage";
 import DeliveriesPage from "./pages/DeliveriesPage";
 import RestaurantsPage from "./pages/RestaurantsPage";
 import BookATablePage from "./pages/BookATablePage";
+import GiftItPage from "./pages/GiftItPage";
 
 function App() {
   return (
@@ -15,7 +16,7 @@ function App() {
           <Route path="/book-a-table" element={<BookATablePage />} />
           <Route path="/deliveries" element={<DeliveriesPage />} />
           <Route path="/restaurants" element={<RestaurantsPage />} />
-          <Route path="/gift-it" element={<RestaurantsPage />} />
+          <Route path="/gift-it" element={<GiftItPage />} />
         </Route>
 
         {/* routes WITHOUT navbar & footer */}
