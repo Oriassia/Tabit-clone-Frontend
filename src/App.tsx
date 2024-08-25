@@ -5,8 +5,19 @@ import DeliveriesPage from "./pages/DeliveriesPage";
 import RestaurantsPage from "./pages/RestaurantsPage";
 import BookATablePage from "./pages/BookATablePage";
 import GiftItPage from "./pages/GiftItPage";
+import { useQuery } from "@tanstack/react-query";
+import api from "./services/api.services";
 
 function App() {
+  const restaurantsQuery = useQuery({
+    queryKey: ["restaurants"],
+    queryFn: async () => {
+      const response = await api.get("/restaurants");
+      return response.data; // Make sure to return the data
+    },
+  });
+
+  if (restaurantsQuery.isSuccess) console.log(restaurantsQuery.data);
   return (
     <>
       <Routes>
