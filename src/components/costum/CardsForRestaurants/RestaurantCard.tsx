@@ -17,7 +17,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
   }
 
   return (
-    <div className="bg-greyNavbar rounded-lg shadow-md h-fit w-[340px] text-start">
+    <div className="dark:bg-greyNavbar rounded-lg shadow-md h-fit w-[340px] text-start border dark:border-none border-gray-200">
       <img
         src={restaurant.mainPhoto}
         alt={restaurant.name}
@@ -30,7 +30,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
         <div className="flex gap-2">
           <p className="text-greenButton">distance from user-#Elad Help</p>
           <p className="text-slate-700">|</p>
-          <p className="text-zinc-500">{`${restaurant.address.street} ${restaurant.address.number}, ${restaurant.address.city}`}</p>
+          <p className="dark:text-zinc-500 text-gray-400">{`${restaurant.address.street} ${restaurant.address.number}, ${restaurant.address.city}`}</p>
         </div>
       </div>
     </div>
