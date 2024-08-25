@@ -202,9 +202,9 @@ function LandingPage() {
       </section>
 
       {/*GIVE THE GIFT OF GOOD FOOD PART*/}
-      <div className="bg-black">
+      <div className="dark:bg-black bg-white">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.5em] font-rubik text-white font-normal text-center md:flex-grow">
+          <h2 className=" col-start-2 py-7 text-[2.5em] font-rubik dark:text-white font-medium text-center md:flex-grow">
             Give the gift of good food
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">

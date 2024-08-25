@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const ShowMore = () => {
   return (
-    <Link to="#" className="text-white flex items-center text-lg font-medium">
+    <Link to="#" className="dark:text-white text-gray-500 flex items-center text-lg font-medium">
       <p className="font-normal text-[1em] font-rubik self-center pt-2">
         Show More
       </p>
