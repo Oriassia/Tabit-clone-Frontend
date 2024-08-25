@@ -83,7 +83,7 @@ function AreaDropdown({
 }: {
   area: string;
   onAreaChange: (newArea: string) => void;
-  onAddNewAddress: () => void; //
+  onAddNewAddress: () => void;
 }) {
   return (
     <DropdownMenu>
@@ -175,7 +175,7 @@ function LandingPage() {
           boxShadow: "inset 0 0 1rem #000",
         }}
       >
-        <h1 className="lg:text-[3.55em] text-[2em] text-white font-rubik font-normal pt-10">
+        <h1 className="lg:text-[3.55em] text-[2em] text-white font-rubik font-normal pt-14">
           Reserve a table!
         </h1>
         <p className="pb-4 text-white font-rubik px-[2.8em] lg:px-0 lg:text-[1.5em] w-[400px] lg:max-w-[450px] text-center">
@@ -199,11 +199,11 @@ function LandingPage() {
       </section>
 
       <div className="bg-black">
-        <div className="lg:grid lg:grid-cols-[20%_60%_20%] items-center py-8">
-          <h2 className="w-full col-start-2 md:w-auto text-3xl font-rubik text-white font-bold text-center md:flex-grow">
+        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
+          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
             Give the gift of good food
           </h2>
-          <div className="w-full md:w-auto flex justify-end items-center mt-4 md:mt-0">
+          <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
             <Link
               to="#"
               className="text-white flex items-center text-lg font-medium"
@@ -232,59 +232,500 @@ function LandingPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <img
-              src="path/to/image1.jpg"
-              alt="MASHAV Food Trucks"
-              className="rounded-t-lg"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold">MASHAV Food Trucks</h3>
-              <p className="text-gray-500">Bnei Brak</p>
-              <Button className="mt-4 bg-teal-500 text-white py-2 px-4 rounded">
-                Get a gift card
-              </Button>
-              <Link to="#" className="block mt-2 text-teal-500">
-                More information
-              </Link>
+        <div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <img
-              src="path/to/image2.jpg"
-              alt="Restaurant TLV"
-              className="rounded-t-lg"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold">Restaurant TLV</h3>
-              <p className="text-gray-500">Tel Aviv, 11 St</p>
-              <Button className="mt-4 bg-teal-500 text-white py-2 px-4 rounded">
-                Get a gift card
-              </Button>
-              <Link to="#" className="block mt-2 text-teal-500">
-                More information
-              </Link>
+          <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
+            <Link
+              to="#"
+              className="text-white flex items-center text-[1em] font-medium"
+            >
+              <p className="font-normal text-[1em] font-rubik self-center pt-2">
+                Show More
+              </p>
+              <div className="flex items-center space-x-1 ml-2">
+                <p
+                  className="text-[3em] leading-none opacity-30"
+                  style={{ color: "#b6e3e4" }}
+                >
+                  ›
+                </p>
+                <p
+                  className="text-[3em] leading-none opacity-40"
+                  style={{ color: "#6dc8ca" }}
+                >
+                  ›
+                </p>
+                <p className="text-[3em] leading-none text-greenButton opacity-80">
+                  ›
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-black">
+        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
+          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
+            Takeout or Delivery{" "}
+          </h2>
+          <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
+            <Link
+              to="#"
+              className="text-white flex items-center text-lg font-medium"
+            >
+              <p className="font-normal text-[1em] font-rubik self-center pt-2">
+                Show More
+              </p>
+              <div className="flex items-center space-x-1 ml-2">
+                <p
+                  className="text-[3em] leading-none opacity-30"
+                  style={{ color: "#b6e3e4" }}
+                >
+                  ›
+                </p>
+                <p
+                  className="text-[3em] leading-none opacity-40"
+                  style={{ color: "#6dc8ca" }}
+                >
+                  ›
+                </p>
+                <p className="text-[3em] leading-none text-greenButton opacity-80">
+                  ›
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-md p-4">
-            <img
-              src="path/to/image3.jpg"
-              alt="Restaurant Haifa"
-              className="rounded-t-lg"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold">Restaurant Haifa</h3>
-              <p className="text-gray-500">Haifa, 26 St</p>
-              <Button className="mt-4 bg-teal-500 text-white py-2 px-4 rounded">
-                Get a gift card
-              </Button>
-              <Link to="#" className="block mt-2 text-teal-500">
-                More information
-              </Link>
+          <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
+            <Link
+              to="#"
+              className="text-white flex items-center text-[1em] font-medium"
+            >
+              <p className="font-normal text-[1em] font-rubik self-center pt-2">
+                Show More
+              </p>
+              <div className="flex items-center space-x-1 ml-2">
+                <p
+                  className="text-[3em] leading-none opacity-30"
+                  style={{ color: "#b6e3e4" }}
+                >
+                  ›
+                </p>
+                <p
+                  className="text-[3em] leading-none opacity-40"
+                  style={{ color: "#6dc8ca" }}
+                >
+                  ›
+                </p>
+                <p className="text-[3em] leading-none text-greenButton opacity-80">
+                  ›
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-black">
+        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
+          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
+            New Restaurants at Tabit
+          </h2>
+          <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
+            <Link
+              to="#"
+              className="text-white flex items-center text-lg font-medium"
+            >
+              <p className="font-normal text-[1em] font-rubik self-center pt-2">
+                Show More
+              </p>
+              <div className="flex items-center space-x-1 ml-2">
+                <p
+                  className="text-[3em] leading-none opacity-30"
+                  style={{ color: "#b6e3e4" }}
+                >
+                  ›
+                </p>
+                <p
+                  className="text-[3em] leading-none opacity-40"
+                  style={{ color: "#6dc8ca" }}
+                >
+                  ›
+                </p>
+                <p className="text-[3em] leading-none text-greenButton opacity-80">
+                  ›
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
             </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
+            <Link
+              to="#"
+              className="text-white flex items-center text-[1em] font-medium"
+            >
+              <p className="font-normal text-[1em] font-rubik self-center pt-2">
+                Show More
+              </p>
+              <div className="flex items-center space-x-1 ml-2">
+                <p
+                  className="text-[3em] leading-none opacity-30"
+                  style={{ color: "#b6e3e4" }}
+                >
+                  ›
+                </p>
+                <p
+                  className="text-[3em] leading-none opacity-40"
+                  style={{ color: "#6dc8ca" }}
+                >
+                  ›
+                </p>
+                <p className="text-[3em] leading-none text-greenButton opacity-80">
+                  ›
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-black">
+        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
+          <h2 className="w-full col-start-2 md:w-auto text-[2.25em] font-rubik text-white font-normal text-center md:flex-grow">
+            Near Me{" "}
+          </h2>
+          <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
+            <Link
+              to="#"
+              className="text-white flex items-center text-lg font-medium"
+            >
+              <p className="font-normal text-[1em] font-rubik self-center pt-2">
+                Show More
+              </p>
+              <div className="flex items-center space-x-1 ml-2">
+                <p
+                  className="text-[3em] leading-none opacity-30"
+                  style={{ color: "#b6e3e4" }}
+                >
+                  ›
+                </p>
+                <p
+                  className="text-[3em] leading-none opacity-40"
+                  style={{ color: "#6dc8ca" }}
+                >
+                  ›
+                </p>
+                <p className="text-[3em] leading-none text-greenButton opacity-80">
+                  ›
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
+        <div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+
+            <div className="bg-greyNavbar rounded-lg shadow-md px-4 py-2 h-fit w-[300px] text-center ">
+              <img
+                src="https://loyaltycdn.blob.core.windows.net/accountstorage/1893/GiftCard/cardImage.jpg?v=1719740044"
+                alt="MASHAV Food Trucks"
+                className="rounded-md h-[128px] w-full object-cover"
+              />
+              <div>
+                <h3 className="text-[em] font-rubik pt-2 text-white font-normal">
+                  MASHAV Food Trucks
+                </h3>
+                <p className="text-zinc-500">Bnei Brak</p>
+              </div>
+              <div>
+                <Button className="w-[268px] bg-greenButton hover:bg-greenButton text-white py-2 px-4 rounded">
+                  Get a gift card
+                </Button>
+                <Link to="#" className="block pt-2 text-greenButton underline">
+                  More information
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
+            <Link
+              to="#"
+              className="text-white flex items-center text-[1em] font-medium"
+            >
+              <p className="font-normal text-[1em] font-rubik self-center pt-2">
+                Show More
+              </p>
+              <div className="flex items-center space-x-1 ml-2">
+                <p
+                  className="text-[3em] leading-none opacity-30"
+                  style={{ color: "#b6e3e4" }}
+                >
+                  ›
+                </p>
+                <p
+                  className="text-[3em] leading-none opacity-40"
+                  style={{ color: "#6dc8ca" }}
+                >
+                  ›
+                </p>
+                <p className="text-[3em] leading-none text-greenButton opacity-80">
+                  ›
+                </p>
+              </div>
+            </Link>
           </div>
         </div>
       </div>
