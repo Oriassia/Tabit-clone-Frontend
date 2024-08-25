@@ -34,15 +34,15 @@ function ReservationSelector({
 }: ReservationSelectorProps) {
   return (
     <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenBorder w-[400px] lg:min-w-[450px] bg-greenBg">
-      <div className="flex flex-col items-center px-[37px] lg:px-[45px] py-[0.5em] text-[19px] border-r-2 border-greenBorder">
+      <div className="flex flex-col items-center px-[37px] lg:px-[45px] py-[0.5em] lg:text-[19px] border-r-2 border-greenBorder">
         <p className="text-sm font-medium">{reservation.dateDay}</p>
         <p>{reservation.dateDayNumber}</p>
       </div>
-      <div className="flex flex-col text-[19px] px-[37px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenBorder">
+      <div className="flex flex-col lg:text-[19px] px-[37px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenBorder">
         <p className="text-sm font-medium">Hour</p>
         <p>{reservation.time}</p>
       </div>
-      <div className="flex flex-col items-center justify-center text-[19px] px-[37px] lg:px-[45px] py-[0.5em]">
+      <div className="flex flex-col items-center justify-center lg:text-[19px] px-[37px] lg:px-[45px] py-[0.5em]">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-sm font-medium">Guests</p>
