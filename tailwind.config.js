@@ -20,11 +20,15 @@ module.exports = {
       colors: {
         greyNavbar: "#303030",
         greyBg: "#212121",
+        greyDropDownMenu: "#424242",
+        greyHoverDropDownMenu: "#595959",
         greyBorder: "#404040",
         greenBorder: "#116667",
         greenButton: "#0ca3a6",
         greenHamburger: "#14888a",
-        greenReservation: "#a6e3e4",
+        greenReservationActive: "#a6e3e4",
+        greenBg: "#00C8C933",
+        greenBorderForIcon: "#689390"
         footerBg: "#A6E3E4",
       },
       fontFamily: {
