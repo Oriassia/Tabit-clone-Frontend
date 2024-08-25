@@ -1,7 +1,9 @@
-import { Globe, Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Link } from "react-router-dom";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
+import { BsGlobe2 } from "react-icons/bs";
+import { MdSearch } from "react-icons/md";
 
 function NavBar() {
   const [isInputVisible, setInputVisible] = useState(false);
@@ -16,23 +18,20 @@ function NavBar() {
             <img
               src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
               className="w-20"
-            ></img>
-            {/* <div title="Logo" className="text-3xl font-semibold">
-              tabit
-            </div> */}
-            <div className="flex gap-4 items-center">
+            />
+            <div className="flex gap-2 items-center">
               <div
-                className="p-2 rounded-full border border-gray-300 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+                className="p-[1px] rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
                 onClick={() => setInputVisible(true)}
               >
-                <Search className="text-lg" />
+                <MdSearch className="size-6 text-greenHamburger" />
               </div>
-              <Globe className="hover:text-gray-300 transition duration-200 cursor-pointer" />
+              <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
             </div>
           </>
         ) : (
           <div className="flex items-center w-full">
-            <Search className="text-lg mr-2" />
+            <MdSearch className="size-6 text-greenHamburger" />
             <input
               type="text"
               placeholder="Restaurant search"
@@ -43,7 +42,7 @@ function NavBar() {
               className="text-lg cursor-pointer hover:text-gray-300 transition duration-200"
               onClick={() => setInputVisible(false)}
             />
-            <Globe className="ml-4 hover:text-gray-300 transition duration-200 cursor-pointer" />
+            <BsGlobe2 className="size-7 text-gray-500 ml-4 hover:text-gray-300 transition duration-200 cursor-pointer" />
           </div>
         )}
       </div>
@@ -53,7 +52,7 @@ function NavBar() {
         <img
           src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
           className="w-20"
-        ></img>
+        />
 
         <div className="flex justify-center gap-8 font-semibold text-sm">
           <Link
@@ -103,13 +102,15 @@ function NavBar() {
               />
             </div>
           )}
-          <div
-            className="p-2 rounded-full border border-gray-300 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
-            onClick={() => setInputVisible(!isInputVisible)}
-          >
-            <Search className="text-lg" />
+          <div className="flex gap-2 items-center">
+            <div
+              className="p-[1px] rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+              onClick={() => setInputVisible(true)}
+            >
+              <MdSearch className="size-6 text-greenHamburger" />
+            </div>
+            <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
           </div>
-          <Globe className="hover:text-gray-300 transition duration-200 cursor-pointer" />
         </div>
       </div>
     </div>
