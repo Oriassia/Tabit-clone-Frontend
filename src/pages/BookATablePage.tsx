@@ -1,4 +1,8 @@
-import { AreaDropdown, Reservation, ReservationSelector } from "@/components/costum/ReservationSelector/ReservationSelector";
+import {
+  AreaDropdown,
+  Reservation,
+  ReservationSelector,
+} from "@/components/costum/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
@@ -24,7 +28,7 @@ function BookATablePage() {
   return (
     <>
       <div
-        className="flex flex-col lg:flex-row relative  items-center py-[2em] min-w-[400px] lg:min-w-[450px] bg-cover bg-center shadow-inner"
+        className="flex flex-col lg:flex-row relative  items-center py-[2em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner"
         style={{
           backgroundImage: `
           linear-gradient(to bottom, 
@@ -40,7 +44,7 @@ function BookATablePage() {
         <h1 className="lg:text-[3.55em] text-[2.7em] text-white font-rubik font-normal pt-14">
           Reserve a table!
         </h1>
-        <p className="pb-4 text-white font-rubik px-[2.8em] lg:px-0 lg:text-[1.5em] w-[400px] lg:max-w-[450px] text-center">
+        <p className="pb-4 text-white font-rubik px-[2.8em] lg:px-0 lg:text-[1.5em] min-w-[350px] lg:max-w-[450px] text-center">
           Just say when and which restaurant, and the rest is on us
         </p>
 
@@ -49,7 +53,7 @@ function BookATablePage() {
           onPartySizeChange={handlePartySizeChange}
         />
 
-        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold w-[400px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
+        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[3500px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
           Find a table
         </Button>
 

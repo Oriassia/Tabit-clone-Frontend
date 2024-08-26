@@ -28,16 +28,16 @@ export function ReservationSelector({
   onPartySizeChange,
 }: ReservationSelectorProps) {
   return (
-    <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton w-[400px] lg:min-w-[450px] bg-greenBg">
-      <div className="flex flex-col items-center px-[37px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
+    <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg">
+      <div className="flex flex-col items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
         <p className="text-[1em] font-normal">{reservation.dateDay}</p>
         <p className="lg:w-[4em]">{reservation.dateDayNumber}</p>
       </div>
-      <div className="flex flex-col lg:text-[19px] px-[37px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenButton">
+      <div className="flex flex-col lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenButton">
         <p className="text-[1em] font-normal">Hour</p>
         <p>{reservation.time}</p>
       </div>
-      <div className="flex flex-col items-center justify-center lg:text-[19px] px-[37px] lg:px-[40px] py-[0.5em]">
+      <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">Guests</p>
@@ -85,13 +85,13 @@ export function AreaDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex items-center gap-2">
-        <GoDotFill className="text-greenButton text-[19px]" />
+        <GoDotFill className="text-greenButton items-center text-[19px]" />
         <span className="font-bold font-rubik text-white text-[19px]">
           {area}
         </span>
-        <Button className="border border-greenBorderForIcon bg-transparent dark:hover:bg-transparent dark:bg-transparent p-0 px-[1.5em] h-[2.9em] hover:bg-transparent rounded-full">
-          <MdMyLocation className="size-7 text-white" />
-        </Button>
+        <span className="border items-center flex border-greenBorderForIcon bg-transparent dark:hover:bg-transparent dark:bg-transparent p-0 px-[1.5em] h-[2.9em] hover:bg-transparent rounded-full">
+          <MdMyLocation className="size-7 text-white " />
+        </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[250px] max-h-48 overflow-y-auto relative"
