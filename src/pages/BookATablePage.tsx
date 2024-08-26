@@ -53,7 +53,7 @@ function BookATablePage() {
           onPartySizeChange={handlePartySizeChange}
         />
 
-        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[3500px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
+        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
           Find a table
         </Button>
 
