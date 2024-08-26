@@ -8,7 +8,6 @@ import RestaurantCard from "@/components/costum/CardsForRestaurants/RestaurantCa
 import {
   ReservationSelector,
   Reservation,
-  ReservationSelectorProps,
   AreaDropdown,
 } from "@/components/costum/ReservationSelector/ReservationSelector";
 

@@ -1,12 +1,25 @@
+import RestaurantCard from "@/components/costum/CardsForRestaurants/RestaurantCard";
 import {
   AreaDropdown,
   Reservation,
   ReservationSelector,
 } from "@/components/costum/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { RestaurantsContext } from "@/context/RestaurantsContext";
+import { useContext, useState } from "react";
 
 function BookATablePage() {
+  const restaurantsContext = useContext(RestaurantsContext);
+
+  if (!restaurantsContext) {
+    throw new Error("useRestaurants must be used within a RestaurantsProvider");
+  }
+
+  const { restaurantsQuery } = restaurantsContext;
+
+  if (restaurantsQuery?.isLoading) return <div>Loading...</div>;
+  if (restaurantsQuery?.isError) return <div>Error loading restaurants.</div>;
+
   const [reservation, setReservation] = useState<Reservation>({
     dateDay: "Friday",
     dateDayNumber: "23 / 08",
@@ -53,7 +66,7 @@ function BookATablePage() {
           onPartySizeChange={handlePartySizeChange}
         />
 
-        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[3500px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
+        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
           Find a table
         </Button>
 
@@ -62,6 +75,11 @@ function BookATablePage() {
           onAreaChange={handleAreaChange}
           onAddNewAddress={handleAddNewAddress}
         />
+      </div>
+      <div>
+        {restaurantsQuery?.data?.map((restaurant) => (
+          <RestaurantCard key={restaurant._Id} restaurant={restaurant} />
+        ))}
       </div>
     </>
   );
