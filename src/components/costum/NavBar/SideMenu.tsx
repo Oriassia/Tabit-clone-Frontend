@@ -18,7 +18,10 @@ function SideMenu() {
           <LucideMenu className=" hover:text-gray-300 transition duration-200 cursor-pointer text-greenHamburger" />
         </button>
       </SheetTrigger>
-      <SheetContent side={"left"} className="bg-greyNavbar text-white">
+      <SheetContent
+        side={"left"}
+        className="font-rubik bg-greyNavbar text-white "
+      >
         <SheetHeader className="mb-8">
           <SheetClose asChild>
             <button>
@@ -29,7 +32,7 @@ function SideMenu() {
           <SheetDescription></SheetDescription>
         </SheetHeader>
 
-        <nav className="flex flex-col gap-5 font-semibold text-sm">
+        <nav className="flex flex-col gap-5 font-semibold text-lg">
           <div>
             <NavLink
               to="/"

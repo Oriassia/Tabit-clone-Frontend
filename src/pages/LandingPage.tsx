@@ -93,6 +93,7 @@ function LandingPage() {
           <div className="flex flex-wrap justify-center gap-4">
             {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
               <GiftCard
+                key={restaurant.restId}
                 restaurant={restaurant}
                 buttonLabel={"Get a gift card"}
                 linkLabel={"More information"}
@@ -120,7 +121,7 @@ function LandingPage() {
         <div>
           <div className="flex flex-wrap justify-center gap-4">
             {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
-              <RestaurantCard restaurant={restaurant} />
+              <RestaurantCard key={restaurant.restId} restaurant={restaurant} />
             ))}
           </div>
 
@@ -144,7 +145,7 @@ function LandingPage() {
         <div>
           <div className="flex flex-wrap justify-center gap-4">
             {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
-              <RestaurantCard restaurant={restaurant} />
+              <RestaurantCard key={restaurant.restId} restaurant={restaurant} />
             ))}
           </div>
 
@@ -168,7 +169,7 @@ function LandingPage() {
         <div>
           <div className="flex flex-wrap justify-center gap-4">
             {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
-              <RestaurantCard restaurant={restaurant} />
+              <RestaurantCard key={restaurant.restId} restaurant={restaurant} />
             ))}
           </div>
 
