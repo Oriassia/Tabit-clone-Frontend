@@ -9,7 +9,7 @@ function NavBar() {
   const [isInputVisible, setInputVisible] = useState(false);
 
   return (
-    <div className="opacity-90 fixed w-full z-10 flex items-center justify-between bg-greyNavbar text-white ">
+    <div className="opacity-90 font-rubik  w-full  flex items-center justify-between bg-greyNavbar text-white ">
       {/* Mobile View */}
       <div className="flex items-center justify-between w-full p-5 sm:hidden ">
         {!isInputVisible ? (
@@ -18,15 +18,15 @@ function NavBar() {
             <Link to={"/"}>
               <img
                 src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
-                className="w-20"
+                className="w-24"
               />
             </Link>
             <div className="flex gap-2 items-center">
               <div
-                className="p-[1px] rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+                className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
                 onClick={() => setInputVisible(true)}
               >
-                <MdSearch className="size-6 text-greenHamburger" />
+                <MdSearch className="size-5 text-greenHamburger" />
               </div>
               <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
             </div>
@@ -54,11 +54,11 @@ function NavBar() {
         <Link to={"/"}>
           <img
             src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
-            className="w-20"
+            className="w-32"
           />
         </Link>
 
-        <div className="flex justify-center gap-8 font-semibold text-sm">
+        <div className="flex justify-center gap-8 font-extrabold text-lg">
           <Link
             to={"/book-a-table"}
             className="hover:text-gray-300 transition duration-200"
@@ -108,10 +108,10 @@ function NavBar() {
           )}
           <div className="flex gap-2 items-center">
             <div
-              className="p-[1px] rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+              className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
               onClick={() => setInputVisible(true)}
             >
-              <MdSearch className="size-6 text-greenHamburger" />
+              <MdSearch className="size-5 text-greenHamburger" />
             </div>
             <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
           </div>
