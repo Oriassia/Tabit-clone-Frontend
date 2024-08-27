@@ -44,7 +44,7 @@ function BookATablePage() {
   return (
     <>
       <div className="h-screen flex flex-col">
-        <div className="fixed z-10 w-full sm:static">
+        <div className="">
           <NavBar />
         </div>
 
@@ -53,13 +53,13 @@ function BookATablePage() {
             className="flex flex-col relative items-center py-[2em] w-full sm:w-[350px] lg:w-[450px] bg-cover bg-center shadow-inner flex-shrink-0"
             style={{
               backgroundImage: `
-              linear-gradient(to bottom, 
-              rgba(0, 0, 0, 0.7), 
-              rgba(0, 0, 0, 0.5) 60%, 
-              rgba(0, 0, 0, 0.3) 100%
-              ),
-              url('https://tabitisrael.co.il/assets/images/dashboard-desktop.jpg?v=4_11_1')
-              `,
+            linear-gradient(to bottom, 
+            rgba(0, 0, 0, 0.7), 
+            rgba(0, 0, 0, 0.5) 60%, 
+            rgba(0, 0, 0, 0.3) 100%
+            ),
+            url('https://tabitisrael.co.il/assets/images/dashboard-desktop.jpg?v=4_11_1')
+            `,
               boxShadow: "inset 0 0 1rem #000",
             }}
           >
@@ -86,19 +86,22 @@ function BookATablePage() {
             />
           </div>
 
-          <div
+          <ScrollArea
+            aria-orientation="vertical"
             title="restaurants-list-section"
-            className="w-full sm:w-[350px] lg:w-[450px] flex-shrink-0"
+            className=" p-5 bg-green-400 sm:w-[350px] lg:w-[450px] flex-shrink-0"
           >
-            <ScrollArea className="h-full">
+            <ul className="h-5 bg-red-500">
               {restaurantsQuery?.data?.map((restaurant) => (
-                <RestaurantsListItem
-                  key={restaurant.restId}
-                  restaurant={restaurant}
-                />
+                <li>
+                  <RestaurantsListItem
+                    key={restaurant.restId}
+                    restaurant={restaurant}
+                  />
+                </li>
               ))}
-            </ScrollArea>
-          </div>
+            </ul>
+          </ScrollArea>
 
           <div
             title="map section"

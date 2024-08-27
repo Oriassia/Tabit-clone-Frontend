@@ -5,31 +5,6 @@ interface RestaurantCardProps {
   restaurant: IRestaurant;
 }
 
-// userInput = 19:00;
-
-// Restaurants: [{
-//   rest_id: 1,
-//   name: "dalal",
-//   availableHours:{
-//     halfHourBefore: {
-//       position: [tableId,tableId,tableId...]
-//       position: [tableId,tableId,tableId...]
-//       position: [tableId,tableId,tableId...]
-//     }
-//     givenHour:{
-//       available:boolean, // if at least 1 table available
-//       position: [tableId,tableId,tableId...],
-//       position: [], // in case no table is available
-//       position: [tableId,tableId,tableId...],
-//     }
-//     halfHourlater:{
-//       position: [tableId,tableId,tableId...]
-//       position: [tableId,tableId,tableId...]
-//       position: [tableId,tableId,tableId...]
-//     }
-//   }
-// }];
-
 function RestaurantsListItem({ restaurant }: RestaurantCardProps) {
   return (
     <div className="dark:bg-greyNavbar border-b border-slate-600 flex gap-4 py-5 px-4">
