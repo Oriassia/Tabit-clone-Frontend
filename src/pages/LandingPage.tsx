@@ -7,19 +7,12 @@ import ShowMore from "@/components/costum/CardsForRestaurants/ShowMore";
 import RestaurantCard from "@/components/costum/CardsForRestaurants/RestaurantCard";
 import {
   ReservationSelector,
-  Reservation,
   AreaDropdown,
+  IReservationInput,
 } from "@/components/costum/ReservationSelector/ReservationSelector";
 
 function LandingPage() {
   const restaurantsContext = useContext(RestaurantsContext);
-  const [reservation, setReservation] = useState<Reservation>({
-    dateDay: "Friday",
-    dateDayNumber: "23 / 08",
-    time: "08:00",
-    guests: 2,
-    area: "Around you",
-  });
 
   if (!restaurantsContext) {
     throw new Error("useRestaurants must be used within a RestaurantsProvider");
@@ -27,13 +20,44 @@ function LandingPage() {
 
   const { restaurantsQuery } = restaurantsContext;
 
+  const [reservationInputData, setReservationInputData] =
+    useState<IReservationInput>({
+      dateDay: "Friday",
+      dateDayNumber: "23 / 08",
+      time: "08:00",
+      guests: 2,
+      area: "Around you",
+    });
+
+  const onDateChange = (newDate: Date) => {
+    const dayName = newDate.toLocaleDateString("en-US", { weekday: "long" });
+    const dayNumber = newDate.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+    setReservationInputData((prevState) => ({
+      ...prevState,
+      dateDay: dayName,
+      dateDayNumber: dayNumber,
+    }));
+  };
+
+  const onTimeChange = (newTime: string) => {
+    setReservationInputData((prevState) => ({
+      ...prevState,
+      time: newTime,
+    }));
+  };
+
   const handleAreaChange = (newArea: string) => {
-    setReservation((prev) => ({ ...prev, area: newArea }));
+    setReservationInputData((prev) => ({ ...prev, area: newArea }));
   };
 
   const handlePartySizeChange = (newSize: number) => {
-    setReservation((prev) => ({ ...prev, guests: newSize }));
+    setReservationInputData((prev) => ({ ...prev, guests: newSize }));
   };
+
   const handleAddNewAddress = () => {
     console.log("Add a new address clicked");
   };
@@ -63,8 +87,10 @@ function LandingPage() {
         </p>
 
         <ReservationSelector
-          reservation={reservation}
+          reservationInputData={reservationInputData}
           onPartySizeChange={handlePartySizeChange}
+          onDateChange={onDateChange}
+          onTimeChange={onTimeChange}
         />
 
         <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
@@ -72,7 +98,7 @@ function LandingPage() {
         </Button>
 
         <AreaDropdown
-          area={reservation.area}
+          area={reservationInputData.area}
           onAreaChange={handleAreaChange}
           onAddNewAddress={handleAddNewAddress}
         />

@@ -26,7 +26,7 @@ export interface ReservationSelectorProps {
 }
 
 export function ReservationSelector({
-  reservationInputData: reservationInput,
+  reservationInputData,
   onPartySizeChange,
   onDateChange,
   onTimeChange,
@@ -61,7 +61,7 @@ export function ReservationSelector({
     let startMinute = 0;
 
     if (
-      reservationInput.dateDayNumber === now.toLocaleDateString() &&
+      reservationInputData.dateDayNumber === now.toLocaleDateString() &&
       now.getHours() >= 8
     ) {
       startHour = now.getHours();
@@ -80,7 +80,7 @@ export function ReservationSelector({
     }
 
     setAvailableTimes(times);
-  }, [reservationInput.dateDayNumber]);
+  }, [reservationInputData.dateDayNumber]);
 
   const formatDate = (date: Date) => {
     const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
@@ -97,8 +97,10 @@ export function ReservationSelector({
       <div className="flex flex-col items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
-            <p className="text-[1em] font-normal">{reservationInput.dateDay}</p>
-            <p className="lg:w-[4em]">{reservationInput.dateDayNumber}</p>
+            <p className="text-[1em] font-normal">
+              {reservationInputData.dateDay}
+            </p>
+            <p className="lg:w-[4em]">{reservationInputData.dateDayNumber}</p>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto">
             {availableDates.map((date) => {
@@ -107,7 +109,7 @@ export function ReservationSelector({
                 <DropdownMenuItem
                   key={dayNumber}
                   className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 rounded-none cursor-pointer px-4 py-3 ${
-                    dayNumber === reservationInput.dateDayNumber
+                    dayNumber === reservationInputData.dateDayNumber
                       ? "bg-greyHoverDropDownMenu"
                       : ""
                   }`}
@@ -129,14 +131,14 @@ export function ReservationSelector({
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">Hour</p>
-            <p>{reservationInput.time}</p>
+            <p>{reservationInputData.time}</p>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto">
             {availableTimes.map((time) => (
               <DropdownMenuItem
                 key={time}
                 className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 rounded-none cursor-pointer px-4 py-3 ${
-                  time === reservationInput.time
+                  time === reservationInputData.time
                     ? "bg-greyHoverDropDownMenu"
                     : ""
                 }`}
@@ -154,7 +156,7 @@ export function ReservationSelector({
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">Guests</p>
-            <p>{reservationInput.guests}</p>
+            <p>{reservationInputData.guests}</p>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
@@ -170,7 +172,7 @@ export function ReservationSelector({
               <DropdownMenuItem
                 key={guestNum}
                 className={`hover:bg-greyHoverDropDownMenu ocus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
-                  guestNum === reservationInput.guests
+                  guestNum === reservationInputData.guests
                     ? "bg-greyHoverDropDownMenu"
                     : ""
                 }`}
