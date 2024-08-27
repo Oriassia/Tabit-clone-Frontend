@@ -5,11 +5,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { MdMyLocation } from "react-icons/md";
 
-export interface Reservation {
+export interface IReservationInput {
   dateDay: string;
   dateDayNumber: string;
   time: string;
@@ -18,29 +19,142 @@ export interface Reservation {
 }
 
 export interface ReservationSelectorProps {
-  reservation: Reservation;
+  reservationInputData: IReservationInput;
   onPartySizeChange: (newSize: number) => void;
+  onDateChange: (newDate: Date) => void;
+  onTimeChange: (newTime: string) => void;
 }
 
 export function ReservationSelector({
-  reservation,
+  reservationInputData: reservationInput,
   onPartySizeChange,
+  onDateChange,
+  onTimeChange,
 }: ReservationSelectorProps) {
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [availableDates, setAvailableDates] = useState<Date[]>([]);
+
+  useEffect(() => {
+    // Generate dates from today until the end of the next month
+    const today = new Date();
+    const endOfNextMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() + 2,
+      0
+    );
+    const dates: Date[] = [];
+
+    let date = today;
+    while (date <= endOfNextMonth) {
+      dates.push(new Date(date));
+      date.setDate(date.getDate() + 1);
+    }
+    setAvailableDates(dates);
+  }, []);
+
+  useEffect(() => {
+    // Generate time options based on selected date
+    const times: string[] = [];
+    const now = new Date();
+
+    let startHour = 8;
+    let startMinute = 0;
+
+    if (
+      reservationInput.dateDayNumber === now.toLocaleDateString() &&
+      now.getHours() >= 8
+    ) {
+      startHour = now.getHours();
+      startMinute = now.getMinutes() < 30 ? 30 : 0;
+    }
+
+    for (let hour = startHour; hour <= 23; hour++) {
+      for (let minute = startMinute; minute < 60; minute += 30) {
+        times.push(
+          `${hour.toString().padStart(2, "0")}:${minute
+            .toString()
+            .padStart(2, "0")}`
+        );
+      }
+      startMinute = 0; // Reset startMinute after the first hour
+    }
+
+    setAvailableTimes(times);
+  }, [reservationInput.dateDayNumber]);
+
+  const formatDate = (date: Date) => {
+    const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
+    const dayNumber = date.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+    return { dayName, dayNumber };
+  };
+
   return (
     <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg">
+      {/* Date selection Drop-Down */}
       <div className="flex flex-col items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
-        <p className="text-[1em] font-normal">{reservation.dateDay}</p>
-        <p className="lg:w-[4em]">{reservation.dateDayNumber}</p>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+            <p className="text-[1em] font-normal">{reservationInput.dateDay}</p>
+            <p className="lg:w-[4em]">{reservationInput.dateDayNumber}</p>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto">
+            {availableDates.map((date) => {
+              const { dayName, dayNumber } = formatDate(date);
+              return (
+                <DropdownMenuItem
+                  key={dayNumber}
+                  className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 rounded-none cursor-pointer px-4 py-3 ${
+                    dayNumber === reservationInput.dateDayNumber
+                      ? "bg-greyHoverDropDownMenu"
+                      : ""
+                  }`}
+                  onClick={() => {
+                    onDateChange(date);
+                    setAvailableTimes([]);
+                  }}
+                >
+                  <p>{`${dayName} - ${dayNumber}`}</p>
+                </DropdownMenuItem>
+              );
+            })}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
+      {/* time selection Drop-Down */}
       <div className="flex flex-col lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenButton">
-        <p className="text-[1em] font-normal">Hour</p>
-        <p>{reservation.time}</p>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+            <p className="text-[1em] font-normal">Hour</p>
+            <p>{reservationInput.time}</p>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto">
+            {availableTimes.map((time) => (
+              <DropdownMenuItem
+                key={time}
+                className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 rounded-none cursor-pointer px-4 py-3 ${
+                  time === reservationInput.time
+                    ? "bg-greyHoverDropDownMenu"
+                    : ""
+                }`}
+                onClick={() => onTimeChange(time)}
+              >
+                <p>{time}</p>
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+
+      {/* Guests selection Drop-Down */}
       <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">Guests</p>
-            <p>{reservation.guests}</p>
+            <p>{reservationInput.guests}</p>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
@@ -56,7 +170,7 @@ export function ReservationSelector({
               <DropdownMenuItem
                 key={guestNum}
                 className={`hover:bg-greyHoverDropDownMenu ocus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
-                  guestNum === reservation.guests
+                  guestNum === reservationInput.guests
                     ? "bg-greyHoverDropDownMenu"
                     : ""
                 }`}
