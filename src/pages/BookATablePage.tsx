@@ -8,20 +8,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RestaurantsContext } from "@/context/RestaurantsContext";
+import api from "@/services/api.services";
 import { useContext, useState } from "react";
 
 function BookATablePage() {
-  const restaurantsContext = useContext(RestaurantsContext);
-
-  if (!restaurantsContext) {
-    throw new Error("useRestaurants must be used within a RestaurantsProvider");
-  }
-
-  const { restaurantsQuery } = restaurantsContext;
-
-  if (restaurantsQuery?.isLoading) return <div>Loading...</div>;
-  if (restaurantsQuery?.isError) return <div>Error loading restaurants.</div>;
-
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
       dateDay: "Friday",
@@ -30,6 +20,18 @@ function BookATablePage() {
       guests: 2,
       area: "Around you",
     });
+
+  const restaurantsContext = useContext(RestaurantsContext);
+
+  if (!restaurantsContext) {
+    throw new Error("useRestaurants must be used within a RestaurantsProvider");
+  }
+
+  const { restaurantsQuery } = restaurantsContext;
+
+  const restaurantsData = restaurantsQuery?.data;
+  if (restaurantsQuery?.isLoading) return <div>Loading...</div>;
+  if (restaurantsQuery?.isError) return <div>Error loading restaurants.</div>;
 
   const onDateChange = (newDate: Date) => {
     const dayName = newDate.toLocaleDateString("en-US", { weekday: "long" });
@@ -64,7 +66,38 @@ function BookATablePage() {
     console.log("Add a new address clicked");
   };
 
-  const restaurantsData = restaurantsQuery?.data;
+  const handleSearchSubmit = async () => {
+    try {
+      console.log("start searching...");
+      // Parse the dateDayNumber and time
+      const [day, month] = reservationInputData.dateDayNumber
+        .split(" / ")
+        .map(Number);
+      const [hours, minutes] = reservationInputData.time.split(":").map(Number);
+      const year = new Date().getFullYear(); // Assuming the current year
+
+      // Create a Date object
+      const reservationDate = new Date(year, month - 1, day, hours, minutes);
+
+      // Convert to ISO string or your preferred format
+      const reservationDateString = reservationDate.toISOString();
+
+      // Add the new property to reservationInputData
+      const postInputData = {
+        lat: 32.0661,
+        lng: 34.7748,
+        partySize: reservationInputData.guests,
+        date: reservationDateString,
+      };
+      console.log("postInputData:", postInputData);
+
+      // Send the updated reservation data
+      const res = await api.post("/restaurants", postInputData);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="h-screen flex flex-col">
@@ -98,7 +131,10 @@ function BookATablePage() {
             onTimeChange={onTimeChange}
           />
 
-          <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
+          <Button
+            onClick={handleSearchSubmit}
+            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3"
+          >
             Find a table
           </Button>
 

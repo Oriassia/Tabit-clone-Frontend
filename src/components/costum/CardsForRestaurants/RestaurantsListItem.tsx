@@ -17,8 +17,11 @@ function RestaurantsListItem({ restaurant }: RestaurantCardProps) {
         <div className="text-xl font-medium text-white">{restaurant.name}</div>
         <div className="text-slate-300">{restaurant.address}</div>
         <div className="flex gap-1">
-          {["Hour 1", "Hour 2", "Hour 3"].map((hour) => (
-            <Button className="dark:bg-greenReservationActive font-normal w-15 h-9 rounded-[4px]">
+          {["Hour 1", "Hour 2", "Hour 3"].map((hour, index) => (
+            <Button
+              key={index}
+              className="dark:bg-greenReservationActive font-normal w-15 h-9 rounded-[4px]"
+            >
               {hour}
             </Button>
           ))}

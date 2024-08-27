@@ -5,7 +5,7 @@ import { Outlet } from "react-router";
 function MainLayout() {
   return (
     <>
-      <div className="fixed z-10">
+      <div className="fixed w-full z-10">
         <NavBar />
       </div>
       <main className="flex-grow">
