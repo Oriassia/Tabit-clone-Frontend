@@ -35,20 +35,16 @@ export function ReservationSelector({
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
 
   useEffect(() => {
-    // Generate dates from today until the end of the next month
+    // Generate dates from today until the next 30 days
     const today = new Date();
-    const endOfNextMonth = new Date(
-      today.getFullYear(),
-      today.getMonth() + 2,
-      0
-    );
     const dates: Date[] = [];
 
-    let date = today;
-    while (date <= endOfNextMonth) {
-      dates.push(new Date(date));
-      date.setDate(date.getDate() + 1);
+    for (let i = 0; i < 30; i++) {
+      const date = new Date();
+      date.setDate(today.getDate() + i);
+      dates.push(date);
     }
+
     setAvailableDates(dates);
   }, []);
 
@@ -56,16 +52,26 @@ export function ReservationSelector({
     // Generate time options based on selected date
     const times: string[] = [];
     const now = new Date();
+    const selectedDate = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate()
+    );
+    const isToday =
+      reservationInputData.dateDayNumber ===
+      now.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+      });
 
     let startHour = 8;
     let startMinute = 0;
 
-    if (
-      reservationInputData.dateDayNumber === now.toLocaleDateString() &&
-      now.getHours() >= 8
-    ) {
-      startHour = now.getHours();
-      startMinute = now.getMinutes() < 30 ? 30 : 0;
+    if (isToday && now.getHours() >= 8) {
+      // Start time should be one hour ahead of the current time
+      const nextAvailableTime = new Date(now.getTime() + 60 * 60 * 1000);
+      startHour = nextAvailableTime.getHours();
+      startMinute = nextAvailableTime.getMinutes() < 30 ? 30 : 0;
     }
 
     for (let hour = startHour; hour <= 23; hour++) {
@@ -92,8 +98,8 @@ export function ReservationSelector({
   };
 
   return (
-    <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg">
-      {/* Date selection Drop-Down */}
+    <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
+      {/* Date Selection */}
       <div className="flex flex-col items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
@@ -102,7 +108,13 @@ export function ReservationSelector({
             </p>
             <p className="lg:w-[4em]">{reservationInputData.dateDayNumber}</p>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto">
+          <DropdownMenuContent
+            className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+            style={{
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // Internet Explorer and Edge
+            }}
+          >
             {availableDates.map((date) => {
               const { dayName, dayNumber } = formatDate(date);
               return (
@@ -126,14 +138,20 @@ export function ReservationSelector({
         </DropdownMenu>
       </div>
 
-      {/* time selection Drop-Down */}
-      <div className="flex flex-col lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] items-center border-r-2 border-greenButton">
+      {/* Time Selection */}
+      <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 border-greenButton">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">Hour</p>
             <p>{reservationInputData.time}</p>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto">
+          <DropdownMenuContent
+            className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+            style={{
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // Internet Explorer and Edge
+            }}
+          >
             {availableTimes.map((time) => (
               <DropdownMenuItem
                 key={time}
@@ -151,7 +169,7 @@ export function ReservationSelector({
         </DropdownMenu>
       </div>
 
-      {/* Guests selection Drop-Down */}
+      {/* Guests Selection */}
       <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
@@ -171,12 +189,12 @@ export function ReservationSelector({
             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((guestNum) => (
               <DropdownMenuItem
                 key={guestNum}
-                className={`hover:bg-greyHoverDropDownMenu ocus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
+                className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
                   guestNum === reservationInputData.guests
                     ? "bg-greyHoverDropDownMenu"
                     : ""
                 }`}
-                onClick={() => onPartySizeChange(guestNum)} // Updates the state on click
+                onClick={() => onPartySizeChange(guestNum)}
               >
                 <p>{guestNum}</p>
               </DropdownMenuItem>
