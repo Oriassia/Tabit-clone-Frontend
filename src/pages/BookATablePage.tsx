@@ -9,14 +9,17 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RestaurantsContext } from "@/context/RestaurantsContext";
 import api from "@/services/api.services";
+import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
 import { useContext, useState } from "react";
 
 function BookATablePage() {
+  const thisDay = new Date();
+
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
-      dateDay: "Friday",
-      dateDayNumber: "23 / 08",
-      time: "08:00",
+      dayName: thisDay.toLocaleDateString("en-US", { weekday: "long" }),
+      dateDayNumber: getFormattedDate(thisDay),
+      time: getFormattedTime(thisDay),
       guests: 2,
       area: "Around you",
     });
@@ -42,7 +45,7 @@ function BookATablePage() {
 
     setReservationInputData((prevState) => ({
       ...prevState,
-      dateDay: dayName,
+      dayName: dayName,
       dateDayNumber: dayNumber,
     }));
   };
@@ -68,19 +71,26 @@ function BookATablePage() {
 
   const handleSearchSubmit = async () => {
     try {
-      console.log("start searching...");
       // Parse the dateDayNumber and time
       const [day, month] = reservationInputData.dateDayNumber
         .split(" / ")
         .map(Number);
       const [hours, minutes] = reservationInputData.time.split(":").map(Number);
+
       const year = new Date().getFullYear(); // Assuming the current year
 
       // Create a Date object
       const reservationDate = new Date(year, month - 1, day, hours, minutes);
+      console.log("reservationDate:", reservationDate);
 
-      // Convert to ISO string or your preferred format
-      const reservationDateString = reservationDate.toISOString();
+      // Manually format the date string without milliseconds and timezone
+      const reservationDateString = `${year}-${String(month).padStart(
+        2,
+        "0"
+      )}-${String(day).padStart(2, "0")}T${String(hours).padStart(
+        2,
+        "0"
+      )}:${String(minutes).padStart(2, "0")}`;
 
       // Add the new property to reservationInputData
       const postInputData = {

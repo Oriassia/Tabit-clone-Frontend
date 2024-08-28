@@ -11,7 +11,7 @@ import { GoDotFill } from "react-icons/go";
 import { MdMyLocation } from "react-icons/md";
 
 export interface IReservationInput {
-  dateDay: string;
+  dayName: string;
   dateDayNumber: string;
   time: string;
   guests: number;
@@ -98,7 +98,7 @@ export function ReservationSelector({
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">
-              {reservationInputData.dateDay}
+              {reservationInputData.dayName}
             </p>
             <p className="lg:w-[4em]">{reservationInputData.dateDayNumber}</p>
           </DropdownMenuTrigger>
