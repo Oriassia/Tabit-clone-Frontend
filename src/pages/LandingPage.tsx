@@ -22,7 +22,7 @@ function LandingPage() {
 
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
-      dateDay: "Friday",
+      dayName: "Friday",
       dateDayNumber: "23 / 08",
       time: "08:00",
       guests: 2,
@@ -38,7 +38,7 @@ function LandingPage() {
 
     setReservationInputData((prevState) => ({
       ...prevState,
-      dateDay: dayName,
+      dayName: dayName,
       dateDayNumber: dayNumber,
     }));
   };
