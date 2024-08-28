@@ -20,11 +20,31 @@ function LandingPage() {
 
   const { restaurantsQuery } = restaurantsContext;
 
+  const getRoundedTime = (date: Date) => {
+    const minutes = date.getMinutes();
+    if (minutes > 30) {
+      date.setHours(date.getHours() + 1);
+      date.setMinutes(0);
+    } else if (minutes > 0 && minutes <= 30) {
+      date.setMinutes(30);
+    }
+    return date.toTimeString().slice(0, 5);
+  };
+
+  const getNextHourTime = () => {
+    const now = new Date();
+    now.setHours(now.getHours() + 1);
+    return getRoundedTime(now);
+  };
+
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
-      dayName: "Friday",
-      dateDayNumber: "23 / 08",
-      time: "08:00",
+      dayName: new Date().toLocaleDateString("en-US", { weekday: "long" }),
+      dateDayNumber: new Date().toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+      }),
+      time: getRoundedTime(new Date()),
       guests: 2,
       area: "Around you",
     });
@@ -40,6 +60,7 @@ function LandingPage() {
       ...prevState,
       dayName: dayName,
       dateDayNumber: dayNumber,
+      time: getRoundedTime(newDate),
     }));
   };
 

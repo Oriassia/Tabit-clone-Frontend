@@ -5,6 +5,7 @@ import DeliveriesPage from "./pages/DeliveriesPage";
 import RestaurantsPage from "./pages/RestaurantsPage";
 import BookATablePage from "./pages/BookATablePage";
 import GiftItPage from "./pages/GiftItPage";
+import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 
 function App() {
   return (
@@ -16,6 +17,10 @@ function App() {
           <Route path="deliveries" element={<DeliveriesPage />} />
           <Route path="restaurants" element={<RestaurantsPage />} />
           <Route path="gift-it" element={<GiftItPage />} />
+          <Route
+            path="restaurants/:restaurantId"
+            element={<RestaurantDetailsPage />}
+          />
         </Route>
 
         {/* routes WITH navbar ONLY */}
