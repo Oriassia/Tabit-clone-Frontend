@@ -66,19 +66,33 @@
 // }
 
 export interface IRestaurant {
-  restId?: string;
+  restId: number;
   name: string;
-  category: string;
-  shortDescription: string;
-  longDescription: string;
   lat: number;
   lng: number;
   address: string;
+  category: string;
   mainPhoto: string;
   phoneNumber: string;
-  website?: string;
-  instagram?: string;
-  facebook?: string;
+  website: string;
+  instagram: string;
+  facebook: string;
+  shortDescription: string;
+  longDescription: string;
+  menus: {
+    url: string;
+    title: string;
+  }[];
+  photos: string[];
+  openingHours: {
+    sunday?: string;
+    monday?: string;
+    tuesday?: string;
+    wednesday?: string;
+    thursday?: string;
+    friday?: string;
+    saturday?: string;
+  }[];
 }
 export interface IOpeningHours {
   id?: number; // Primary key in the SQL structure
@@ -122,4 +136,30 @@ export interface IRestaurantPhoto {
   photoId?: number; // Matches the AUTO_INCREMENT primary key from SQL
   restId: number; // Foreign key reference to `Restaurants`
   url: string; // URL to the photo
+}
+
+export interface availabileTablesByRestaurant {
+  distance_in_km: number;
+  given_hour: {
+    bar: number | null;
+    inside: number;
+    outside: number;
+    available: number;
+  };
+  half_hour_after: {
+    bar: number | null;
+    inside: number;
+    outside: number;
+    available: number;
+  };
+  half_hour_before: {
+    bar: number | null;
+    inside: number;
+    outside: number;
+    available: number;
+  };
+  rest_address: string;
+  rest_id: number;
+  rest_name: string;
+  restaurant_mainphoto: string;
 }

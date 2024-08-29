@@ -7,13 +7,17 @@ import {
 } from "@/components/costum/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { RestaurantsContext } from "@/context/RestaurantsContext";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
-import { useContext, useState } from "react";
+import { availabileTablesByRestaurant } from "@/types/restaurant";
+import { useState } from "react";
 
 function BookATablePage() {
   const thisDay = new Date();
+
+  const [availableTablesByRest, setavailableTablesByRest] = useState<
+    availabileTablesByRestaurant[]
+  >([]);
 
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
@@ -23,18 +27,6 @@ function BookATablePage() {
       guests: 2,
       area: "Around you",
     });
-
-  const restaurantsContext = useContext(RestaurantsContext);
-
-  if (!restaurantsContext) {
-    throw new Error("useRestaurants must be used within a RestaurantsProvider");
-  }
-
-  const { restaurantsQuery } = restaurantsContext;
-
-  const restaurantsData = restaurantsQuery?.data;
-  if (restaurantsQuery?.isLoading) return <div>Loading...</div>;
-  if (restaurantsQuery?.isError) return <div>Error loading restaurants.</div>;
 
   const onDateChange = (newDate: Date) => {
     const dayName = newDate.toLocaleDateString("en-US", { weekday: "long" });
@@ -79,10 +71,6 @@ function BookATablePage() {
 
       const year = new Date().getFullYear(); // Assuming the current year
 
-      // Create a Date object
-      const reservationDate = new Date(year, month - 1, day, hours, minutes);
-      console.log("reservationDate:", reservationDate);
-
       // Manually format the date string without milliseconds and timezone
       const reservationDateString = `${year}-${String(month).padStart(
         2,
@@ -99,11 +87,11 @@ function BookATablePage() {
         partySize: reservationInputData.guests,
         date: reservationDateString,
       };
-      console.log("postInputData:", postInputData);
 
       // Send the updated reservation data
-      const res = await api.post("/restaurants", postInputData);
-      console.log(res);
+      const { data } = await api.post("/tables", postInputData);
+      console.log(data[0]);
+      setavailableTablesByRest(data[0]);
     } catch (error) {
       console.log(error);
     }
@@ -160,10 +148,10 @@ function BookATablePage() {
           title="restaurants-list-section"
           className=" sm:w-[350px] lg:w-[450px] flex-shrink-0"
         >
-          {restaurantsData && restaurantsData.length > 0 ? (
+          {availableTablesByRest && availableTablesByRest.length > 0 ? (
             <ul className="h-5 bg-red-500">
-              {restaurantsData.map((restaurant) => (
-                <li key={restaurant.restId}>
+              {availableTablesByRest.map((restaurant) => (
+                <li key={restaurant.rest_id}>
                   <RestaurantsListItem restaurant={restaurant} />
                 </li>
               ))}
