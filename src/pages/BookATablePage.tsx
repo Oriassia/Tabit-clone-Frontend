@@ -6,7 +6,6 @@ import {
   ReservationSelector,
 } from "@/components/costum/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
 import { availabileTablesByRestaurant } from "@/types/restaurant";
@@ -98,10 +97,15 @@ function BookATablePage() {
   };
 
   return (
-    <div className="h-screen flex flex-col">
+    <div title="page-wrapper" className="sm:h-screen flex flex-col">
       <NavBar />
-      <div title="page-wrapper" className="flex flex-col sm:flex-row h-full">
+      <div
+        title="content-wrapper"
+        className="flex flex-col sm:flex-row sm:h-screen overflow-hidden"
+      >
+        {/* Reserve a table section */}
         <div
+          title="reserve-a-table-section"
           className="flex flex-col text-center items-center justify-center px-12 bg-cover bg-center shadow-inner"
           style={{
             backgroundImage: `
@@ -143,24 +147,25 @@ function BookATablePage() {
           />
         </div>
 
-        <ScrollArea
-          aria-orientation="vertical"
-          title="restaurants-list-section"
-          className=" sm:w-[350px] lg:w-[450px] flex-shrink-0"
-        >
+        {/* Rests list section */}
+        <div className="flex flex-col sm:w-[350px] lg:w-[450px] flex-shrink-0 dark:bg-greyNavbar">
           {availableTablesByRest && availableTablesByRest.length > 0 ? (
-            <ul className="h-5 bg-red-500">
+            <ul className="flex flex-col overflow-auto custom-scrollbar">
               {availableTablesByRest.map((restaurant) => (
                 <li key={restaurant.rest_id}>
                   <RestaurantsListItem restaurant={restaurant} />
                 </li>
               ))}
+              <li className="text-white py-5 h-full container">
+                No more restaurants available...
+              </li>
             </ul>
           ) : (
             <div className="text-center py-4">No restaurants available</div>
           )}
-        </ScrollArea>
+        </div>
 
+        {/* MAP section */}
         <div
           title="map section"
           className="hidden sm:block sm:flex-grow w-full"

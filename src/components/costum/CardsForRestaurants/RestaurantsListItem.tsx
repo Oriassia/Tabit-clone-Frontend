@@ -7,7 +7,7 @@ interface RestaurantItemProps {
 
 function RestaurantsListItem({ restaurant }: RestaurantItemProps) {
   return (
-    <div className="dark:bg-greyNavbar border-b border-slate-600 flex gap-4 py-5 px-4">
+    <div className=" border-b border-slate-600 flex gap-4 py-5 px-4">
       <img
         src={restaurant.restaurant_mainphoto}
         alt={restaurant.rest_name}
