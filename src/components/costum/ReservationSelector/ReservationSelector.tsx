@@ -96,7 +96,7 @@ export function ReservationSelector({
   return (
     <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
       {/* Date Selection */}
-      <div className="flex flex-col items-center py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
+      <div className="flex flex-col items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">
@@ -135,7 +135,7 @@ export function ReservationSelector({
       </div>
 
       {/* Time Selection */}
-      <div className="flex flex-col items-center lg:text-[19px]  py-[0.5em] border-r-2 border-greenButton">
+      <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 border-greenButton">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">Hour</p>
@@ -166,7 +166,7 @@ export function ReservationSelector({
       </div>
 
       {/* Guests Selection */}
-      <div className="flex flex-col items-center justify-center lg:text-[19px] py-[0.5em]">
+      <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
             <p className="text-[1em] font-normal">Guests</p>
