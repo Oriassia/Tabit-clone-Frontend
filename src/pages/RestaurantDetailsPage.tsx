@@ -1,15 +1,59 @@
-import { useState } from "react";
-import { FaPhoneAlt, FaMapMarkerAlt } from "react-icons/fa";
-import { MdOutlineWatchLater } from "react-icons/md";
+import { useEffect, useState } from "react";
 import { AreaDropdown } from "../components/costum/ReservationSelector/ReservationSelector";
 import CalendarIcon from "@/components/costum/svg/CalendarIcon";
 import LockIcon from "@/components/costum/svg/LockIcon";
+import { IRestaurant } from "@/types/restaurant";
+import api from "@/services/api.services";
+import { useParams } from "react-router";
+import BikeIcon from "@/components/costum/svg/BikeIcon";
+import Location from "@/components/costum/svg/Location";
+import CallIcon from "@/components/costum/svg/CallIcon";
+import OpenIcon from "@/components/costum/svg/OpenIcon";
+import BillIcon from "@/components/costum/svg/BillIcon";
+import { Link } from "react-router-dom";
 
 const RestaurantDetailsPage: React.FC = () => {
-  // Define the state for area selection
+  const { restaurantId } = useParams<{ restaurantId: string }>();
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
+
   const [reservationInputData, setReservationInputData] = useState({
     area: "Tel Aviv-Jaffa area",
   });
+
+  useEffect(() => {
+    if (restaurantId) {
+      fetchRestaurantById(restaurantId)
+        .then((data) => {
+          if (data) {
+            setRestaurant(data);
+          } else {
+            setError("Restaurant not found.");
+          }
+        })
+        .catch(() => setError("Failed to fetch restaurant"))
+        .finally(() => setLoading(false));
+    }
+  }, [restaurantId]);
+
+  const fetchRestaurantById = async (
+    restaurantId: string
+  ): Promise<IRestaurant | null> => {
+    try {
+      const response = await api.get(`/restaurants/${restaurantId}`);
+      if (response.status !== 200) {
+        console.error("Failed to fetch restaurant data");
+        return null;
+      }
+      return response.data;
+    } catch (error) {
+      console.error("Failed to fetch restaurant:", error);
+      return null;
+    }
+  };
 
   const handleAreaChange = (newArea: string) => {
     setReservationInputData({ ...reservationInputData, area: newArea });
@@ -36,7 +80,7 @@ const RestaurantDetailsPage: React.FC = () => {
           <div className="flex gap-1 ">
             <p className="underline">Restaurants</p>
             <p className="">&gt;</p>
-            <p className="underline">restaurantName</p>
+            <p className="underline">{restaurant?.name}</p>
           </div>
         </div>
         {/* Image */}
@@ -48,75 +92,90 @@ const RestaurantDetailsPage: React.FC = () => {
           />
         </div>
         <div className="px-3 py-5" style={{ background: "#303030" }}>
-          <h1 className="text-5xl font-medium ">Name</h1>
-          <p className="text-lg text-gray-400 py-3 ">categories</p>
-          <p className="text-[1em] py-1">
-            חווית אירוח מסעירה, המותחת את הגבולות שבין מסעדה, בר ותיאטרון
+          <h1 className="text-5xl font-medium ">{restaurant?.name}</h1>
+          <p className="text-lg text-gray-400 py-3 ">
+            {restaurant?.category
+              ?.split(",") // Разделяем строку на массив по запятой
+              .map((cat, index, arr) => (
+                <span key={index} className="text-[1em]">
+                  {cat.trim()} {/* Удаляем лишние пробелы */}
+                  {index < arr.length - 1 && " | "}
+                  {/* Добавляем знак | между элементами */}
+                </span>
+              ))}
           </p>
+          <p className="text-[1em] py-1">{restaurant?.shortDescription}</p>
         </div>
       </div>
 
       {/* Bottom Section */}
-      <div className="bg-greyBg text-white py-8  lg:px-10">
-        <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="bg-greyBg text-white py-8  ">
+        <div className="">
+          <div className="">
             {/* Reservation and Service Availability */}
-            <div className="col-span-2">
+            <div className="px-3 flex flex-col justify-center">
               {/* FLEX FOR RESERVE TAKEOUT DELIVERY */}
-              <div className="flex ">
+              <div className="flex border border-greyBorder rounded-3xl">
                 {/* {RESERVE} */}
-                <div className="">
+                <button className="pt-3 pb-10 border-r border-greyBorder">
                   <div className="items-center flex justify-center">
                     <CalendarIcon />
                   </div>
                   <p className="text-center text-[1em] font-bold">Reserve</p>
-                </div>
+                </button>
                 {/* {TAKEOUT} */}
-                <div className="">
+                <div className="border-r border-greyBorder py-3">
                   <div className="items-center flex justify-center">
                     <LockIcon />
                   </div>
-                  <p className="text-center text-[1em] font-bold">Takeout</p>
-                  <p className="text-center text-gray-400">Not available now</p>
+                  <p className="text-center text-[1em] text-greyDropDownMenu font-bold text-gray">
+                    Takeout
+                  </p>
                 </div>
                 {/* {Delivery} */}
-                <div className="">
-                  <p className="text-center text-xl font-bold">Delivery</p>
-                  <p className="text-center text-gray-400">
-                    Not available for this address
+                <div className="py-3">
+                  <div className="items-center flex justify-center">
+                    <BikeIcon />
+                  </div>
+                  <p className="text-center text-greyDropDownMenu text-[1em] font-bold">
+                    Delivery
                   </p>
                 </div>
               </div>
-              <div className="p-4 bg-gray-800 rounded-lg">
-                <p className="text-center text-xl font-bold">Eat in</p>
-                <p className="text-center text-gray-400">Not available now</p>
+              <div className="flex justify-center pt-[1.6em]">
+                <AreaDropdown
+                  area={reservationInputData.area}
+                  onAreaChange={handleAreaChange}
+                  onAddNewAddress={handleAddNewAddress}
+                />
               </div>
-              <AreaDropdown
-                area={reservationInputData.area}
-                onAreaChange={handleAreaChange}
-                onAddNewAddress={handleAddNewAddress}
-              />
             </div>
 
             {/* Contact and Info */}
-            <div className="col-span-1 md:col-span-2 lg:col-span-1">
+            <div>
               <div className="flex flex-col space-y-4">
                 <div className="flex items-center">
-                  <FaMapMarkerAlt className="mr-2 text-teal-500" />
+                  <Location />
                   <span>דרך רפאל איתן 1, קריית אונו</span>
                 </div>
                 <div className="flex items-center">
-                  <FaPhoneAlt className="mr-2 text-teal-500" />
+                  <CallIcon />
                   <span>03-750-1111</span>
                 </div>
                 <div className="flex items-center">
-                  <MdOutlineWatchLater className="mr-2 text-teal-500" />
+                  <OpenIcon />
                   <span>Open</span>
                   <span className="ml-2">12:00 - 23:30</span>
                 </div>
-                <a href="#" className="text-teal-500 hover:underline">
-                  Website
-                </a>
+                <div className="flex items-center">
+                  <BillIcon />
+                  <Link
+                    to={`${restaurant?.website}`}
+                    className="text-greenButton"
+                  >
+                    Website
+                  </Link>
+                </div>
               </div>
             </div>
           </div>

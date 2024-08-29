@@ -2,11 +2,10 @@ const CalendarIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="40%"
-      height="40%"
       viewBox="0 0 46 46"
       preserveAspectRatio="xMidYMid meet"
       focusable="false"
+      className="w-[25%] h-[25%] lg:w-[40%] lg:h-[40%]"
     >
       <g fill="none" fillRule="evenodd">
         <g>
