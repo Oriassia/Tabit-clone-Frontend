@@ -1,7 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { RestaurantsContext } from "@/context/RestaurantsContext";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import GiftCard from "@/components/costum/CardsForRestaurants/GiftCard";
 import ShowMore from "@/components/costum/CardsForRestaurants/ShowMore";
 import RestaurantCard from "@/components/costum/CardsForRestaurants/RestaurantCard";
@@ -10,15 +8,22 @@ import {
   AreaDropdown,
   IReservationInput,
 } from "@/components/costum/ReservationSelector/ReservationSelector";
+import { IRestaurant } from "@/types/restaurant";
+import api from "@/services/api.services";
 
 function LandingPage() {
-  const restaurantsContext = useContext(RestaurantsContext);
+  const [AllRestaurants, setAllRestaurants] = useState<IRestaurant[]>([]);
 
-  if (!restaurantsContext) {
-    throw new Error("useRestaurants must be used within a RestaurantsProvider");
+  useEffect(() => {
+    fetchAllRests();
+  }, []);
+
+  async function fetchAllRests() {
+    try {
+      const { data } = await api.get("/restaurants");
+      setAllRestaurants(data);
+    } catch (error) {}
   }
-
-  const { restaurantsQuery } = restaurantsContext;
 
   const getRoundedTime = (date: Date) => {
     const minutes = date.getMinutes();
@@ -132,7 +137,7 @@ function LandingPage() {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4">
-            {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
+            {AllRestaurants?.slice(0, 3).map((restaurant) => (
               <GiftCard
                 key={restaurant.restId}
                 restaurant={restaurant}
@@ -161,7 +166,7 @@ function LandingPage() {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4">
-            {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
+            {AllRestaurants.slice(0, 3).map((restaurant) => (
               <RestaurantCard key={restaurant.restId} restaurant={restaurant} />
             ))}
           </div>
@@ -185,7 +190,7 @@ function LandingPage() {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4">
-            {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
+            {AllRestaurants.slice(0, 3).map((restaurant) => (
               <RestaurantCard key={restaurant.restId} restaurant={restaurant} />
             ))}
           </div>
@@ -209,7 +214,7 @@ function LandingPage() {
 
         <div>
           <div className="flex flex-wrap justify-center gap-4">
-            {restaurantsQuery?.data?.slice(0, 3).map((restaurant) => (
+            {AllRestaurants.slice(0, 3).map((restaurant) => (
               <RestaurantCard key={restaurant.restId} restaurant={restaurant} />
             ))}
           </div>
