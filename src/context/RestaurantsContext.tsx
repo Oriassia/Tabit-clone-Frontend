@@ -2,6 +2,7 @@ import api from "@/services/api.services";
 import { IRestaurant } from "@/types/restaurant";
 import { useQuery, UseQueryResult } from "@tanstack/react-query";
 import { createContext, ReactNode } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export interface RestaurantsContextProps {
   restaurantsQuery: UseQueryResult<IRestaurant[]> | null;
@@ -30,6 +31,10 @@ const RestaurantsProvider = ({ children }: RestaurantsProviderProps) => {
       throw error; // ensures the error is propagated to the `useQuery` hook
     }
   }
+
+  // async function fetchRestaurantById() {
+  //   const {restaurantId} = useSearchParams
+  // }
 
   return (
     <RestaurantsContext.Provider value={{ restaurantsQuery }}>
