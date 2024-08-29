@@ -152,30 +152,29 @@ const RestaurantDetailsPage: React.FC = () => {
             </div>
 
             {/* Contact and Info */}
-            <div>
-              <div className="flex flex-col space-y-4">
-                <div className="flex items-center">
-                  <Location />
-                  <span>דרך רפאל איתן 1, קריית אונו</span>
-                </div>
-                <div className="flex items-center">
-                  <CallIcon />
-                  <span>03-750-1111</span>
-                </div>
-                <div className="flex items-center">
-                  <OpenIcon />
-                  <span>Open</span>
-                  <span className="ml-2">12:00 - 23:30</span>
-                </div>
-                <div className="flex items-center">
-                  <BillIcon />
-                  <Link
-                    to={`${restaurant?.website}`}
-                    className="text-greenButton"
-                  >
-                    Website
-                  </Link>
-                </div>
+
+            <div className="flex flex-col space-y-4 px-5">
+              <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
+                <Location />
+                <span>דרך רפאל איתן 1, קריית אונו</span>
+              </div>
+              <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
+                <CallIcon />
+                <span>03-750-1111</span>
+              </div>
+              <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
+                <OpenIcon />
+                <span>Open</span>
+                <span className="ml-2">12:00 - 23:30</span>
+              </div>
+              <div className="flex items-center gap-6">
+                <BillIcon />
+                <Link
+                  to={`${restaurant?.website}`}
+                  className="text-greenButton"
+                >
+                  Website
+                </Link>
               </div>
             </div>
           </div>
