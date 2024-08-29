@@ -1,4 +1,5 @@
 import RestaurantsListItem from "@/components/costum/CardsForRestaurants/RestaurantsListItem";
+import Map from "@/components/costum/Map/Map";
 import NavBar from "@/components/costum/NavBar/NavBar";
 import {
   AreaDropdown,
@@ -9,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
 import { availabileTablesByRestaurant } from "@/types/restaurant";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 function BookATablePage() {
   const thisDay = new Date();
@@ -17,6 +18,7 @@ function BookATablePage() {
   const [availableTablesByRest, setavailableTablesByRest] = useState<
     availabileTablesByRestaurant[]
   >([]);
+  const [clickedId, setClickedId] = useState<number | null>(null); // State for clicked restaurant
 
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
@@ -26,6 +28,9 @@ function BookATablePage() {
       guests: 2,
       area: "Around you",
     });
+
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   const onDateChange = (newDate: Date) => {
     const dayName = newDate.toLocaleDateString("en-US", { weekday: "long" });
@@ -62,15 +67,12 @@ function BookATablePage() {
 
   const handleSearchSubmit = async () => {
     try {
-      // Parse the dateDayNumber and time
       const [day, month] = reservationInputData.dateDayNumber
         .split(" / ")
         .map(Number);
       const [hours, minutes] = reservationInputData.time.split(":").map(Number);
 
-      const year = new Date().getFullYear(); // Assuming the current year
-
-      // Manually format the date string without milliseconds and timezone
+      const year = new Date().getFullYear();
       const reservationDateString = `${year}-${String(month).padStart(
         2,
         "0"
@@ -79,7 +81,6 @@ function BookATablePage() {
         "0"
       )}:${String(minutes).padStart(2, "0")}`;
 
-      // Add the new property to reservationInputData
       const postInputData = {
         lat: 32.0661,
         lng: 34.7748,
@@ -87,21 +88,39 @@ function BookATablePage() {
         date: reservationDateString,
       };
 
-      // Send the updated reservation data
       const { data } = await api.post("/tables", postInputData);
-      console.log(data[0]);
       setavailableTablesByRest(data[0]);
+
+      // Example: Scroll to restaurant with restId = 5 after data is loaded
+      scrollToRestaurant(data[0][0].restId);
+      setClickedId(data[0][0].restId);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const scrollToRestaurant = (restId: number) => {
+    const targetIndex = availableTablesByRest.findIndex(
+      (restaurant) => restaurant.restId === restId
+    );
+
+    if (targetIndex !== -1 && listItemRefs.current[targetIndex]) {
+      listItemRefs.current[targetIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setClickedId(availableTablesByRest[targetIndex].restId);
+    }
+  };
+  function isClicked(restId: number) {
+    return clickedId == restId;
+  }
   return (
     <div title="page-wrapper" className="sm:h-screen flex flex-col">
       <NavBar />
       <div
         title="content-wrapper"
-        className="flex flex-col sm:flex-row sm:h-screen overflow-hidden"
+        className="flex flex-col sm:flex-row h-screen"
       >
         {/* Reserve a table section */}
         <div
@@ -154,6 +173,7 @@ function BookATablePage() {
               {availableTablesByRest.map((restaurant) => (
                 <li key={restaurant.rest_id}>
                   <RestaurantsListItem restaurant={restaurant} />
+
                 </li>
               ))}
               <li className="text-white py-5 h-full container">
@@ -170,7 +190,10 @@ function BookATablePage() {
           title="map section"
           className="hidden sm:block sm:flex-grow w-full"
         >
-          Im a MAP for Elad !!
+          <Map
+            restaurants={availableTablesByRest}
+            onClickFun={scrollToRestaurant}
+          />
         </div>
       </div>
     </div>
