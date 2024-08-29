@@ -1,40 +1,44 @@
-import RestaurantsListItem from "@/components/costum/CardsForRestaurants/RestaurantsListItem";
-import Map from "@/components/costum/Map/Map";
-import NavBar from "@/components/costum/NavBar/NavBar";
+import RestaurantsListItem from "@/components/custom/CardsForRestaurants/RestaurantsListItem";
+import Map from "@/components/custom/Map/Map";
+import NavBar from "@/components/custom/NavBar/NavBar";
 import {
   AreaDropdown,
   IReservationInput,
   ReservationSelector,
-} from "@/components/costum/ReservationSelector/ReservationSelector";
+} from "@/components/custom/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
+import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
 import { availabileTablesByRestaurant } from "@/types/restaurant";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function BookATablePage() {
-  const thisDay = new Date();
-
+  const currentDate = new Date();
   const [availableTablesByRest, setavailableTablesByRest] = useState<
     availabileTablesByRestaurant[]
   >([]);
   const [clickedId, setClickedId] = useState<number | null>(null); // State for clicked restaurant
-
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
-      dayName: thisDay.toLocaleDateString("en-US", { weekday: "long" }),
-      dateDayNumber: getFormattedDate(thisDay),
-      time: getFormattedTime(thisDay),
+      dayName: currentDate.toLocaleDateString("en-GB", { weekday: "long" }),
+      dateDayNumber: getFormattedDate(currentDate),
+      time: getFormattedTime(currentDate),
       guests: 2,
-      area: "Around you",
+      area: "Tel Aviv-Jaffa area",
     });
+  const { usersLocation } = useUserContext();
+
+  useEffect(() => {
+    handleSearchSubmit();
+  }, []);
 
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   const onDateChange = (newDate: Date) => {
-    const dayName = newDate.toLocaleDateString("en-US", { weekday: "long" });
-    const dayNumber = newDate.toLocaleDateString("en-US", {
+    const dayName = newDate.toLocaleDateString("en-GB", { weekday: "long" });
+    const dayNumber = newDate.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "2-digit",
     });
@@ -67,35 +71,84 @@ function BookATablePage() {
 
   const handleSearchSubmit = async () => {
     try {
+      // Validate date and time
+      if (!reservationInputData.dateDayNumber || !reservationInputData.time) {
+        throw new Error(
+          "Please provide both date and time for the reservation."
+        );
+      }
+
       const [day, month] = reservationInputData.dateDayNumber
-        .split(" / ")
+        .split("/")
         .map(Number);
       const [hours, minutes] = reservationInputData.time.split(":").map(Number);
 
-      const year = new Date().getFullYear();
-      const reservationDateString = `${year}-${String(month).padStart(
-        2,
-        "0"
-      )}-${String(day).padStart(2, "0")}T${String(hours).padStart(
-        2,
-        "0"
-      )}:${String(minutes).padStart(2, "0")}`;
+      if (isNaN(day) || isNaN(month) || isNaN(hours) || isNaN(minutes)) {
+        throw new Error("Invalid date or time format.");
+      }
 
-      const postInputData = {
+      const currentDate = new Date();
+      const reservationDate = new Date(
+        currentDate.getFullYear(),
+        month - 1,
+        day,
+        hours,
+        minutes
+      );
+
+      if (reservationDate < currentDate) {
+        throw new Error("Reservation date and time cannot be in the past.");
+      }
+
+      // Construct the reservation date string without milliseconds and "Z"
+      let reservationDateString = reservationDate.toISOString();
+      reservationDateString = reservationDateString.slice(0, -5); // Remove milliseconds and trailing "Z"
+
+      // Default post data
+      let postInputData = {
         lat: 32.0661,
         lng: 34.7748,
         partySize: reservationInputData.guests,
         date: reservationDateString,
       };
 
+      // Handle different areas
+      switch (reservationInputData.area) {
+        case "Around me":
+          if (usersLocation?.lat && usersLocation?.lng) {
+            postInputData.lat = usersLocation.lat;
+            postInputData.lng = usersLocation.lng;
+          } else {
+            throw new Error("User location is not available.");
+          }
+          break;
+
+        case "Tel Aviv-Jaffa area":
+          postInputData.lat = 32.0661;
+          postInputData.lng = 34.7748;
+          break;
+
+        // Add additional areas here if needed
+        default:
+          throw new Error("Selected area is not supported.");
+      }
+
+      // Make the API request
       const { data } = await api.post("/tables", postInputData);
+
+      if (data.length === 0) {
+        throw new Error("No tables available for the selected criteria.");
+      }
+
       setavailableTablesByRest(data[0]);
 
-      // Example: Scroll to restaurant with restId = 5 after data is loaded
+      // Scroll to the first available restaurant in the list
       scrollToRestaurant(data[0][0].restId);
       setClickedId(data[0][0].restId);
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      console.error(error);
+      // Provide user feedback on the error
+      alert(error.message || "An unexpected error occurred. Please try again.");
     }
   };
 
@@ -112,15 +165,16 @@ function BookATablePage() {
       setClickedId(availableTablesByRest[targetIndex].restId);
     }
   };
+
   function isClicked(restId: number) {
     return clickedId == restId;
   }
   return (
-    <div title="page-wrapper" className="sm:h-screen flex flex-col">
+    <div title="page-wrapper" className="h-screen flex flex-col">
       <NavBar />
       <div
         title="content-wrapper"
-        className="flex flex-col sm:flex-row h-screen"
+        className="h-full flex flex-col sm:flex-row overflow-hidden"
       >
         {/* Reserve a table section */}
         <div
@@ -167,17 +221,22 @@ function BookATablePage() {
         </div>
 
         {/* Rests list section */}
-        <div className="flex flex-col sm:w-[350px] lg:w-[450px] flex-shrink-0 dark:bg-greyNavbar">
+        <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
           {availableTablesByRest && availableTablesByRest.length > 0 ? (
-            <ul className="flex flex-col overflow-auto custom-scrollbar">
-              {availableTablesByRest.map((restaurant) => (
-                <li key={restaurant.rest_id}>
-                  <RestaurantsListItem restaurant={restaurant} />
-
+            <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
+              {availableTablesByRest.map((restaurant, index) => (
+                <li
+                  key={restaurant.restId}
+                  ref={(el) => (listItemRefs.current[index] = el)}
+                >
+                  <RestaurantsListItem
+                    restaurant={restaurant}
+                    isClicked={isClicked(restaurant.restId)}
+                  />
                 </li>
               ))}
-              <li className="text-white py-5 h-full container">
-                No more restaurants available...
+              <li className="dark:text-white min-h-20 h-full content-center text-center container">
+                No more results...
               </li>
             </ul>
           ) : (
@@ -186,10 +245,7 @@ function BookATablePage() {
         </div>
 
         {/* MAP section */}
-        <div
-          title="map section"
-          className="hidden sm:block sm:flex-grow w-full"
-        >
+        <div title="map section" className="hidden sm:block sm:flex-grow ">
           <Map
             restaurants={availableTablesByRest}
             onClickFun={scrollToRestaurant}

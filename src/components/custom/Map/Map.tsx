@@ -3,14 +3,15 @@ import { availabileTablesByRestaurant, IRestaurant } from "@/types/restaurant";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import { GoogleApi } from "../../../../config";
+
 interface IProps {
   restaurants: IRestaurant[] | availabileTablesByRestaurant[];
   onClickFun: (restId: number) => void;
 }
 
 const containerStyle = {
-  width: "100vw",
-  height: "100vh",
+  width: "",
+  height: "100%",
 };
 
 const libraries: "places"[] = ["places"];

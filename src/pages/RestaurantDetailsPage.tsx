@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
-import { AreaDropdown } from "../components/costum/ReservationSelector/ReservationSelector";
-import CalendarIcon from "@/components/costum/svg/CalendarIcon";
-import LockIcon from "@/components/costum/svg/LockIcon";
+import { AreaDropdown } from "../components/custom/ReservationSelector/ReservationSelector";
+import CalendarIcon from "@/components/custom/svg/CalendarIcon";
+import LockIcon from "@/components/custom/svg/LockIcon";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useParams } from "react-router";
-import BikeIcon from "@/components/costum/svg/BikeIcon";
-import Location from "@/components/costum/svg/Location";
-import CallIcon from "@/components/costum/svg/CallIcon";
-import OpenIcon from "@/components/costum/svg/OpenIcon";
-import BillIcon from "@/components/costum/svg/BillIcon";
+import BikeIcon from "@/components/custom/svg/BikeIcon";
+import Location from "@/components/custom/svg/Location";
+import CallIcon from "@/components/custom/svg/CallIcon";
+import OpenIcon from "@/components/custom/svg/OpenIcon";
+import BillIcon from "@/components/custom/svg/BillIcon";
 import { Link } from "react-router-dom";
 
 const RestaurantDetailsPage: React.FC = () => {
