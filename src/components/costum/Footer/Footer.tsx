@@ -38,9 +38,9 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer className=" text-black ">
-      <div className="container mx-auto bg-footerBg">
-        <div className="flex flex-col md:flex-row justify-between items-center md:items-start">
+    <footer className="text-black ">
+      <div className="container max-w-full m-0 bg-footerBg flex justify-center">
+        <div className="w-[75em] p-5 flex flex-col md:flex-row justify-between items-center md:items-start">
           <div className="mb-6 md:mb-0 text-center md:text-left">
             <h3 className="font-extrabold mb-2">Featured areas</h3>
             <ul>
@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="container  py-10 bg-black text-sm">
+      <div className=" py-10  bg-black text-sm">
         <div className="flex flex-col gap-2 items-center">
           <div className="flex gap-2">
             <span className="text-gray-500">v4.11.1</span>

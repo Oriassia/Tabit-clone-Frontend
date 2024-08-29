@@ -9,24 +9,24 @@ function NavBar() {
   const [isInputVisible, setInputVisible] = useState(false);
 
   return (
-    <div className="flex items-center justify-between px-5 bg-greyNavbar text-white h-16 shadow-md">
+    <div className="left-0 right-0 z-50 opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
       {/* Mobile View */}
-      <div className="flex items-center justify-between w-full sm:hidden">
+      <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
         {!isInputVisible ? (
           <>
             <SideMenu />
             <Link to={"/"}>
               <img
                 src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
-                className="w-20"
+                className="w-24"
               />
             </Link>
             <div className="flex gap-2 items-center">
               <div
-                className="p-[1px] rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+                className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
                 onClick={() => setInputVisible(true)}
               >
-                <MdSearch className="size-6 text-greenHamburger" />
+                <MdSearch className="size-5 text-greenHamburger" />
               </div>
               <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
             </div>
@@ -50,15 +50,15 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex items-center justify-between w-full">
+      <div className="hidden sm:flex items-center justify-between p-3 container shadow-2xl">
         <Link to={"/"}>
           <img
             src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
-            className="w-20"
+            className="w-32"
           />
         </Link>
 
-        <div className="flex justify-center gap-8 font-semibold text-sm">
+        <div className="flex justify-center gap-8 font-extrabold text-lg">
           <Link
             to={"/book-a-table"}
             className="hover:text-gray-300 transition duration-200"
@@ -108,10 +108,10 @@ function NavBar() {
           )}
           <div className="flex gap-2 items-center">
             <div
-              className="p-[1px] rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+              className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
               onClick={() => setInputVisible(true)}
             >
-              <MdSearch className="size-6 text-greenHamburger" />
+              <MdSearch className="size-5 text-greenHamburger" />
             </div>
             <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
           </div>
