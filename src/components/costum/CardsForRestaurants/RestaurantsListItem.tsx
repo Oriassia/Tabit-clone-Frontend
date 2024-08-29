@@ -8,6 +8,7 @@ interface RestaurantItemProps {
 
 function RestaurantsListItem({ restaurant, isClicked }: RestaurantItemProps) {
   return (
+
     <div
       className={`${
         !isClicked ? "dark:bg-greyNavbar" : "dark:bg-greySelectedRestaurant"
