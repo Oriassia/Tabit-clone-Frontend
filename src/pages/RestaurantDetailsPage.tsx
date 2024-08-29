@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { AreaDropdown } from "../components/costum/ReservationSelector/ReservationSelector";
-import CalendarIcon from "@/components/costum/svg/CalendarIcon";
-import LockIcon from "@/components/costum/svg/LockIcon";
+import { AreaDropdown } from "../components/custom/ReservationSelector/ReservationSelector";
+import CalendarIcon from "@/components/custom/svg/CalendarIcon";
+import LockIcon from "@/components/custom/svg/LockIcon";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useParams } from "react-router";
+
 import BikeIcon from "@/components/costum/svg/BikeIcon";
 // import Location from "@/components/costum/svg/Location";
 // import CallIcon from "@/components/costum/svg/CallIcon";
@@ -13,6 +14,7 @@ import BikeIcon from "@/components/costum/svg/BikeIcon";
 // import { Link } from "react-router-dom";
 // import OpeningHours from "@/components/costum/ComponentsForDetails/OpenHours";
 import RestaurantDetails from "@/components/costum/ComponentsForDetails/RestaurantDetails";
+
 
 const RestaurantDetailsPage: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
