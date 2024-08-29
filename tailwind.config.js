@@ -19,6 +19,7 @@ module.exports = {
     extend: {
       colors: {
         greyNavbar: "#303030",
+        greySelectedRestaurant: "#383838",
         greyBg: "#212121",
         greyDropDownMenu: "#424242",
         greyHoverDropDownMenu: "#595959",
