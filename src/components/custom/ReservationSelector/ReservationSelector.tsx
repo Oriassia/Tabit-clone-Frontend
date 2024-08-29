@@ -1,3 +1,4 @@
+import { useUserContext } from "@/context/UserContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -55,7 +56,7 @@ export function ReservationSelector({
 
     const isToday =
       reservationInputData.dateDayNumber ===
-      now.toLocaleDateString("en-US", {
+      now.toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "2-digit",
       });
@@ -85,8 +86,8 @@ export function ReservationSelector({
   }, [reservationInputData.dateDayNumber]);
 
   const formatDate = (date: Date) => {
-    const dayName = date.toLocaleDateString("en-US", { weekday: "long" });
-    const dayNumber = date.toLocaleDateString("en-US", {
+    const dayName = date.toLocaleDateString("en-GB", { weekday: "long" });
+    const dayNumber = date.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "2-digit",
     });
@@ -211,6 +212,8 @@ export function AreaDropdown({
   onAreaChange: (newArea: string) => void;
   onAddNewAddress: () => void;
 }) {
+  const { usersLocation } = useUserContext();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex items-center gap-2 pb-[2em]">
@@ -229,9 +232,12 @@ export function AreaDropdown({
           msOverflowStyle: "none", // Internet Explorer and Edge
         }}
       >
-        <DropdownMenuItem className="rounded-none select-none">
-          <DropdownMenuLabel className="text-gray-400 font-thin px-[0.6em] py-[0.7em] touch-none">
-            Actual location unavailable
+        <DropdownMenuItem
+          className="hover:bg-greyHoverDropDownMenu cursor-pointer px-[0.6em] py-[0.7em]"
+          onClick={() => onAreaChange("Around me")}
+        >
+          <DropdownMenuLabel className="font-thin">
+            {usersLocation ? "Around me" : "Actual location unavailable"}
           </DropdownMenuLabel>
         </DropdownMenuItem>
         {[

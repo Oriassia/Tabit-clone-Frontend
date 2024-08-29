@@ -1,36 +1,44 @@
-import RestaurantsListItem from "@/components/costum/CardsForRestaurants/RestaurantsListItem";
-import NavBar from "@/components/costum/NavBar/NavBar";
+import RestaurantsListItem from "@/components/custom/CardsForRestaurants/RestaurantsListItem";
+import Map from "@/components/custom/Map/Map";
+import NavBar from "@/components/custom/NavBar/NavBar";
 import {
   AreaDropdown,
   IReservationInput,
   ReservationSelector,
-} from "@/components/costum/ReservationSelector/ReservationSelector";
+} from "@/components/custom/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
 import { availabileTablesByRestaurant } from "@/types/restaurant";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 function BookATablePage() {
-  const thisDay = new Date();
-
+  const currentDate = new Date();
   const [availableTablesByRest, setavailableTablesByRest] = useState<
     availabileTablesByRestaurant[]
   >([]);
-
+  const [clickedId, setClickedId] = useState<number | null>(null); // State for clicked restaurant
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
-      dayName: thisDay.toLocaleDateString("en-US", { weekday: "long" }),
-      dateDayNumber: getFormattedDate(thisDay),
-      time: getFormattedTime(thisDay),
+      dayName: currentDate.toLocaleDateString("en-GB", { weekday: "long" }),
+      dateDayNumber: getFormattedDate(currentDate),
+      time: getFormattedTime(currentDate),
       guests: 2,
-      area: "Around you",
+      area: "Tel Aviv-Jaffa area",
     });
+  const { usersLocation } = useUserContext();
+
+  useEffect(() => {
+    handleSearchSubmit();
+  }, []);
+
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   const onDateChange = (newDate: Date) => {
-    const dayName = newDate.toLocaleDateString("en-US", { weekday: "long" });
-    const dayNumber = newDate.toLocaleDateString("en-US", {
+    const dayName = newDate.toLocaleDateString("en-GB", { weekday: "long" });
+    const dayNumber = newDate.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "2-digit",
     });
@@ -63,45 +71,114 @@ function BookATablePage() {
 
   const handleSearchSubmit = async () => {
     try {
-      // Parse the dateDayNumber and time
+      // Validate date and time
+      if (!reservationInputData.dateDayNumber || !reservationInputData.time) {
+        throw new Error(
+          "Please provide both date and time for the reservation."
+        );
+      }
+
       const [day, month] = reservationInputData.dateDayNumber
-        .split(" / ")
+        .split("/")
         .map(Number);
       const [hours, minutes] = reservationInputData.time.split(":").map(Number);
 
-      const year = new Date().getFullYear(); // Assuming the current year
+      if (isNaN(day) || isNaN(month) || isNaN(hours) || isNaN(minutes)) {
+        throw new Error("Invalid date or time format.");
+      }
 
-      // Manually format the date string without milliseconds and timezone
-      const reservationDateString = `${year}-${String(month).padStart(
-        2,
-        "0"
-      )}-${String(day).padStart(2, "0")}T${String(hours).padStart(
-        2,
-        "0"
-      )}:${String(minutes).padStart(2, "0")}`;
+      const currentDate = new Date();
+      const reservationDate = new Date(
+        currentDate.getFullYear(),
+        month - 1,
+        day,
+        hours,
+        minutes
+      );
 
-      // Add the new property to reservationInputData
-      const postInputData = {
+      if (reservationDate < currentDate) {
+        throw new Error("Reservation date and time cannot be in the past.");
+      }
+
+      // Construct the reservation date string without milliseconds and "Z"
+      let reservationDateString = reservationDate.toISOString();
+      reservationDateString = reservationDateString.slice(0, -5); // Remove milliseconds and trailing "Z"
+
+      // Default post data
+      let postInputData = {
         lat: 32.0661,
         lng: 34.7748,
         partySize: reservationInputData.guests,
         date: reservationDateString,
       };
 
-      // Send the updated reservation data
+      // Handle different areas
+      switch (reservationInputData.area) {
+        case "Around me":
+          if (usersLocation?.lat && usersLocation?.lng) {
+            postInputData.lat = usersLocation.lat;
+            postInputData.lng = usersLocation.lng;
+          } else {
+            throw new Error("User location is not available.");
+          }
+          break;
+
+        case "Tel Aviv-Jaffa area":
+          postInputData.lat = 32.0661;
+          postInputData.lng = 34.7748;
+          break;
+
+        // Add additional areas here if needed
+        default:
+          throw new Error("Selected area is not supported.");
+      }
+
+      // Make the API request
       const { data } = await api.post("/tables", postInputData);
-      console.log(data[0]);
+
+      if (data.length === 0) {
+        throw new Error("No tables available for the selected criteria.");
+      }
+
       setavailableTablesByRest(data[0]);
-    } catch (error) {
-      console.log(error);
+
+      // Scroll to the first available restaurant in the list
+      scrollToRestaurant(data[0][0].restId);
+      setClickedId(data[0][0].restId);
+    } catch (error: any) {
+      console.error(error);
+      // Provide user feedback on the error
+      alert(error.message || "An unexpected error occurred. Please try again.");
     }
   };
 
+  const scrollToRestaurant = (restId: number) => {
+    const targetIndex = availableTablesByRest.findIndex(
+      (restaurant) => restaurant.restId === restId
+    );
+
+    if (targetIndex !== -1 && listItemRefs.current[targetIndex]) {
+      listItemRefs.current[targetIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setClickedId(availableTablesByRest[targetIndex].restId);
+    }
+  };
+
+  function isClicked(restId: number) {
+    return clickedId == restId;
+  }
   return (
-    <div className="h-screen flex flex-col">
+    <div title="page-wrapper" className="h-screen flex flex-col">
       <NavBar />
-      <div title="page-wrapper" className="flex flex-col sm:flex-row h-full">
+      <div
+        title="content-wrapper"
+        className="h-full flex flex-col sm:flex-row overflow-hidden"
+      >
+        {/* Reserve a table section */}
         <div
+          title="reserve-a-table-section"
           className="flex flex-col text-center items-center justify-center px-12 bg-cover bg-center shadow-inner"
           style={{
             backgroundImage: `
@@ -143,29 +220,36 @@ function BookATablePage() {
           />
         </div>
 
-        <ScrollArea
-          aria-orientation="vertical"
-          title="restaurants-list-section"
-          className=" sm:w-[350px] lg:w-[450px] flex-shrink-0"
-        >
+        {/* Rests list section */}
+        <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
           {availableTablesByRest && availableTablesByRest.length > 0 ? (
-            <ul className="h-5 bg-red-500">
-              {availableTablesByRest.map((restaurant) => (
-                <li key={restaurant.rest_id}>
-                  <RestaurantsListItem restaurant={restaurant} />
+            <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
+              {availableTablesByRest.map((restaurant, index) => (
+                <li
+                  key={restaurant.restId}
+                  ref={(el) => (listItemRefs.current[index] = el)}
+                >
+                  <RestaurantsListItem
+                    restaurant={restaurant}
+                    isClicked={isClicked(restaurant.restId)}
+                  />
                 </li>
               ))}
+              <li className="dark:text-white min-h-20 h-full content-center text-center container">
+                No more results...
+              </li>
             </ul>
           ) : (
             <div className="text-center py-4">No restaurants available</div>
           )}
-        </ScrollArea>
+        </div>
 
-        <div
-          title="map section"
-          className="hidden sm:block sm:flex-grow w-full"
-        >
-          Im a MAP for Elad !!
+        {/* MAP section */}
+        <div title="map section" className="hidden sm:block sm:flex-grow ">
+          <Map
+            restaurants={availableTablesByRest}
+            onClickFun={scrollToRestaurant}
+          />
         </div>
       </div>
     </div>

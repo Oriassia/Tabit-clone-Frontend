@@ -64,7 +64,10 @@
 //   instagram?: string;
 //   facebook?: string;
 // }
-
+export interface ILocation {
+  lat: number;
+  lng: number;
+}
 export interface IRestaurant {
   restId: number;
   name: string;
@@ -159,7 +162,9 @@ export interface availabileTablesByRestaurant {
     available: number;
   };
   rest_address: string;
-  rest_id: number;
+  restId: number;
+  lat: number;
+  lng: number;
   rest_name: string;
   restaurant_mainphoto: string;
 }

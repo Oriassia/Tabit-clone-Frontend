@@ -3,11 +3,16 @@ import { availabileTablesByRestaurant } from "@/types/restaurant";
 
 interface RestaurantItemProps {
   restaurant: availabileTablesByRestaurant;
+  isClicked: boolean;
 }
 
-function RestaurantsListItem({ restaurant }: RestaurantItemProps) {
+function RestaurantsListItem({ restaurant, isClicked }: RestaurantItemProps) {
   return (
-    <div className="dark:bg-greyNavbar border-b border-slate-600 flex gap-4 py-5 px-4">
+    <div
+      className={`${
+        isClicked ? "dark:bg-greySelectedRestaurant" : ""
+      } border-b border-slate-600 flex gap-3 py-4 px-4`}
+    >
       <img
         src={restaurant.restaurant_mainphoto}
         alt={restaurant.rest_name}
@@ -22,7 +27,7 @@ function RestaurantsListItem({ restaurant }: RestaurantItemProps) {
           {["Hour 1", "Hour 2", "Hour 3"].map((hour, index) => (
             <Button
               key={index}
-              className="dark:bg-greenReservationActive font-normal w-15 h-9 rounded-[4px]"
+              className="dark:bg-greenReservationActive font-normal w-16 h-9 rounded-[4px]"
             >
               {hour}
             </Button>

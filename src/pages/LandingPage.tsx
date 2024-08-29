@@ -1,13 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import GiftCard from "@/components/costum/CardsForRestaurants/GiftCard";
-import ShowMore from "@/components/costum/CardsForRestaurants/ShowMore";
-import RestaurantCard from "@/components/costum/CardsForRestaurants/RestaurantCard";
+import GiftCard from "@/components/custom/CardsForRestaurants/GiftCard";
+import ShowMore from "@/components/custom/CardsForRestaurants/ShowMore";
+import RestaurantCard from "@/components/custom/CardsForRestaurants/RestaurantCard";
 import {
   ReservationSelector,
   AreaDropdown,
   IReservationInput,
-} from "@/components/costum/ReservationSelector/ReservationSelector";
+} from "@/components/custom/ReservationSelector/ReservationSelector";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 
@@ -38,8 +38,8 @@ function LandingPage() {
 
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
-      dayName: new Date().toLocaleDateString("en-US", { weekday: "long" }),
-      dateDayNumber: new Date().toLocaleDateString("en-US", {
+      dayName: new Date().toLocaleDateString("en-GB", { weekday: "long" }),
+      dateDayNumber: new Date().toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "2-digit",
       }),
@@ -49,8 +49,8 @@ function LandingPage() {
     });
 
   const onDateChange = (newDate: Date) => {
-    const dayName = newDate.toLocaleDateString("en-US", { weekday: "long" });
-    const dayNumber = newDate.toLocaleDateString("en-US", {
+    const dayName = newDate.toLocaleDateString("en-GB", { weekday: "long" });
+    const dayNumber = newDate.toLocaleDateString("en-GB", {
       day: "2-digit",
       month: "2-digit",
     });
