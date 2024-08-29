@@ -2,7 +2,7 @@ import { useUserContext } from "@/context/UserContext";
 import { availabileTablesByRestaurant, IRestaurant } from "@/types/restaurant";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
-
+import { GoogleApi } from "../../../../config";
 interface IProps {
   restaurants: IRestaurant[] | availabileTablesByRestaurant[];
   onClickFun: (restId: number) => void;
@@ -20,7 +20,7 @@ function Map({ restaurants, onClickFun }: IProps) {
 
   const [clickedId, setClickedId] = useState<number | null>(null);
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyDwY1nKLe_qB7XyA6_8uBsBkOG_uNdtxgg", // Replace with your actual Google Maps API key
+    googleMapsApiKey: GoogleApi, // Replace with your actual Google Maps API key
     libraries,
   });
 

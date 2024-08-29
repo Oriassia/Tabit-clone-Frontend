@@ -7,8 +7,6 @@ interface RestaurantItemProps {
 }
 
 function RestaurantsListItem({ restaurant, isClicked }: RestaurantItemProps) {
-  console.log(isClicked);
-
   return (
     <div
       className={`${

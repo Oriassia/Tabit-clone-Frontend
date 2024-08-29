@@ -114,8 +114,6 @@ function BookATablePage() {
     }
   };
   function isClicked(restId: number) {
-    console.log(clickedId);
-
     return clickedId == restId;
   }
   return (
