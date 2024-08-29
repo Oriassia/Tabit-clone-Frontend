@@ -6,11 +6,13 @@ import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useParams } from "react-router";
 import BikeIcon from "@/components/costum/svg/BikeIcon";
-import Location from "@/components/costum/svg/Location";
-import CallIcon from "@/components/costum/svg/CallIcon";
-import OpenIcon from "@/components/costum/svg/OpenIcon";
-import BillIcon from "@/components/costum/svg/BillIcon";
-import { Link } from "react-router-dom";
+// import Location from "@/components/costum/svg/Location";
+// import CallIcon from "@/components/costum/svg/CallIcon";
+// import OpenIcon from "@/components/costum/svg/OpenIcon";
+// import BillIcon from "@/components/costum/svg/BillIcon";
+// import { Link } from "react-router-dom";
+// import OpeningHours from "@/components/costum/ComponentsForDetails/OpenHours";
+import RestaurantDetails from "@/components/costum/ComponentsForDetails/RestaurantDetails";
 
 const RestaurantDetailsPage: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
@@ -153,30 +155,14 @@ const RestaurantDetailsPage: React.FC = () => {
 
             {/* Contact and Info */}
 
-            <div className="flex flex-col space-y-4 px-5">
-              <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
-                <Location />
-                <span>דרך רפאל איתן 1, קריית אונו</span>
-              </div>
-              <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
-                <CallIcon />
-                <span>03-750-1111</span>
-              </div>
-              <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
-                <OpenIcon />
-                <span>Open</span>
-                <span className="ml-2">12:00 - 23:30</span>
-              </div>
-              <div className="flex items-center gap-6">
-                <BillIcon />
-                <Link
-                  to={`${restaurant?.website}`}
-                  className="text-greenButton"
-                >
-                  Website
-                </Link>
-              </div>
-            </div>
+            {/* Contact and Info */}
+            {loading ? (
+              <div>Loading...</div>
+            ) : error ? (
+              <div>{error}</div>
+            ) : (
+              restaurant && <RestaurantDetails restaurant={restaurant} />
+            )}
           </div>
         </div>
       </div>
