@@ -50,7 +50,9 @@ const RestaurantDetailsPage: React.FC = () => {
         console.error("Failed to fetch restaurant data");
         return null;
       }
-      return response.data;
+      console.log(response.data[0]);
+
+      return response.data[0];
     } catch (error) {
       console.error("Failed to fetch restaurant:", error);
       return null;
@@ -152,8 +154,6 @@ const RestaurantDetailsPage: React.FC = () => {
                 />
               </div>
             </div>
-
-            {/* Contact and Info */}
 
             {/* Contact and Info */}
             {loading ? (
