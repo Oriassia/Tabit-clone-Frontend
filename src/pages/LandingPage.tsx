@@ -81,12 +81,12 @@ function LandingPage() {
     <>
       {/*RESERVATION PART*/}
       <section
-        className="relative flex flex-col items-center py-[3em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner"
+        className="relative flex flex-col items-center pt-[6em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner "
         style={{
           backgroundImage: `
           linear-gradient(to bottom, 
             rgba(0, 0, 0, 0.7), 
-            rgba(0, 0, 0, 0.5) 60%, 
+            rgba(0, 0, 0, 0.5) 70%, 
             rgba(0, 200, 200, 1) 100%
           ),
           url('https://tabitisrael.co.il/assets/images/dashboard-desktop.jpg?v=4_11_1')

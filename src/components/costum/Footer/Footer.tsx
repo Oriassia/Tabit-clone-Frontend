@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className=" py-10 bg-black text-sm">
+      <div className=" py-10  bg-black text-sm">
         <div className="flex flex-col gap-2 items-center">
           <div className="flex gap-2">
             <span className="text-gray-500">v4.11.1</span>
