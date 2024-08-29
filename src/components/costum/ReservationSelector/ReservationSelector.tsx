@@ -52,11 +52,7 @@ export function ReservationSelector({
     // Generate time options based on selected date
     const times: string[] = [];
     const now = new Date();
-    const selectedDate = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate()
-    );
+
     const isToday =
       reservationInputData.dateDayNumber ===
       now.toLocaleDateString("en-US", {
