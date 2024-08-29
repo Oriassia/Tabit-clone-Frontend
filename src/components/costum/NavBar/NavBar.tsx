@@ -9,9 +9,9 @@ function NavBar() {
   const [isInputVisible, setInputVisible] = useState(false);
 
   return (
-    <div className="opacity-90 font-rubik w-full  flex items-center justify-between bg-greyNavbar text-white ">
+    <div className="fixed top-0 left-0 right-0 z-50 opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
       {/* Mobile View */}
-      <div className="flex items-center justify-between p-5 sm:hidden ">
+      <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
         {!isInputVisible ? (
           <>
             <SideMenu />
@@ -50,7 +50,7 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex items-center justify-between p-5 container">
+      <div className="hidden sm:flex items-center justify-between p-3 container shadow-2xl">
         <Link to={"/"}>
           <img
             src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"

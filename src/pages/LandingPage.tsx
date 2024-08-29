@@ -31,12 +31,6 @@ function LandingPage() {
     return date.toTimeString().slice(0, 5);
   };
 
-  const getNextHourTime = () => {
-    const now = new Date();
-    now.setHours(now.getHours() + 1);
-    return getRoundedTime(now);
-  };
-
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
       dayName: new Date().toLocaleDateString("en-US", { weekday: "long" }),
