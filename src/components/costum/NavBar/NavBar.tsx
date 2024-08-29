@@ -9,7 +9,7 @@ function NavBar() {
   const [isInputVisible, setInputVisible] = useState(false);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
+    <div className="left-0 right-0 z-50 opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
       {/* Mobile View */}
       <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
         {!isInputVisible ? (

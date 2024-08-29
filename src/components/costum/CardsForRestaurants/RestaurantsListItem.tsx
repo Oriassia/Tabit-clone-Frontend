@@ -1,21 +1,23 @@
 import { Button } from "@/components/ui/button";
-import { IRestaurant } from "@/types/restaurant";
+import { availabileTablesByRestaurant } from "@/types/restaurant";
 
-interface RestaurantCardProps {
-  restaurant: IRestaurant;
+interface RestaurantItemProps {
+  restaurant: availabileTablesByRestaurant;
 }
 
-function RestaurantsListItem({ restaurant }: RestaurantCardProps) {
+function RestaurantsListItem({ restaurant }: RestaurantItemProps) {
   return (
     <div className="dark:bg-greyNavbar border-b border-slate-600 flex gap-4 py-5 px-4">
       <img
-        src={restaurant.mainPhoto}
-        alt={restaurant.name}
+        src={restaurant.restaurant_mainphoto}
+        alt={restaurant.rest_name}
         className="rounded-md max-h-14 w-14 object-cover"
       />
       <div className="font-rubik font-normal flex flex-col gap-1">
-        <div className="text-xl font-medium text-white">{restaurant.name}</div>
-        <div className="text-slate-300">{restaurant.address}</div>
+        <div className="text-xl font-medium text-white">
+          {restaurant.rest_name}
+        </div>
+        <div className="text-slate-300">{restaurant.rest_address}</div>
         <div className="flex gap-1">
           {["Hour 1", "Hour 2", "Hour 3"].map((hour, index) => (
             <Button
