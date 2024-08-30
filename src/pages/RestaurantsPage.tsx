@@ -2,12 +2,12 @@ import RestaurantsListItem from "@/components/custom/CardsForRestaurants/Restaur
 import Map from "@/components/custom/Map/Map";
 import NavBar from "@/components/custom/NavBar/NavBar";
 import { AreaDropdown } from "@/components/custom/ReservationSelector/ReservationSelector";
-import ReservationSelectorForRestsPage from "@/components/custom/ReservationSelector/ReservationSelectorForRestsPage";
+import TagsSelector from "@/components/custom/ReservationSelector/TagsSelector";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
 import { IRestaurant } from "@/types/restaurant";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface IInputData {
   category: string;
@@ -26,8 +26,12 @@ function RestaurantsPage() {
     area: "Tel Aviv-Jaffa area",
   });
 
-  const handleCategoryChange = (newSize: number) => {
-    setRestaurants((prev) => ({ ...prev, guests: newSize }));
+  useEffect(() => {
+    handleSearchSubmit();
+  }, []);
+
+  const handleCategoryChange = (newCat: string) => {
+    setInputData((prev) => ({ ...prev, category: newCat }));
   };
 
   const handleAreaChange = (newArea: string) => {
@@ -96,11 +100,13 @@ function RestaurantsPage() {
         throw new Error("No tables available for the selected criteria.");
       }
 
-      setRestaurants(data[0]);
+      // console.log(data);
+
+      setRestaurants(data);
 
       // Scroll to the first available restaurant in the list
-      scrollToRestaurant(data[0][0].restId);
-      setClickedId(data[0][0].restId);
+      scrollToRestaurant(data[0].restId);
+      setClickedId(data[0].restId);
     } catch (error: any) {
       console.error(error);
       // Provide user feedback on the error
@@ -113,7 +119,7 @@ function RestaurantsPage() {
       <NavBar />
       <div
         title="content-wrapper"
-        className="h-full flex flex-col sm:flex-row overflow-hidden"
+        className="h-full flex flex-col sm:flex-row sm:overflow-hidden"
       >
         {/* Reserve a table section */}
         <div
@@ -138,7 +144,7 @@ function RestaurantsPage() {
             Just say when and which restaurant, and the rest is on us
           </p>
 
-          <ReservationSelectorForRestsPage
+          <TagsSelector
             InputData={InputData}
             handleCategoryChange={handleCategoryChange}
           />

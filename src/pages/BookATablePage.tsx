@@ -174,7 +174,7 @@ function BookATablePage() {
       <NavBar />
       <div
         title="content-wrapper"
-        className="h-full flex flex-col sm:flex-row overflow-hidden"
+        className="h-full flex flex-col sm:flex-row sm:overflow-hidden"
       >
         {/* Reserve a table section */}
         <div
