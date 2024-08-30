@@ -57,12 +57,12 @@ function BookATablePage() {
     }));
   };
 
-  const handleAreaChange = (newArea: string) => {
-    setReservationInputData((prev) => ({ ...prev, area: newArea }));
-  };
-
   const handlePartySizeChange = (newSize: number) => {
     setReservationInputData((prev) => ({ ...prev, guests: newSize }));
+  };
+
+  const handleAreaChange = (newArea: string) => {
+    setReservationInputData((prev) => ({ ...prev, area: newArea }));
   };
 
   const handleAddNewAddress = () => {
@@ -224,14 +224,14 @@ function BookATablePage() {
         <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
           {availableTablesByRest && availableTablesByRest.length > 0 ? (
             <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
-              {availableTablesByRest.map((restaurant, index) => (
+              {availableTablesByRest.map((restWithTables, index) => (
                 <li
-                  key={restaurant.restId}
+                  key={restWithTables.restId}
                   ref={(el) => (listItemRefs.current[index] = el)}
                 >
                   <RestaurantsListItem
-                    restaurant={restaurant}
-                    isClicked={isClicked(restaurant.restId)}
+                    restWithTables={restWithTables}
+                    isClicked={isClicked(restWithTables.restId)}
                   />
                 </li>
               ))}
