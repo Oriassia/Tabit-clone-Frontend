@@ -15,7 +15,6 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<LandingPage />} />
           <Route path="deliveries" element={<DeliveriesPage />} />
-          <Route path="restaurants" element={<RestaurantsPage />} />
           <Route path="gift-it" element={<GiftItPage />} />
           <Route
             path="restaurants/:restaurantId"
@@ -23,13 +22,11 @@ function App() {
           />
         </Route>
 
-        {/* routes WITH navbar ONLY */}
+        {/* routes WITHOUT navbar & footer */}
         <Route path="/" element={<Outlet />}>
           <Route path="book-a-table" element={<BookATablePage />} />
+          <Route path="restaurants" element={<RestaurantsPage />} />
         </Route>
-
-        {/* routes WITHOUT navbar & footer */}
-        {/* <Route path="/" element={<Outlet />}></Route> */}
       </Routes>
     </>
   );

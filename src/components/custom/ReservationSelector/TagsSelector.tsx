@@ -6,15 +6,12 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 
-interface ReservationSelectorProps {
+interface TagsSelectorProps {
   InputData: IInputData;
-  handleCategoryChange: (newSize: number) => void;
+  handleCategoryChange: (newSize: string) => void;
 }
 
-function ReservationSelectorForRestsPage({
-  InputData,
-  handleCategoryChange,
-}: ReservationSelectorProps) {
+function TagsSelector({ InputData, handleCategoryChange }: TagsSelectorProps) {
   return (
     <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
       {/* category Selection */}
@@ -34,17 +31,17 @@ function ReservationSelectorForRestsPage({
             <DropdownMenuItem className="rounded-none font-bold px-4 py-0 pb-4 select-none">
               How Many Guests?
             </DropdownMenuItem>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((guestNum) => (
+            {["italian", "meat", "kosher", "vegeterian"].map((category) => (
               <DropdownMenuItem
-                key={guestNum}
+                key={category}
                 className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
-                  guestNum === InputData.guests
+                  category === InputData.category
                     ? "bg-greyHoverDropDownMenu"
                     : ""
                 }`}
-                onClick={() => handleCategoryChange(guestNum)}
+                onClick={() => handleCategoryChange(category)}
               >
-                <p>{guestNum}</p>
+                <p>{category}</p>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
@@ -54,4 +51,4 @@ function ReservationSelectorForRestsPage({
   );
 }
 
-export default ReservationSelectorForRestsPage;
+export default TagsSelector;
