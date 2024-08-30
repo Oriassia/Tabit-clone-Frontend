@@ -2,11 +2,17 @@ import RestaurantsListItem from "@/components/custom/CardsForRestaurants/Restaur
 import Map from "@/components/custom/Map/Map";
 import NavBar from "@/components/custom/NavBar/NavBar";
 import { AreaDropdown } from "@/components/custom/ReservationSelector/ReservationSelector";
+import ReservationSelectorForRestsPage from "@/components/custom/ReservationSelector/ReservationSelectorForRestsPage";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
 import { IRestaurant } from "@/types/restaurant";
 import { useRef, useState } from "react";
+
+export interface IInputData {
+  category: string;
+  area: string;
+}
 
 function RestaurantsPage() {
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
@@ -19,6 +25,18 @@ function RestaurantsPage() {
     category: "Tags",
     area: "Tel Aviv-Jaffa area",
   });
+
+  const handleCategoryChange = (newSize: number) => {
+    setRestaurants((prev) => ({ ...prev, guests: newSize }));
+  };
+
+  const handleAreaChange = (newArea: string) => {
+    setInputData((prev) => ({ ...prev, area: newArea }));
+  };
+
+  const handleAddNewAddress = () => {
+    console.log("Add a new address clicked");
+  };
 
   const scrollToRestaurant = (restId: number) => {
     const targetIndex = restaurants.findIndex(
@@ -72,7 +90,7 @@ function RestaurantsPage() {
       }
 
       // Make the API request
-      const { data } = await api.post("/tables", postInputData);
+      const { data } = await api.get("/restaurants");
 
       if (data.length === 0) {
         throw new Error("No tables available for the selected criteria.");
@@ -120,12 +138,10 @@ function RestaurantsPage() {
             Just say when and which restaurant, and the rest is on us
           </p>
 
-          {/* <ReservationSelector
-            reservationInputData={reservationInputData}
-            onPartySizeChange={handlePartySizeChange}
-            onDateChange={onDateChange}
-            onTimeChange={onTimeChange}
-          /> */}
+          <ReservationSelectorForRestsPage
+            InputData={InputData}
+            handleCategoryChange={handleCategoryChange}
+          />
 
           <Button
             onClick={handleSearchSubmit}
@@ -167,10 +183,7 @@ function RestaurantsPage() {
 
         {/* MAP section */}
         <div title="map section" className="hidden sm:block sm:flex-grow ">
-          <Map
-            restaurants={availableTablesByRest}
-            onClickFun={scrollToRestaurant}
-          />
+          <Map restaurants={restaurants} onClickFun={scrollToRestaurant} />
         </div>
       </div>
     </div>
