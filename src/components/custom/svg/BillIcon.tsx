@@ -3,7 +3,7 @@ import React from "react";
 const BillIcon: React.FC = () => {
   return (
     <svg
-      className="w-[8%] h-[8%] lg:w-[40%] lg:h-[40%]"
+      className="w-[20%] h-[20%] lg:w-[40%] lg:h-[40%]"
       viewBox="0 0 18 20"
       version="1.1"
       xmlns="http://www.w3.org/2000/svg"
