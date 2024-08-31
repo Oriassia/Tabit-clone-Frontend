@@ -12,6 +12,22 @@ interface TagsSelectorProps {
 }
 
 function TagsSelector({ InputData, handleCategoryChange }: TagsSelectorProps) {
+  const categories = [
+    "Middle Eastern",
+    "Bar",
+    "Mediterranean",
+    "Hotel",
+    "Restaurant",
+    "Grill",
+    "Seafood",
+    "Greek",
+    "French",
+    "Bistro",
+    "Contemporary",
+    "Fusion",
+    "Asian",
+  ];
+
   return (
     <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
       {/* category Selection */}
@@ -31,7 +47,7 @@ function TagsSelector({ InputData, handleCategoryChange }: TagsSelectorProps) {
             <DropdownMenuItem className="rounded-none font-bold px-4 py-0 pb-4 select-none">
               How Many Guests?
             </DropdownMenuItem>
-            {["italian", "meat", "kosher", "vegeterian"].map((category) => (
+            {categories.map((category) => (
               <DropdownMenuItem
                 key={category}
                 className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
