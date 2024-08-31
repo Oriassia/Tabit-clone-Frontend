@@ -43,3 +43,20 @@ export const getFormattedTime = (date: Date) => {
     .toString()
     .padStart(2, "0")}`;
 };
+
+export function calculateTimeSlots(searchedTime: string): string[] {
+  const [hours, minutes] = searchedTime.split(":").map(Number);
+
+  const createDateTime = (h: number, m: number) =>
+    new Date().setHours(h, m, 0, 0);
+
+  const searchedDateTime = createDateTime(hours, minutes);
+  const beforeTime = new Date(searchedDateTime).setMinutes(minutes - 30);
+  const afterTime = new Date(searchedDateTime).setMinutes(minutes + 30);
+
+  return [
+    new Date(beforeTime).toTimeString().slice(0, 5),
+    searchedTime,
+    new Date(afterTime).toTimeString().slice(0, 5),
+  ];
+}

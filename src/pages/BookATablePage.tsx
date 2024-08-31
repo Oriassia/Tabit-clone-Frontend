@@ -10,13 +10,13 @@ import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
-import { availabileTablesByRestaurant } from "@/types/restaurant";
+import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 
 function BookATablePage() {
   const currentDate = new Date();
   const [availableTablesByRest, setavailableTablesByRest] = useState<
-    availabileTablesByRestaurant[]
+    AvailableTablesByRestaurant[]
   >([]);
   const [clickedId, setClickedId] = useState<number | null>(null); // State for clicked restaurant
   const [reservationInputData, setReservationInputData] =
@@ -180,18 +180,7 @@ function BookATablePage() {
         {/* Reserve a table section */}
         <div
           title="reserve-a-table-section"
-          className="flex flex-col text-center items-center justify-center px-12 bg-cover bg-center shadow-inner"
-          style={{
-            backgroundImage: `
-              linear-gradient(to bottom, 
-              rgba(0, 0, 0, 0.7), 
-              rgba(0, 0, 0, 0.5) 60%, 
-              rgba(0, 0, 0, 0.3) 100%
-              ),
-              url('https://tabitisrael.co.il/assets/images/dashboard-desktop.jpg?v=4_11_1')
-            `,
-            boxShadow: "inset 0 0 1rem #000",
-          }}
+          className="flex flex-col text-center items-center justify-center px-12 bg-cover bg-center shadow-inner reserve-section"
         >
           <h1 className="lg:text-[3.55em] text-[2.7em] text-white font-rubik font-normal pt-14">
             Reserve a table!
