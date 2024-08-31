@@ -28,6 +28,7 @@ function BookATablePage() {
       area: "Tel Aviv-Jaffa area",
     });
   const { usersLocation } = useUserContext();
+  const [searchedTime, setSearchedTime] = useState("");
 
   useEffect(() => {
     handleSearchSubmit();
@@ -140,8 +141,8 @@ function BookATablePage() {
         throw new Error("No tables available for the selected criteria.");
       }
 
+      setSearchedTime(reservationInputData.time);
       setavailableTablesByRest(data[0]);
-
       // Scroll to the first available restaurant in the list
       scrollToRestaurant(data[0][0].restId);
       setClickedId(data[0][0].restId);
@@ -232,6 +233,7 @@ function BookATablePage() {
                   <RestaurantsListItem
                     restWithTables={restWithTables}
                     isClicked={isClicked(restWithTables.restId)}
+                    searchedTime={searchedTime}
                   />
                 </li>
               ))}
