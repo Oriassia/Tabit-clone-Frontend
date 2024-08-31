@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import Location from "../svg/Location";
 import CallIcon from "../svg/CallIcon";
 import BillIcon from "../svg/BillIcon";
+
 import OpenHours from "./OpenHour";
 import { IRestaurant } from "../../../types/restaurant";
 import InstagramIcon from "../svg/InstagramIcon";
 import FacebookIcon from "../svg/FacebookIcon";
+
 
 interface RestaurantDetailsProps {
   restaurant: IRestaurant;
@@ -32,6 +34,7 @@ const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
       </div>
       {/* Pass the restaurant prop to OpeningHours */}
       <OpenHours restaurant={restaurant} />
+
       <div className="flex items-center">
         <div className="flex items-center gap-6">
           <BillIcon />

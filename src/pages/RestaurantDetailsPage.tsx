@@ -6,8 +6,10 @@ import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useParams } from "react-router";
 
+
 import BikeIcon from "../components/custom/svg/BikeIcon";
 import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
+
 
 const RestaurantDetailsPage: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
