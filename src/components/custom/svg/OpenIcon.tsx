@@ -7,7 +7,7 @@ const OpenIcon: React.FC = () => {
       data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 21.5 21.5"
-      className="w-[8%] h-[8%] lg:w-[40%] lg:h-[40%]"
+      className="w-[10%] h-[10%] lg:w-[40%] lg:h-[40%]"
       preserveAspectRatio="xMidYMid meet"
       focusable="false"
     >

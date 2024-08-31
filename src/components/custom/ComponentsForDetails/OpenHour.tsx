@@ -48,30 +48,46 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
   };
 
   return (
-    <div className="border-b border-greyBorder pb-3">
+    <div className="border-b border-greyBorder font-rubik font-normal pb-3 ">
       <div
-        className="flex items-center gap-6 cursor-pointer"
+        className="flex  items-center text-[1em] cursor-pointer"
         onClick={toggleOpen}
       >
-        <OpenIcon />
-        <span>{currentlyOpen ? "Open" : "Closed"}</span>
-        <span className="ml-2">{todayHours}</span>
+        <div className="flex items-center w-fit gap-6">
+          <OpenIcon />
+          <span className="text-[1em]">
+            {currentlyOpen ? "Open" : "Closed"}
+          </span>
+        </div>
+        <span className="flex-grow w-fit text-right ">{todayHours}</span>
       </div>
       {isOpen && (
         <div className="mt-3">
-          <div className="flex gap-[5em]">
+          <div className="flex w-full">
             {/* Столбец с днями недели */}
-            <div className="flex flex-col">
+            <div className="flex flex-col text-[0.8em]">
               {restaurant.openingHours.map((hours, index) => (
-                <span key={index}>
+                <span
+                  key={index}
+                  className={`px-1 pr-[7em] py-1 ${
+                    index % 2 === 0 ? "bg-greyDarkBg" : "bg-greyBg"
+                  }`}
+                >
                   {capitalizeFirstLetter(Object.keys(hours)[0])}
                 </span>
               ))}
             </div>
             {/* Столбец с часами работы */}
-            <div className="flex flex-col">
+            <div className="flex flex-col flex-grow text-[0.8em]">
               {restaurant.openingHours.map((hours, index) => (
-                <span key={index}>{Object.values(hours)[0] || "Closed"}</span>
+                <span
+                  key={index}
+                  className={`px-1 py-1 ${
+                    index % 2 === 0 ? "bg-greyDarkBg" : "bg-greyBg"
+                  } w-full`}
+                >
+                  {Object.values(hours)[0] || "Closed"}
+                </span>
               ))}
             </div>
           </div>

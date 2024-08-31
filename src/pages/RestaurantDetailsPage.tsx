@@ -6,15 +6,8 @@ import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useParams } from "react-router";
 
-import BikeIcon from "@/components/costum/svg/BikeIcon";
-// import Location from "@/components/costum/svg/Location";
-// import CallIcon from "@/components/costum/svg/CallIcon";
-// import OpenIcon from "@/components/costum/svg/OpenIcon";
-// import BillIcon from "@/components/costum/svg/BillIcon";
-// import { Link } from "react-router-dom";
-// import OpeningHours from "@/components/costum/ComponentsForDetails/OpenHours";
-import RestaurantDetails from "@/components/costum/ComponentsForDetails/RestaurantDetails";
-
+import BikeIcon from "../components/custom/svg/BikeIcon";
+import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
 
 const RestaurantDetailsPage: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();

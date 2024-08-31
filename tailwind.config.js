@@ -21,6 +21,7 @@ module.exports = {
         greyNavbar: "#303030",
         greySelectedRestaurant: "#383838",
         greyBg: "#212121",
+        greyDarkBg: "#1f1f1f",
         greyDropDownMenu: "#424242",
         greyHoverDropDownMenu: "#595959",
         greyBorder: "#404040",
