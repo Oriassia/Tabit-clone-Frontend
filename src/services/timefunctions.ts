@@ -10,9 +10,7 @@ export const getFormattedDate = (date: Date) => {
     date.setDate(date.getDate() + 1);
   }
 
-  return `${date.getDate().toString().padStart(2, "0")} / ${(
-    date.getMonth() + 1
-  )
+  return `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1)
     .toString()
     .padStart(2, "0")}`;
 };
@@ -59,4 +57,50 @@ export function calculateTimeSlots(searchedTime: string): string[] {
     searchedTime,
     new Date(afterTime).toTimeString().slice(0, 5),
   ];
+}
+
+export const formatDate = (date: Date) => {
+  const dayName = date.toLocaleDateString("en-GB", { weekday: "long" });
+  const dayNumber = date.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+
+  return { dayName, dayNumber };
+};
+
+export function getAvailableTimes(dateDayNumber: string | null) {
+  // Generate time options based on selected date
+  const times: string[] = [];
+  const now = new Date();
+
+  const isToday =
+    dateDayNumber ===
+    now.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+  let startHour = 8;
+  let startMinute = 0;
+
+  if (isToday && now.getHours() >= 8) {
+    // Start time should be one hour ahead of the current time
+    const nextAvailableTime = new Date(now.getTime() + 60 * 60 * 1000);
+    startHour = nextAvailableTime.getHours();
+    startMinute = nextAvailableTime.getMinutes() < 30 ? 30 : 0;
+  }
+
+  for (let hour = startHour; hour <= 23; hour++) {
+    for (let minute = startMinute; minute < 60; minute += 30) {
+      times.push(
+        `${hour.toString().padStart(2, "0")}:${minute
+          .toString()
+          .padStart(2, "0")}`
+      );
+    }
+    startMinute = 0; // Reset startMinute after the first hour
+  }
+
+  return times;
 }

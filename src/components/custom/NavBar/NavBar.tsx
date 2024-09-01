@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
 import { BsGlobe2 } from "react-icons/bs";
@@ -51,44 +51,64 @@ function NavBar() {
 
       {/* Desktop View */}
       <div className="hidden sm:flex items-center justify-between p-3 container shadow-2xl">
-        <Link to={"/"}>
+        <NavLink to={"/"}>
           <img
             src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
             className="w-32"
           />
-        </Link>
+        </NavLink>
 
         <div className="flex justify-center gap-8 font-extrabold text-lg">
-          <Link
+          <NavLink
             to={"/book-a-table"}
-            className="hover:text-gray-300 transition duration-200"
+            className={({ isActive }) =>
+              isActive
+                ? `text-greenHamburger transition duration-200`
+                : "hover:text-gray-300 transition duration-200"
+            }
           >
             Reserve a table
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={"/deliveries"}
-            className="hover:text-gray-300 transition duration-200"
+            className={({ isActive }) =>
+              isActive
+                ? `text-greenHamburger transition duration-200`
+                : "hover:text-gray-300 transition duration-200"
+            }
           >
             Deliveries & Takeouts
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={"/restaurants"}
-            className="hover:text-gray-300 transition duration-200"
+            className={({ isActive }) =>
+              isActive
+                ? `text-greenHamburger transition duration-200`
+                : "hover:text-gray-300 transition duration-200"
+            }
           >
             Restaurants
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={"/gift-it"}
-            className="hover:text-gray-300 transition duration-200"
+            className={({ isActive }) =>
+              isActive
+                ? `text-greenHamburger transition duration-200`
+                : "hover:text-gray-300 transition duration-200"
+            }
           >
             Tabit Gift it
-          </Link>
-          <Link
+          </NavLink>
+          <NavLink
             to={"/"}
-            className="hover:text-gray-300 transition duration-200"
+            className={({ isActive }) =>
+              isActive
+                ? `text-greenHamburger transition duration-200`
+                : "hover:text-gray-300 transition duration-200"
+            }
           >
             Restaurant owner?
-          </Link>
+          </NavLink>
         </div>
 
         <div className="flex items-center gap-4">

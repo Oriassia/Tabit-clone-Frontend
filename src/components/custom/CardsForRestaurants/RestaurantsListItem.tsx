@@ -16,7 +16,6 @@ function RestaurantsListItem({
   restWithTables,
   restaurant,
   isClicked,
-  searchedTime,
 }: RestaurantItemProps) {
   const name = restWithTables?.name || restaurant?.name;
   const address = restWithTables?.address || restaurant?.address;
@@ -43,7 +42,7 @@ function RestaurantsListItem({
         <div className="text-xl font-medium text-white">{name}</div>
         <div className="text-slate-300">{address}</div>
 
-        {restWithTables && searchedTime && (
+        {restWithTables && (
           <div className="flex gap-1">
             {
               <>
