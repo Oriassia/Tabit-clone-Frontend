@@ -28,43 +28,40 @@ function TagsSelector({ updateSearchParams, searchParams }: TagsSelectorProps) {
   ];
 
   return (
-    <div className="border-2 rounded-full font-bold font-rubik text-white border-greenButton w-[80%] h-14 content-center bg-greenBg ">
-      {/* category Selection */}
-      <div className="lg:text-[19px] ">
-        <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 ">
-            <div className="">{searchParams.get("category")}</div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
-            style={{
-              scrollbarWidth: "none", // Firefox
-              msOverflowStyle: "none", // Internet Explorer and Edge
-            }}
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="lg:text-[19px] focus:outline-none focus:ring-0 border-2 rounded-full font-bold font-rubik text-white border-greenButton h-14 w-full content-center bg-greenBg ">
+          <div className="">{searchParams.get("category") || "Tags"}</div>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+          style={{
+            scrollbarWidth: "none", // Firefox
+            msOverflowStyle: "none", // Internet Explorer and Edge
+          }}
+        >
+          <DropdownMenuItem
+            onClick={() => updateSearchParams("category", "Tags")}
+            className="hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 font-bold"
           >
+            Clear Tags
+          </DropdownMenuItem>
+          {categories.map((category) => (
             <DropdownMenuItem
-              onClick={() => updateSearchParams("category", "Tags")}
-              className="hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 font-bold"
+              key={category}
+              className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 font-normal ${
+                category === searchParams.get("category")
+                  ? "bg-greyHoverDropDownMenu"
+                  : ""
+              }`}
+              onClick={() => updateSearchParams("category", category)}
             >
-              Clear Tags
+              <p>{category}</p>
             </DropdownMenuItem>
-            {categories.map((category) => (
-              <DropdownMenuItem
-                key={category}
-                className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 font-normal ${
-                  category === searchParams.get("category")
-                    ? "bg-greyHoverDropDownMenu"
-                    : ""
-                }`}
-                onClick={() => updateSearchParams("category", category)}
-              >
-                <p>{category}</p>
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-    </div>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 }
 

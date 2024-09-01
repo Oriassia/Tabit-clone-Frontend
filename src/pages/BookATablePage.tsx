@@ -127,15 +127,18 @@ function BookATablePage() {
         title="content-wrapper"
         className="h-full flex flex-col sm:flex-row sm:overflow-hidden"
       >
+        {/* Reserve a table section */}
         <div
           title="reserve-a-table-section"
-          className="flex flex-col text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
+          className="flex flex-col gap-5 px-10 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
         >
-          <div className="lg:text-[3.55em] text-[2.7em] text-white font-rubik font-normal">
-            Reserve a table!
-          </div>
-          <div className="text-white font-rubik lg:text-[1.5em] w-[80%]">
-            Just say when and which restaurant, and the rest is on us
+          <div>
+            <div className="text-4xl text-white font-rubik font-normal pt-14">
+              Reserve a table!
+            </div>
+            <div className="font-medium text-lg text-white font-rubik w-full text-center">
+              Search for a table at Tabit restaurants
+            </div>
           </div>
 
           <ReservationSelector
@@ -146,7 +149,7 @@ function BookATablePage() {
 
           <Button
             onClick={handleSearchSubmit}
-            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3"
+            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
           >
             Find a table
           </Button>
@@ -158,7 +161,7 @@ function BookATablePage() {
           />
         </div>
 
-        <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
+        <div className="dark:bg-greyNavbar flex flex-col">
           {availableTablesByRest.length > 0 ? (
             <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
               {availableTablesByRest.map((restWithTables, index) => (
@@ -181,7 +184,7 @@ function BookATablePage() {
           )}
         </div>
 
-        <div title="map section" className="hidden sm:block sm:flex-grow">
+        <div title="map section" className="hidden sm:block flex-grow">
           <Map
             restaurants={availableTablesByRest}
             onClickFun={scrollToRestaurant}

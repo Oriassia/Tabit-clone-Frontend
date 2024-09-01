@@ -49,11 +49,11 @@ export function ReservationSelector({
   }, [searchParams.get("dateDayNumber")]);
 
   return (
-    <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
-      {/* Date Selection */}
-      <div className="flex flex-col items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
+    <>
+      <div className="grid grid-cols-1 w-full border-2 rounded-[35px] font-bold font-rubik text-white border-greenButton bg-greenBg">
+        {/* Date Selection */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center py-[0.5em] lg:text-[19px] text-[15px] border-b  border-greenButton">
             <p className="text-[1em] font-normal">
               {searchParams.get("dayName")}
             </p>
@@ -87,12 +87,10 @@ export function ReservationSelector({
             })}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
 
-      {/* Time Selection */}
-      <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 border-greenButton">
+        {/* Time Selection */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center lg:text-[19px]  py-[0.5em] border-b  border-greenButton">
             <p className="text-[1em] font-normal">Hour</p>
             <p>{searchParams.get("time")}</p>
           </DropdownMenuTrigger>
@@ -118,12 +116,10 @@ export function ReservationSelector({
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-      </div>
 
-      {/* Guests Selection */}
-      <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
+        {/* Guests Selection */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center justify-center lg:text-[19px]  py-[0.5em]">
             <p className="text-[1em] font-normal">Guests</p>
             <p>{searchParams.get("guests")}</p>
           </DropdownMenuTrigger>
@@ -153,6 +149,6 @@ export function ReservationSelector({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </div>
+    </>
   );
 }
