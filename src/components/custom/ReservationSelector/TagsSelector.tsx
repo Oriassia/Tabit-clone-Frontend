@@ -1,4 +1,3 @@
-import { IInputData } from "@/pages/RestaurantsPage";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,11 +6,11 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 
 interface TagsSelectorProps {
-  InputData: IInputData;
-  handleCategoryChange: (newSize: string) => void;
+  updateSearchParams: (title: string, value: string) => void;
+  searchParams: URLSearchParams;
 }
 
-function TagsSelector({ InputData, handleCategoryChange }: TagsSelectorProps) {
+function TagsSelector({ updateSearchParams, searchParams }: TagsSelectorProps) {
   const categories = [
     "Middle Eastern",
     "Bar",
@@ -29,13 +28,12 @@ function TagsSelector({ InputData, handleCategoryChange }: TagsSelectorProps) {
   ];
 
   return (
-    <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
+    <div className="border-2 rounded-full font-bold font-rubik text-white border-greenButton w-[80%] h-14 content-center bg-greenBg ">
       {/* category Selection */}
-      <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
+      <div className="lg:text-[19px] ">
         <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
-            <p className="text-[1em] font-normal">Category</p>
-            <p>{InputData.category}</p>
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 ">
+            <div className="">{searchParams.get("category")}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
@@ -44,18 +42,21 @@ function TagsSelector({ InputData, handleCategoryChange }: TagsSelectorProps) {
               msOverflowStyle: "none", // Internet Explorer and Edge
             }}
           >
-            <DropdownMenuItem className="rounded-none font-bold px-4 py-0 pb-4 select-none">
-              How Many Guests?
+            <DropdownMenuItem
+              onClick={() => updateSearchParams("category", "Tags")}
+              className="hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 font-bold"
+            >
+              Clear Tags
             </DropdownMenuItem>
             {categories.map((category) => (
               <DropdownMenuItem
                 key={category}
-                className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
-                  category === InputData.category
+                className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 font-normal ${
+                  category === searchParams.get("category")
                     ? "bg-greyHoverDropDownMenu"
                     : ""
                 }`}
-                onClick={() => handleCategoryChange(category)}
+                onClick={() => updateSearchParams("category", category)}
               >
                 <p>{category}</p>
               </DropdownMenuItem>

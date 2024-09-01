@@ -1,41 +1,39 @@
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import GiftCard from "@/components/custom/CardsForRestaurants/GiftCard";
 import ShowMore from "@/components/custom/CardsForRestaurants/ShowMore";
 import RestaurantCard from "@/components/custom/CardsForRestaurants/RestaurantCard";
-import {
-  ReservationSelector,
-  AreaDropdown,
-  IReservationInput,
-} from "@/components/custom/ReservationSelector/ReservationSelector";
+import { IReservationInput } from "@/components/custom/ReservationSelector/ReservationSelector";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { formatDate, getAvailableTimes } from "@/services/timefunctions";
+import { GoDotFill } from "react-icons/go";
+import { MdMyLocation } from "react-icons/md";
+import { FaPlus } from "react-icons/fa6";
+import { useUserContext } from "@/context/UserContext";
+import { Link } from "react-router-dom";
+
+const getRoundedTime = (date: Date) => {
+  const minutes = date.getMinutes();
+  if (minutes > 30) {
+    date.setHours(date.getHours() + 1);
+    date.setMinutes(0);
+  } else if (minutes > 0 && minutes <= 30) {
+    date.setMinutes(30);
+  }
+  return date.toTimeString().slice(0, 5);
+};
 
 function LandingPage() {
   const [AllRestaurants, setAllRestaurants] = useState<IRestaurant[]>([]);
-
-  useEffect(() => {
-    fetchAllRests();
-  }, []);
-
-  async function fetchAllRests() {
-    try {
-      const { data } = await api.get("/restaurants");
-      setAllRestaurants(data);
-    } catch (error) {}
-  }
-
-  const getRoundedTime = (date: Date) => {
-    const minutes = date.getMinutes();
-    if (minutes > 30) {
-      date.setHours(date.getHours() + 1);
-      date.setMinutes(0);
-    } else if (minutes > 0 && minutes <= 30) {
-      date.setMinutes(30);
-    }
-    return date.toTimeString().slice(0, 5);
-  };
-
+  const { usersLocation } = useUserContext();
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
       dayName: new Date().toLocaleDateString("en-GB", { weekday: "long" }),
@@ -48,7 +46,36 @@ function LandingPage() {
       area: "Around you",
     });
 
-  const onDateChange = (newDate: Date) => {
+  const [availableTimes, setAvailableTimes] = useState<string[]>([]);
+  const [availableDates, setAvailableDates] = useState<Date[]>([]);
+
+  useEffect(() => {
+    // Generate dates from today until the next 30 days
+    const today = new Date();
+    const dates: Date[] = [];
+
+    for (let i = 0; i < 30; i++) {
+      const date = new Date();
+      date.setDate(today.getDate() + i);
+      dates.push(date);
+    }
+
+    setAvailableDates(dates);
+    setAvailableTimes(getAvailableTimes(reservationInputData.dateDayNumber));
+  }, [reservationInputData.dateDayNumber]);
+
+  useEffect(() => {
+    fetchAllRests();
+  }, []);
+
+  async function fetchAllRests() {
+    try {
+      const { data } = await api.get("/restaurants");
+      setAllRestaurants(data);
+    } catch (error) {}
+  }
+
+  const onDateChange = useCallback((newDate: Date) => {
     const dayName = newDate.toLocaleDateString("en-GB", { weekday: "long" });
     const dayNumber = newDate.toLocaleDateString("en-GB", {
       day: "2-digit",
@@ -57,30 +84,30 @@ function LandingPage() {
 
     setReservationInputData((prevState) => ({
       ...prevState,
-      dayName: dayName,
+      dayName,
       dateDayNumber: dayNumber,
       time: getRoundedTime(newDate),
     }));
-  };
+  }, []);
 
-  const onTimeChange = (newTime: string) => {
+  const onTimeChange = useCallback((newTime: string) => {
     setReservationInputData((prevState) => ({
       ...prevState,
       time: newTime,
     }));
-  };
+  }, []);
 
-  const handleAreaChange = (newArea: string) => {
+  const handleAreaChange = useCallback((newArea: string) => {
     setReservationInputData((prev) => ({ ...prev, area: newArea }));
-  };
+  }, []);
 
-  const handlePartySizeChange = (newSize: number) => {
+  const handlePartySizeChange = useCallback((newSize: number) => {
     setReservationInputData((prev) => ({ ...prev, guests: newSize }));
-  };
+  }, []);
 
-  const handleAddNewAddress = () => {
+  const handleAddNewAddress = useCallback(() => {
     console.log("Add a new address clicked");
-  };
+  }, []);
 
   return (
     <>
@@ -106,22 +133,180 @@ function LandingPage() {
           Just say when and which restaurant, and the rest is on us
         </p>
 
-        <ReservationSelector
-          reservationInputData={reservationInputData}
-          onPartySizeChange={handlePartySizeChange}
-          onDateChange={onDateChange}
-          onTimeChange={onTimeChange}
-        />
+        {/* reservation section */}
+        <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
+          {/* Date Selection */}
+          <div className="flex flex-col items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+                <p className="text-[1em] font-normal">
+                  {reservationInputData.dayName}
+                </p>
+                <p className="lg:w-[4em]">
+                  {reservationInputData.dateDayNumber}
+                </p>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+                style={{
+                  scrollbarWidth: "none", // Firefox
+                  msOverflowStyle: "none", // Internet Explorer and Edge
+                }}
+              >
+                {availableDates.map((date) => {
+                  const { dayName, dayNumber } = formatDate(date);
+                  return (
+                    <DropdownMenuItem
+                      key={dayNumber}
+                      className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 rounded-none cursor-pointer px-4 py-3 ${
+                        dayNumber === reservationInputData.dateDayNumber
+                          ? "bg-greyHoverDropDownMenu"
+                          : ""
+                      }`}
+                      onClick={() => {
+                        onDateChange(date);
+                        setAvailableTimes([]);
+                      }}
+                    >
+                      <p>{`${dayName} - ${dayNumber}`}</p>
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Time Selection */}
+          <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 border-greenButton">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+                <p className="text-[1em] font-normal">Hour</p>
+                <p>{reservationInputData.time}</p>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+                style={{
+                  scrollbarWidth: "none", // Firefox
+                  msOverflowStyle: "none", // Internet Explorer and Edge
+                }}
+              >
+                {availableTimes.map((time) => (
+                  <DropdownMenuItem
+                    key={time}
+                    className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 rounded-none cursor-pointer px-4 py-3 ${
+                      time === reservationInputData.time
+                        ? "bg-greyHoverDropDownMenu"
+                        : ""
+                    }`}
+                    onClick={() => onTimeChange(time)}
+                  >
+                    <p>{time}</p>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+
+          {/* Guests Selection */}
+          <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+                <p className="text-[1em] font-normal">Guests</p>
+                <p>{reservationInputData.guests}</p>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+                style={{
+                  scrollbarWidth: "none", // Firefox
+                  msOverflowStyle: "none", // Internet Explorer and Edge
+                }}
+              >
+                <DropdownMenuItem className="rounded-none font-bold px-4 py-0 pb-4 select-none">
+                  How Many Guests?
+                </DropdownMenuItem>
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((guestNum) => (
+                  <DropdownMenuItem
+                    key={guestNum}
+                    className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 ${
+                      guestNum === reservationInputData.guests
+                        ? "bg-greyHoverDropDownMenu"
+                        : ""
+                    }`}
+                    onClick={() => handlePartySizeChange(guestNum)}
+                  >
+                    <p>{guestNum}</p>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
 
         <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
-          Find a table
+          <Link
+            to={`/book-a-table?dayName=${reservationInputData.dayName}&dateDayNumber=${reservationInputData.dateDayNumber}&time=${reservationInputData.time}&guests=${reservationInputData.guests}&area=${reservationInputData.area}`}
+          >
+            Find a table
+          </Link>
         </Button>
 
-        <AreaDropdown
-          area={reservationInputData.area}
-          onAreaChange={handleAreaChange}
-          onAddNewAddress={handleAddNewAddress}
-        />
+        {/* Area Selector */}
+        <DropdownMenu>
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex items-center gap-2 pb-[2em]">
+            <GoDotFill className="text-greenButton items-center text-[19px]" />
+            <span className="font-bold font-rubik text-white text-[19px]">
+              {reservationInputData.area}
+            </span>
+            <span className="border items-center flex border-greenBorderForIcon bg-transparent dark:hover:bg-transparent dark:bg-transparent p-0 px-[1.5em] h-[2.9em] hover:bg-transparent rounded-full">
+              <MdMyLocation className="size-7 text-white " />
+            </span>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[250px] max-h-48 overflow-y-auto relative"
+            style={{
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // Internet Explorer and Edge
+            }}
+          >
+            <DropdownMenuItem
+              className="hover:bg-greyHoverDropDownMenu cursor-pointer px-[0.6em] py-[0.7em]"
+              onClick={() =>
+                handleAreaChange(
+                  usersLocation ? "Around me" : "Actual location unavailable"
+                )
+              }
+            >
+              <DropdownMenuLabel className="font-thin">
+                {usersLocation ? "Around me" : "Actual location unavailable"}
+              </DropdownMenuLabel>
+            </DropdownMenuItem>
+            {[
+              "Tel Aviv-Jaffa area",
+              "Jerusalem area",
+              "Haifa area",
+              "Center",
+              "North",
+              "South",
+            ].map((location) => (
+              <DropdownMenuItem
+                key={location}
+                className="hover:bg-greyHoverDropDownMenu cursor-pointer px-[0.6em] py-[0.7em]"
+                onClick={() => handleAreaChange(location)}
+              >
+                <DropdownMenuLabel className="font-thin">
+                  {location}
+                </DropdownMenuLabel>
+              </DropdownMenuItem>
+            ))}
+            <DropdownMenuItem
+              className="bg-greenButton flex gap-3 justify-center hover:bg-greenButtonDark text-center py-3 font-thin text-[1em] text-white cursor-pointer sticky bottom-0  font-rubik"
+              onClick={handleAddNewAddress}
+            >
+              <FaPlus />
+              Add a new address
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </section>
 
       {/*GIVE THE GIFT OF GOOD FOOD PART*/}
