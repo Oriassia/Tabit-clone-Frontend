@@ -113,14 +113,14 @@ function RestaurantsPage() {
         {/* Reserve a table section */}
         <div
           title="reserve-a-table-section"
-          className="flex flex-col text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
+          className="flex flex-col gap-5 px-10 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
         >
-          <h1 className="lg:text-[3.55em] text-[2.7em] text-white font-rubik font-normal pt-14">
+          <div className="text-3xl text-white font-rubik font-normal pt-14">
             Reserve a table!
-          </h1>
-          <p className="pb-4 text-white font-rubik px-[2.8em] lg:px-0 lg:text-[1.5em] min-w-[350px] lg:max-w-[450px] text-center">
-            Just say when and which restaurant, and the rest is on us
-          </p>
+          </div>
+          <div className=" text-white font-rubik w-full text-center">
+            Search for a table at Tabit restaurants
+          </div>
 
           <TagsSelector
             searchParams={searchParams}
@@ -129,7 +129,7 @@ function RestaurantsPage() {
 
           <Button
             onClick={handleSearchSubmit}
-            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-[80%] h-14 rounded-full hover:bg-greenButton my-3"
+            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
           >
             Find a table
           </Button>

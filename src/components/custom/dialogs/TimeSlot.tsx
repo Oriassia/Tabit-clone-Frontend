@@ -18,7 +18,7 @@ const TimeSlotDialog: React.FC<{ slot: TimeSlot }> = ({ slot }) => (
       disabled={slot.data?.available !== 1}
       className={`${
         slot.data?.available === 1 ? default_triggerClass : outline_triggerClass
-      } rounded-[4px] py-2 px-3`}
+      } rounded-[4px] py-3 px-5`}
     >
       {slot.data?.time}
     </DialogTrigger>
