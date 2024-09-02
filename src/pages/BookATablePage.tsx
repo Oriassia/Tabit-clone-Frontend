@@ -10,6 +10,7 @@ import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
 import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { format } from "date-fns";
 
 function BookATablePage() {
   const currentDate = new Date();
@@ -38,8 +39,6 @@ function BookATablePage() {
   };
 
   const onDateChange = (newDate: Date) => {
-    console.log("newDateInput:", newDate);
-
     updateSearchParams(
       "dayName",
       newDate.toLocaleDateString("en-GB", { weekday: "long" })
@@ -73,7 +72,10 @@ function BookATablePage() {
         throw new Error("Reservation date and time cannot be in the past.");
       }
 
-      const reservationDateString = reservationDate.toISOString().slice(0, -5); // Remove milliseconds and trailing "Z"
+      const reservationDateString = format(
+        reservationDate,
+        "yyyy-MM-dd'T'HH:mm"
+      ); // Remove milliseconds and trailing "Z"
 
       const postInputData = {
         lat: 32.0661,
@@ -97,9 +99,10 @@ function BookATablePage() {
         throw new Error("No tables available for the selected criteria.");
       }
 
-      setAvailableTablesByRest(data[0]);
-      scrollToRestaurant(data[0][0].restId);
-      setClickedId(data[0][0].restId);
+      setAvailableTablesByRest(data);
+      updateSearchParams("date", postInputData.date);
+      scrollToRestaurant(data[0].restId);
+      setClickedId(data[0].restId);
     } catch (error: any) {
       console.error(error);
       alert(error.message || "An unexpected error occurred. Please try again.");
