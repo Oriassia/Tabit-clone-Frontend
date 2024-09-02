@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { IOpeningHours, IRestaurant } from "@/types/restaurant"; // Убедитесь, что путь правильный
-import OpenIcon from "../svg/OpenIcon"; // Предполагаем, что у вас есть компонент для иконки
+import React, { useRef, useState } from "react";
+import { IOpeningHours, IRestaurant } from "@/types/restaurant";
+import OpenIcon from "../svg/OpenIcon";
+import { IoIosArrowDown } from "react-icons/io";
 
 interface OpeningHoursProps {
   restaurant: IRestaurant;
@@ -8,9 +9,14 @@ interface OpeningHoursProps {
 
 const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
+  const toggleOpen = () => {
+    setIsOpen((prev) => !prev);
   };
 
   // Получаем текущий день недели
@@ -29,13 +35,29 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
 
   // Функция для проверки, открыт ли ресторан в данный момент
   const isCurrentlyOpen = (hours: string) => {
-    const [openTime, closeTime] = hours.split(" - ").map((time) => {
-      const [hours, minutes] = time.split(":").map(Number);
-      const date = new Date(now);
-      date.setHours(hours);
-      date.setMinutes(minutes);
-      return date;
-    });
+    const [openTimeStr, closeTimeStr] = hours
+      .split("-")
+      .map((time) => time.trim());
+
+    const [openHour, openMinute] = openTimeStr.split(":").map(Number);
+    const [closeHour, closeMinute] = closeTimeStr.split(":").map(Number);
+
+    const openTime = new Date(now);
+    openTime.setHours(openHour);
+    openTime.setMinutes(openMinute);
+    openTime.setSeconds(0);
+    openTime.setMilliseconds(0);
+
+    let closeTime = new Date(now);
+    closeTime.setHours(closeHour);
+    closeTime.setMinutes(closeMinute);
+    closeTime.setSeconds(0);
+    closeTime.setMilliseconds(0);
+
+    // Если время закрытия раньше времени открытия, предполагаем, что закрытие на следующий день
+    if (closeTime <= openTime) {
+      closeTime.setDate(closeTime.getDate() + 1);
+    }
 
     return now >= openTime && now <= closeTime;
   };
@@ -43,25 +65,37 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
   // Проверяем, открыт ли ресторан сейчас
   const currentlyOpen = todayHours !== "Closed" && isCurrentlyOpen(todayHours);
 
-  const toggleOpen = () => {
-    setIsOpen((prev) => !prev);
-  };
-
   return (
-    <div className="border-b border-greyBorder font-rubik font-normal pb-3 ">
+    <div className="border-b border-greyBorder font-rubik font-normal pb-3">
       <div
-        className="flex  items-center text-[1em] cursor-pointer"
+        className="flex items-center text-[1em]  cursor-pointer"
         onClick={toggleOpen}
       >
-        <div className="flex items-center w-fit gap-6">
+        <div className="flex items-center gap-6">
           <OpenIcon />
-          <span className="text-[1em]">
-            {currentlyOpen ? "Open" : "Closed"}
-          </span>
+          <div className="flex items-center gap-1">
+            <span className="text-[1em]">
+              {currentlyOpen ? "Open" : "Closed"}
+            </span>
+            <IoIosArrowDown
+              className={`transform transition-transform duration-300 ${
+                isOpen ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          </div>
         </div>
-        <span className="flex-grow w-fit text-right ">{todayHours}</span>
+        <span className="w-full text-right pr-[1em]">{todayHours}</span>
       </div>
-      {isOpen && (
+      <div
+        ref={contentRef}
+        className={`overflow-hidden transition-height duration-500 ease-in-out`}
+        style={{
+          height:
+            isOpen && contentRef.current
+              ? `${contentRef.current.scrollHeight}px`
+              : "0px",
+        }}
+      >
         <div className="mt-3">
           <div className="flex w-full">
             {/* Столбец с днями недели */}
@@ -92,7 +126,7 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
             </div>
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 };
