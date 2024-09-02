@@ -7,10 +7,9 @@ import { useParams } from "react-router";
 
 import BikeIcon from "../components/custom/svg/BikeIcon";
 import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import PhotosDescriptionMenu from "@/components/custom/ComponentsForDetails/PhotosDescriptionMenu";
 import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
-
 
 const RestaurantDetailsPage: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
@@ -20,7 +19,7 @@ const RestaurantDetailsPage: React.FC = () => {
 
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
 
-  const [reservationInputData, setReservationInputData] = useState({
+  const [searchParams, setSearchParams] = useSearchParams({
     area: "Tel Aviv-Jaffa area",
   });
 
@@ -57,8 +56,9 @@ const RestaurantDetailsPage: React.FC = () => {
     }
   };
 
-  const handleAreaChange = (newArea: string) => {
-    setReservationInputData({ ...reservationInputData, area: newArea });
+  const updateSearchParams = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams);
   };
 
   const handleAddNewAddress = () => {
@@ -167,9 +167,9 @@ const RestaurantDetailsPage: React.FC = () => {
                 </div>
                 {/* Dropdown */}
                 <div className="flex justify-center  pt-[1.6em]">
-                  <AreaDropdown
-                    area={reservationInputData.area}
-                    onAreaChange={handleAreaChange}
+                  <AreaDropDown
+                    searchParams={searchParams}
+                    updateSearchParams={updateSearchParams}
                     onAddNewAddress={handleAddNewAddress}
                   />
                 </div>
