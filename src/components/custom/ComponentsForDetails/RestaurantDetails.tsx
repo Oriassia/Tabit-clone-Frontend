@@ -9,7 +9,6 @@ import { IRestaurant } from "../../../types/restaurant";
 import InstagramIcon from "../svg/InstagramIcon";
 import FacebookIcon from "../svg/FacebookIcon";
 
-
 interface RestaurantDetailsProps {
   restaurant: IRestaurant;
 }
@@ -43,7 +42,9 @@ const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
           </Link>
         </div>
         <div className="flex gap-4 items-center justify-end">
-          <InstagramIcon />
+          <Link to={`${restaurant.website}`}>
+            <InstagramIcon />
+          </Link>
           <FacebookIcon />
         </div>
       </div>
