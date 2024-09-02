@@ -7,7 +7,7 @@ function OrangeClock() {
       fill="#F08E74"
       height="100%"
       width="100%"
-      className="w-6 aspect-square"
+      className="w-5 aspect-square"
       preserveAspectRatio="xMidYMid meet"
       focusable="false"
     >

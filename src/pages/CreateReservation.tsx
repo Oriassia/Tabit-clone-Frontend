@@ -8,13 +8,13 @@ import { useSearchParams } from "react-router-dom";
 function CreateReservation() {
   const [searchParams] = useSearchParams();
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
-  const orgId = searchParams.get("orgId");
+  const restId = searchParams.get("restId");
 
   useEffect(() => {
     async function getRestaurantData() {
-      if (orgId) {
+      if (restId) {
         try {
-          const { data } = await api.get(`/restaurants/${orgId}`);
+          const { data } = await api.get(`/restaurants/${restId}`);
           console.log(data[0]); // Debug log to verify fetched data
           setRestaurant(data[0]); // Set the fetched restaurant data
         } catch (error) {
@@ -23,9 +23,9 @@ function CreateReservation() {
       }
     }
     getRestaurantData();
-  }, [orgId]); // Include orgId as a dependency
+  }, [restId]); // Include orgId as a dependency
 
-  if (!orgId) {
+  if (!restId) {
     return <div>Invalid Restaurant ID. Please check the URL.</div>; // Handle invalid orgId
   }
 
@@ -44,7 +44,7 @@ function CreateReservation() {
         <h2 className="text-3xl text-slate-300 my-1">Reserve a Table</h2>
         <h1 className="text-4xl text-white my-1">{restaurant?.name}</h1>
         <h3 className="text-xl text-white my-1 mb-3">{restaurant?.address}</h3>
-        <ReservationData restId={orgId} />
+        <ReservationData restId={restId} />
         <span>ReservBtn</span>
         <h3 className="text-xl text-white my-1">
           To reserve a table at {restaurant?.name}, choose a date, time, and

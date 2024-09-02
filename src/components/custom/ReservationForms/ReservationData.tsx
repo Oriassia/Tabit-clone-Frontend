@@ -6,10 +6,17 @@ import OrangeGuests from "../svg/OrangeGuests";
 import OrangeTablesIcon from "../svg/OrangeTablesIcon";
 import { Separator } from "@/components/ui/separator";
 import api from "@/services/api.services";
+import { useSearchParams } from "react-router-dom";
 
 function ReservationData({ restId }: { restId: string }) {
+  const [searchParams] = useSearchParams();
+  const position = searchParams.get("position");
+  const tableId = searchParams.get("tableId");
+  const dateAnTime: string | null = searchParams.get("date");
+  const date: string | null = dateAnTime ? dateAnTime.split("T")[0] : null;
+  const hour: string | null = dateAnTime ? dateAnTime.split("T")[1] : null;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedHour, setSelectedHour] = useState<string | null>(null);
+  const [selectedHour, setSelectedHour] = useState<string | null>(hour);
   const [selectedGuests, setSelectedGuests] = useState<string>("2");
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [type, setType] = useState<string | null>(null);
@@ -135,7 +142,10 @@ function ReservationData({ restId }: { restId: string }) {
     }
     getTablesPositions();
   }, [restId]);
-
+  useEffect(() => {
+    if (tableId != null) {
+    }
+  }, []);
   const handleDateSelection = (date: string) => {
     setSelectedDate(date);
     setType("hour"); // Focus on time selection after date selection
@@ -161,7 +171,7 @@ function ReservationData({ restId }: { restId: string }) {
       <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-xl shadow-greyShadow rounded-lg">
         {/* Date selection */}
         <div
-          className={`relative col-span-1 p-3 flex flex-col items-center justify-center ${
+          className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type == "date" && isOpen
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
@@ -175,15 +185,15 @@ function ReservationData({ restId }: { restId: string }) {
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
             {type === "date" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
           </span>
-          <div className="flex w-full justify-center">
-            <OrangeCalender />
+          <div className="flex w-full justify-center mb-3">
+            <OrangeCalender /> {/* Smaller icon size */}
           </div>
           <div className="text-center">{selectedDate || next7Days[0]}</div>
         </div>
 
         {/* Time selection */}
         <div
-          className={`relative col-span-1 p-3 flex flex-col items-center justify-center ${
+          className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type == "hour" && isOpen
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
@@ -197,15 +207,15 @@ function ReservationData({ restId }: { restId: string }) {
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
             {type === "hour" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
           </span>
-          <div className="flex w-full justify-center">
-            <OrangeClock />
+          <div className="flex w-full justify-center mb-3">
+            <OrangeClock /> {/* Smaller icon size */}
           </div>
           <div className="text-center">{selectedHour || "Select a time"}</div>
         </div>
 
         {/* Guests selection */}
         <div
-          className={`relative col-span-1 p-3 flex flex-col items-center justify-center ${
+          className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type == "guests" && isOpen ? "border-[1px] border-orange" : ""
           } rounded-lg cursor-pointer `}
           onClick={() => {
@@ -217,8 +227,8 @@ function ReservationData({ restId }: { restId: string }) {
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
             {type === "guests" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
           </span>
-          <div className="flex w-full justify-center">
-            <OrangeGuests />
+          <div className="flex w-full justify-center mb-3">
+            <OrangeGuests /> {/* Smaller icon size */}
           </div>
           <div className="text-center">
             {selectedGuests} {selectedGuests == "1" ? "Guest" : "Guests"}
@@ -228,7 +238,7 @@ function ReservationData({ restId }: { restId: string }) {
         {/* Position selection */}
         {positions.length > 1 && (
           <div
-            className={`relative col-span-3 p-3 h-16 flex items-center justify-center ${
+            className={`relative col-span-3 p-3 h-16 flex items-center pl-6  ${
               type == "position" && isOpen
                 ? "border-[1px] border-orange"
                 : "border-t-[1px] border-white"
@@ -239,7 +249,7 @@ function ReservationData({ restId }: { restId: string }) {
             }}
           >
             {/* Arrow Icon */}
-            <span className="absolute top-3 left-1 text-sm w-4 pl-2">
+            <span className="absolute top-3 right-3 text-sm w-4 pl-2">
               {type === "position" && isOpen ? (
                 <FaChevronUp />
               ) : (
