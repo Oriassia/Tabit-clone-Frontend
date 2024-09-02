@@ -36,7 +36,7 @@ function CreateReservation() {
 
   return (
     <>
-      <div className="w-full h-dvh flex flex-col items-center bg-greyBg text-white">
+      <div className="w-full flex flex-col items-center bg-greyBg text-white">
         <img
           src={restaurant?.mainPhoto}
           alt={restaurant?.name}
