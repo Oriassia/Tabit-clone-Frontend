@@ -18,6 +18,7 @@ module.exports = {
     },
     extend: {
       colors: {
+        greyShadow: "#272727",
         greyNavbar: "#303030",
         greySelectedRestaurant: "#383838",
         greyBg: "#212121",
@@ -32,6 +33,9 @@ module.exports = {
         greenBg: "#00C8C933",
         greenBorderForIcon: "#689390",
         footerBg: "#A6E3E4",
+        greyFooterText: "#969696",
+        orange: "#F08E74",
+        greySelected: "#444444",
       },
       fontFamily: {
         sans: ["Roboto", "sans-serif"],
@@ -52,7 +56,24 @@ module.exports = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      boxShadow: {
+        greyShadow:
+          "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [
+    require("tailwindcss-animate"),
+    function ({ addUtilities }) {
+      addUtilities({
+        ".scrollbar-none": {
+          "-ms-overflow-style": "none" /* Internet Explorer 10+ */,
+          "scrollbar-width": "none" /* Firefox */,
+          "&::-webkit-scrollbar": {
+            display: "none" /* Safari and Chrome */,
+          },
+        },
+      });
+    },
+  ],
 };

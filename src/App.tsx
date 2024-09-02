@@ -6,6 +6,7 @@ import RestaurantsPage from "./pages/RestaurantsPage";
 import BookATablePage from "./pages/BookATablePage";
 import GiftItPage from "./pages/GiftItPage";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
+import CreateReservation from "./pages/CreateReservation";
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
         <Route path="/" element={<Outlet />}>
           <Route path="book-a-table" element={<BookATablePage />} />
           <Route path="restaurants" element={<RestaurantsPage />} />
+        </Route>
+        <Route path="/online-reservations">
+          <Route index element={<CreateReservation />} />
         </Route>
       </Routes>
     </>

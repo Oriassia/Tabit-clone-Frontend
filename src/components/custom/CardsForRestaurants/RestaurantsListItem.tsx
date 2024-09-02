@@ -1,52 +1,31 @@
-import { Button } from "@/components/ui/button";
-import { availabileTablesByRestaurant, IRestaurant } from "@/types/restaurant";
+import {
+  AvailableTablesByRestaurant,
+  IRestaurant,
+  TimeSlot,
+} from "@/types/restaurant";
+import TimeSlotDialog from "../dialogs/TimeSlot";
 
 interface RestaurantItemProps {
   searchedTime?: string;
   restaurant?: IRestaurant;
-  restWithTables?: availabileTablesByRestaurant;
+  restWithTables?: AvailableTablesByRestaurant;
   isClicked: boolean;
-}
-
-function calculateTimeSlots(searchedTime: string): string[] {
-  const [hours, minutes] = searchedTime.split(":").map(Number);
-
-  const createDateTime = (h: number, m: number) =>
-    new Date().setHours(h, m, 0, 0);
-
-  const searchedDateTime = createDateTime(hours, minutes);
-  const beforeTime = new Date(searchedDateTime).setMinutes(minutes - 30);
-  const afterTime = new Date(searchedDateTime).setMinutes(minutes + 30);
-
-  return [
-    new Date(beforeTime).toTimeString().slice(0, 5),
-    searchedTime,
-    new Date(afterTime).toTimeString().slice(0, 5),
-  ];
-}
-
-function isButtonDisabled(
-  index: number,
-  restWithTables: availabileTablesByRestaurant
-): boolean {
-  const availabilityMap = [
-    restWithTables.half_hour_before.available,
-    restWithTables.given_hour.available,
-    restWithTables.half_hour_after.available,
-  ];
-  return availabilityMap[index] !== 1;
 }
 
 function RestaurantsListItem({
   restWithTables,
   restaurant,
   isClicked,
-  searchedTime,
 }: RestaurantItemProps) {
-  const name = restWithTables?.rest_name || restaurant?.name;
-  const address = restWithTables?.rest_address || restaurant?.address;
-  const mainPhoto =
-    restWithTables?.restaurant_mainphoto || restaurant?.mainPhoto;
+  const name = restWithTables?.name || restaurant?.name;
+  const address = restWithTables?.address || restaurant?.address;
+  const mainPhoto = restWithTables?.mainPhoto || restaurant?.mainPhoto;
+
+  const timeSlots: TimeSlot[] = [
+    { label: "Half Hour Before", data: restWithTables?.half_hour_before },
+    { label: "Given Hour", data: restWithTables?.given_hour },
+    { label: "Half Hour After", data: restWithTables?.half_hour_after },
+  ];
 
   return (
     <div
@@ -63,22 +42,15 @@ function RestaurantsListItem({
         <div className="text-xl font-medium text-white">{name}</div>
         <div className="text-slate-300">{address}</div>
 
-        {restWithTables && searchedTime && (
+        {restWithTables && (
           <div className="flex gap-1">
-            {calculateTimeSlots(searchedTime).map((time, index) => (
-              <Button
-                key={index}
-                disabled={isButtonDisabled(index, restWithTables)}
-                variant={
-                  isButtonDisabled(index, restWithTables)
-                    ? "outline"
-                    : "default"
-                }
-                className=" font-normal w-16 h-9 rounded-[4px]"
-              >
-                {time}
-              </Button>
-            ))}
+            {
+              <>
+                {timeSlots.map((slot) => (
+                  <TimeSlotDialog key={slot.label} slot={slot} />
+                ))}
+              </>
+            }
           </div>
         )}
       </div>

@@ -1,105 +1,30 @@
-// export interface IRestaurant {
-//   _Id?: string;
-//   name: string;
-//   categories: string[];
-//   shortDescription: string;
-//   mainPhoto: string;
-//   address: IRestaurantAddress;
-//   contactInfo: IRestaurantContactInfo;
-//   location: {
-//     lat: number;
-//     lng: number;
-//   };
-//   openingHours: IOpeningHours[]; // calendar interface @@@
-//   about?: {
-//     longDescription?: string;
-//     menus: IRestaurantMenu[];
-//     photos: string[];
-//     reservations: IReservation[];
-//   };
-//   tables: ITable[];
-// }
-// export interface IOpeningHours {
-//   day: string;
-//   open: string;
-//   close: string;
-// }
-
-// export interface IReservation {
-//   _id?: string;
-//   partySize: number;
-//   guestInfo: IGuestInfo;
-//   reservationTime: Date;
-//   position: string;
-//   notes?: string;
-// }
-// export interface ITable {
-//   _id?: string;
-//   position: string;
-//   partySize: number;
-//   reservations: IReservation[];
-// }
-// export interface IGuestInfo {
-//   guestFirstName: string;
-//   guestLastName: string;
-//   phoneNumber: string;
-//   email?: string;
-// }
-
-// export interface IRestaurantMenu {
-//   title: string;
-//   menuUrl: string;
-// }
-
-// export interface IRestaurantAddress {
-//   country: string;
-//   city: string;
-//   street: string;
-//   number: number;
-// }
-
-// export interface IRestaurantContactInfo {
-//   phoneNumber?: string;
-//   websiteURL?: string;
-//   instagram?: string;
-//   facebook?: string;
-// }
 export interface ILocation {
   lat: number;
   lng: number;
 }
 export interface IRestaurant {
   restId: number;
-  name: string;
-  lat: number;
-  lng: number;
-  address: string;
-  category: string;
-  mainPhoto: string;
-  phoneNumber: string;
-  website: string;
-  instagram: string;
-  facebook: string;
-  shortDescription: string;
-  longDescription: string;
-  menus: {
+  name?: string;
+  lat?: number;
+  lng?: number;
+  address?: string;
+  category?: string;
+  mainPhoto?: string;
+  phoneNumber?: string;
+  website?: string;
+  instagram?: string;
+  facebook?: string;
+  shortDescription?: string;
+  longDescription?: string;
+  menus?: {
     url: string;
     title: string;
   }[];
-  photos: string[];
-  openingHours: {
-    sunday?: string;
-    monday?: string;
-    tuesday?: string;
-    wednesday?: string;
-    thursday?: string;
-    friday?: string;
-    saturday?: string;
-  }[];
+  photos?: string[];
+  openingHours?: IOpeningHours;
 }
+
 export interface IOpeningHours {
-  id?: number; // Primary key in the SQL structure
-  restId: number; // Foreign key reference to `Restaurants`
   sunday?: string;
   monday?: string;
   tuesday?: string;
@@ -129,42 +54,49 @@ export interface ITable {
   capacity: number; // Number of guests the table can accommodate
 }
 
-export interface IRestaurantMenu {
-  menuId?: number; // Matches the AUTO_INCREMENT primary key from SQL
-  restId: number; // Foreign key reference to `Restaurants`
-  title: string; // E.g., 'Dinner Menu'
-  url: string; // URL to the menu
-}
+// export interface IRestaurantMenu {
+//   menuId?: number; // Matches the AUTO_INCREMENT primary key from SQL
+//   restId: number; // Foreign key reference to `Restaurants`
+//   title: string; // E.g., 'Dinner Menu'
+//   url: string; // URL to the menu
+// }
+
 export interface IRestaurantPhoto {
   photoId?: number; // Matches the AUTO_INCREMENT primary key from SQL
   restId: number; // Foreign key reference to `Restaurants`
   url: string; // URL to the photo
 }
 
-export interface availabileTablesByRestaurant {
+export interface AvailableTablesByRestaurant extends IRestaurant {
   distance_in_km: number;
   given_hour: {
     bar: number | null;
     inside: number;
     outside: number;
     available: number;
+    time: string;
   };
   half_hour_after: {
     bar: number | null;
     inside: number;
     outside: number;
     available: number;
+    time: string;
   };
   half_hour_before: {
+    time: string;
     bar: number | null;
     inside: number;
     outside: number;
     available: number;
   };
-  rest_address: string;
-  restId: number;
-  lat: number;
-  lng: number;
-  rest_name: string;
-  restaurant_mainphoto: string;
+}
+
+export interface TimeSlot {
+  label: string;
+  data?: {
+    available: number;
+    time: string;
+    [key: string]: any;
+  };
 }

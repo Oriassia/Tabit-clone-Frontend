@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { AreaDropdown } from "../components/custom/ReservationSelector/ReservationSelector";
 import CalendarIcon from "@/components/custom/svg/CalendarIcon";
 import LockIcon from "@/components/custom/svg/LockIcon";
 import { IRestaurant } from "@/types/restaurant";
@@ -10,6 +9,8 @@ import BikeIcon from "../components/custom/svg/BikeIcon";
 import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
 import { Link } from "react-router-dom";
 import PhotosDescriptionMenu from "@/components/custom/ComponentsForDetails/PhotosDescriptionMenu";
+import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
+
 
 const RestaurantDetailsPage: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();

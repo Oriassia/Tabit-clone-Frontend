@@ -1,88 +1,60 @@
 import RestaurantsListItem from "@/components/custom/CardsForRestaurants/RestaurantsListItem";
 import Map from "@/components/custom/Map/Map";
 import NavBar from "@/components/custom/NavBar/NavBar";
-import {
-  AreaDropdown,
-  IReservationInput,
-  ReservationSelector,
-} from "@/components/custom/ReservationSelector/ReservationSelector";
+import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
+import { ReservationSelector } from "@/components/custom/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
-import { availabileTablesByRestaurant } from "@/types/restaurant";
+import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 function BookATablePage() {
   const currentDate = new Date();
-  const [availableTablesByRest, setavailableTablesByRest] = useState<
-    availabileTablesByRestaurant[]
+  const [availableTablesByRest, setAvailableTablesByRest] = useState<
+    AvailableTablesByRestaurant[]
   >([]);
-  const [clickedId, setClickedId] = useState<number | null>(null); // State for clicked restaurant
-  const [reservationInputData, setReservationInputData] =
-    useState<IReservationInput>({
-      dayName: currentDate.toLocaleDateString("en-GB", { weekday: "long" }),
-      dateDayNumber: getFormattedDate(currentDate),
-      time: getFormattedTime(currentDate),
-      guests: 2,
-      area: "Tel Aviv-Jaffa area",
-    });
+  const [clickedId, setClickedId] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams({
+    dayName: currentDate.toLocaleDateString("en-GB", { weekday: "long" }),
+    dateDayNumber: getFormattedDate(currentDate),
+    time: getFormattedTime(currentDate),
+    guests: "2",
+    area: "Tel Aviv-Jaffa area",
+  });
   const { usersLocation } = useUserContext();
-  const [searchedTime, setSearchedTime] = useState("");
+  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
     handleSearchSubmit();
   }, []);
 
-  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
-  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const updateSearchParams = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams);
+  };
 
   const onDateChange = (newDate: Date) => {
-    const dayName = newDate.toLocaleDateString("en-GB", { weekday: "long" });
-    const dayNumber = newDate.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-    });
+    console.log("newDateInput:", newDate);
 
-    setReservationInputData((prevState) => ({
-      ...prevState,
-      dayName: dayName,
-      dateDayNumber: dayNumber,
-    }));
-  };
-
-  const onTimeChange = (newTime: string) => {
-    setReservationInputData((prevState) => ({
-      ...prevState,
-      time: newTime,
-    }));
-  };
-
-  const handlePartySizeChange = (newSize: number) => {
-    setReservationInputData((prev) => ({ ...prev, guests: newSize }));
-  };
-
-  const handleAreaChange = (newArea: string) => {
-    setReservationInputData((prev) => ({ ...prev, area: newArea }));
-  };
-
-  const handleAddNewAddress = () => {
-    console.log("Add a new address clicked");
+    updateSearchParams(
+      "dayName",
+      newDate.toLocaleDateString("en-GB", { weekday: "long" })
+    );
+    updateSearchParams("dateDayNumber", getFormattedDate(newDate));
   };
 
   const handleSearchSubmit = async () => {
     try {
-      // Validate date and time
-      if (!reservationInputData.dateDayNumber || !reservationInputData.time) {
-        throw new Error(
-          "Please provide both date and time for the reservation."
-        );
-      }
-
-      const [day, month] = reservationInputData.dateDayNumber
+      const [day, month] = (searchParams.get("dateDayNumber") ?? "")
         .split("/")
         .map(Number);
-      const [hours, minutes] = reservationInputData.time.split(":").map(Number);
+      const [hours, minutes] = (searchParams.get("time") ?? "")
+        .split(":")
+        .map(Number);
 
       if (isNaN(day) || isNaN(month) || isNaN(hours) || isNaN(minutes)) {
         throw new Error("Invalid date or time format.");
@@ -101,54 +73,35 @@ function BookATablePage() {
         throw new Error("Reservation date and time cannot be in the past.");
       }
 
-      // Construct the reservation date string without milliseconds and "Z"
-      let reservationDateString = reservationDate.toISOString();
-      reservationDateString = reservationDateString.slice(0, -5); // Remove milliseconds and trailing "Z"
+      const reservationDateString = reservationDate.toISOString().slice(0, -5); // Remove milliseconds and trailing "Z"
 
-      // Default post data
-      let postInputData = {
+      const postInputData = {
         lat: 32.0661,
         lng: 34.7748,
-        partySize: reservationInputData.guests,
+        partySize: searchParams.get("guests") ?? "2",
         date: reservationDateString,
       };
 
-      // Handle different areas
-      switch (reservationInputData.area) {
-        case "Around me":
-          if (usersLocation?.lat && usersLocation?.lng) {
-            postInputData.lat = usersLocation.lat;
-            postInputData.lng = usersLocation.lng;
-          } else {
-            throw new Error("User location is not available.");
-          }
-          break;
-
-        case "Tel Aviv-Jaffa area":
-          postInputData.lat = 32.0661;
-          postInputData.lng = 34.7748;
-          break;
-
-        // Add additional areas here if needed
-        default:
-          throw new Error("Selected area is not supported.");
+      if (searchParams.get("area") === "Around me") {
+        if (usersLocation?.lat && usersLocation?.lng) {
+          postInputData.lat = usersLocation.lat;
+          postInputData.lng = usersLocation.lng;
+        } else {
+          throw new Error("User location is not available.");
+        }
       }
 
-      // Make the API request
       const { data } = await api.post("/tables", postInputData);
 
-      if (data.length === 0) {
+      if (!data.length) {
         throw new Error("No tables available for the selected criteria.");
       }
 
-      setSearchedTime(reservationInputData.time);
-      setavailableTablesByRest(data[0]);
-      // Scroll to the first available restaurant in the list
+      setAvailableTablesByRest(data[0]);
       scrollToRestaurant(data[0][0].restId);
       setClickedId(data[0][0].restId);
     } catch (error: any) {
       console.error(error);
-      // Provide user feedback on the error
       alert(error.message || "An unexpected error occurred. Please try again.");
     }
   };
@@ -163,13 +116,10 @@ function BookATablePage() {
         behavior: "smooth",
         block: "center",
       });
-      setClickedId(availableTablesByRest[targetIndex].restId);
+      setClickedId(restId);
     }
   };
 
-  function isClicked(restId: number) {
-    return clickedId == restId;
-  }
   return (
     <div title="page-wrapper" className="h-screen flex flex-col">
       <NavBar />
@@ -180,50 +130,39 @@ function BookATablePage() {
         {/* Reserve a table section */}
         <div
           title="reserve-a-table-section"
-          className="flex flex-col text-center items-center justify-center px-12 bg-cover bg-center shadow-inner"
-          style={{
-            backgroundImage: `
-              linear-gradient(to bottom, 
-              rgba(0, 0, 0, 0.7), 
-              rgba(0, 0, 0, 0.5) 60%, 
-              rgba(0, 0, 0, 0.3) 100%
-              ),
-              url('https://tabitisrael.co.il/assets/images/dashboard-desktop.jpg?v=4_11_1')
-            `,
-            boxShadow: "inset 0 0 1rem #000",
-          }}
+          className="flex flex-col gap-5 px-10 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
         >
-          <h1 className="lg:text-[3.55em] text-[2.7em] text-white font-rubik font-normal pt-14">
-            Reserve a table!
-          </h1>
-          <p className="pb-4 text-white font-rubik px-[2.8em] lg:px-0 lg:text-[1.5em] min-w-[350px] lg:max-w-[450px] text-center">
-            Just say when and which restaurant, and the rest is on us
-          </p>
+          <div>
+            <div className="text-4xl text-white font-rubik font-normal pt-14">
+              Reserve a table!
+            </div>
+            <div className="font-medium text-lg text-white font-rubik w-full text-center">
+              Search for a table at Tabit restaurants
+            </div>
+          </div>
 
           <ReservationSelector
-            reservationInputData={reservationInputData}
-            onPartySizeChange={handlePartySizeChange}
             onDateChange={onDateChange}
-            onTimeChange={onTimeChange}
+            updateSearchParams={updateSearchParams}
+            searchParams={searchParams}
           />
 
           <Button
             onClick={handleSearchSubmit}
-            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3"
+            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
           >
             Find a table
           </Button>
 
-          <AreaDropdown
-            area={reservationInputData.area}
-            onAreaChange={handleAreaChange}
-            onAddNewAddress={handleAddNewAddress}
+          <AreaDropDown
+            searchParams={searchParams}
+            updateSearchParams={updateSearchParams}
+            onAddNewAddress={() => console.log("Add a new address clicked")}
           />
         </div>
 
-        {/* Rests list section */}
-        <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
-          {availableTablesByRest && availableTablesByRest.length > 0 ? (
+        <div className="dark:bg-greyNavbar flex flex-col">
+          {availableTablesByRest.length > 0 ? (
             <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
               {availableTablesByRest.map((restWithTables, index) => (
                 <li
@@ -232,8 +171,7 @@ function BookATablePage() {
                 >
                   <RestaurantsListItem
                     restWithTables={restWithTables}
-                    isClicked={isClicked(restWithTables.restId)}
-                    searchedTime={searchedTime}
+                    isClicked={clickedId === restWithTables.restId}
                   />
                 </li>
               ))}
@@ -246,8 +184,7 @@ function BookATablePage() {
           )}
         </div>
 
-        {/* MAP section */}
-        <div title="map section" className="hidden sm:block sm:flex-grow ">
+        <div title="map section" className="hidden sm:block flex-grow">
           <Map
             restaurants={availableTablesByRest}
             onClickFun={scrollToRestaurant}
