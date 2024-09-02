@@ -217,7 +217,7 @@ export function AreaDropdown({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex items-center gap-2 pb-[2em]">
-        <GoDotFill className="text-greenButton items-center text-[19px]" />
+        <GoDotFill className="text-gray-400 items-center text-[19px]" />
         <span className="font-bold font-rubik text-white text-[19px]">
           {area}
         </span>

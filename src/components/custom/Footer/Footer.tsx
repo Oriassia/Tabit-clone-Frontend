@@ -66,7 +66,7 @@ const Footer: React.FC = () => {
                   href={social.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-8 h-8 bg-white rounded-full flex items-center justify-center"
+                  className="w-8 h-8 bg-white dark:bg-black rounded-full flex items-center justify-center"
                 >
                   <span className="sr-only">{social.name}</span>
                   <span className="text-footerBg">{social.icon}</span>

@@ -5,7 +5,7 @@ const CalendarIcon = () => {
       viewBox="0 0 46 46"
       preserveAspectRatio="xMidYMid meet"
       focusable="false"
-      className="w-[25%] h-[25%] lg:w-[40%] lg:h-[40%]"
+      className="w-[25%] h-[25%]"
     >
       <g fill="none" fillRule="evenodd">
         <g>
