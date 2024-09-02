@@ -47,7 +47,11 @@ function RestaurantsListItem({
             {
               <>
                 {timeSlots.map((slot) => (
-                  <TimeSlotDialog key={slot.label} slot={slot} />
+                  <TimeSlotDialog
+                    key={slot.label}
+                    restWithTables={restWithTables}
+                    slot={slot}
+                  />
                 ))}
               </>
             }
