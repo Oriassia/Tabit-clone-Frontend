@@ -6,22 +6,79 @@ import OrangeGuests from "../svg/OrangeGuests";
 import OrangeTablesIcon from "../svg/OrangeTablesIcon";
 import { Separator } from "@/components/ui/separator";
 import api from "@/services/api.services";
+import { useSearchParams } from "react-router-dom";
+import ReserveBtn from "./ReserveBtn";
+import { IReservation } from "@/types/restaurant";
+
+interface IAvaliableTable {
+  DateTime: string;
+  TableId: string;
+  Position: string;
+  Capacity: string;
+}
 
 function ReservationData({ restId }: { restId: string }) {
+  const [searchParams] = useSearchParams();
+  const position: string | null = searchParams.get("position");
+  const guests: string | null = searchParams.get("guests");
+  const tableId: string | null = searchParams.get("tableId");
+  const dateAndTime: string | null = searchParams.get("date");
+  const date: string | null = dateAndTime ? dateAndTime.split("T")[0] : null;
+  const hour: string | null = dateAndTime ? dateAndTime.split("T")[1] : null;
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedHour, setSelectedHour] = useState<string | null>(null);
-  const [selectedGuests, setSelectedGuests] = useState<string>("2");
-  const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [selectedHour, setSelectedHour] = useState<string>(hour || ""); // Ensure it's a string
+  const [selectedGuests, setSelectedGuests] = useState<string>(guests || "2");
+  const [selectedDate, setSelectedDate] = useState<string>(date || ""); // Ensure it's a string
   const [type, setType] = useState<string | null>(null);
   const [positions, setPositions] = useState<any[]>([]); // Update to any[] to handle objects
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
-
+  const [selectedPosition, setSelectedPosition] = useState<string | null>(
+    position
+  );
+  const [allTables, setAllTables] = useState<IAvaliableTable[] | null>(null);
   // Function to convert 24-hour format to 12-hour format
   function convertTo12HourFormat(hour: number, minute: number): string {
     const ampm = hour >= 12 ? "PM" : "AM";
     const hour12 = hour % 12 === 0 ? 12 : hour % 12;
     const minuteFormatted = minute.toString().padStart(2, "0");
     return `${hour12}:${minuteFormatted} ${ampm}`;
+  }
+  function formatToDateTime(datePart: string, timePart: string): string {
+    // Define the current year as 2024
+    const targetYear = 2024;
+
+    // Parse the date part (e.g., "Mon, 9/2") to get the month and day
+    const [_, dateString] = datePart.split(", ").map((part) => part.trim());
+    const [month, day] = dateString.split("/").map(Number);
+
+    // Convert the time part to 24-hour format
+    const [time, period] = timePart.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+    if (period === "PM" && hours !== 12) {
+      hours += 12; // Convert PM to 24-hour format, except for 12 PM
+    } else if (period === "AM" && hours === 12) {
+      hours = 0; // Convert 12 AM to 0
+    }
+
+    // Create a new date object for 2024 with the parsed values
+    const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
+
+    // Format the date to "YYYY-MM-DDTHH:MM"
+    const formattedString = `${formattedDate.getFullYear()}-${(
+      formattedDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${formattedDate
+      .getDate()
+      .toString()
+      .padStart(2, "0")}T${formattedDate
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${formattedDate
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+
+    return formattedString;
   }
 
   // Function to filter future times
@@ -115,6 +172,34 @@ function ReservationData({ restId }: { restId: string }) {
   const futureHours = filterFutureTimes(allHours);
   const next7Days = generateNext7Days();
   const guestsArr = ["1", "2", "3", "4", "5", "6+"];
+  async function getAllTables() {
+    try {
+      const { data } = await api.get(`/tables/${restId}`);
+      setAllTables(data);
+      console.log(data);
+    } catch (error) {
+      console.error("Failed to fetch tables:", error);
+    }
+  }
+
+  function checkAvability(
+    dateTime: string | null,
+    capacity: string | null,
+    position: string | null
+  ) {
+    if (allTables) {
+      allTables.forEach((table) => {
+        if (
+          table.Capacity === capacity &&
+          table.Position === position &&
+          table.DateTime === dateTime
+        ) {
+          return true;
+        }
+      });
+    }
+    return false;
+  }
 
   useEffect(() => {
     if (!selectedHour && futureHours.length > 0) {
@@ -135,6 +220,12 @@ function ReservationData({ restId }: { restId: string }) {
     }
     getTablesPositions();
   }, [restId]);
+  useEffect(() => {
+    getAllTables();
+    if (tableId != null) {
+    } else if (checkAvability(dateAndTime, guests, position)) {
+    }
+  }, []);
 
   const handleDateSelection = (date: string) => {
     setSelectedDate(date);
@@ -156,12 +247,27 @@ function ReservationData({ restId }: { restId: string }) {
     setIsOpen(false); // Close dropdown
   };
 
+  async function reserveATable() {
+    if (tableId == null) {
+      const tableId = allTables?.forEach((table) => {
+        if (
+          table.Capacity === selectedGuests &&
+          table.Position === selectedPosition &&
+          formatToDateTime(selectedDate, selectedHour) === table.DateTime
+        )
+          return table.TableId;
+      });
+      if (tableId) {
+      }
+    }
+  }
+
   return (
     <>
       <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-xl shadow-greyShadow rounded-lg">
         {/* Date selection */}
         <div
-          className={`relative col-span-1 p-3 flex flex-col items-center justify-center ${
+          className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type == "date" && isOpen
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
@@ -175,15 +281,15 @@ function ReservationData({ restId }: { restId: string }) {
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
             {type === "date" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
           </span>
-          <div className="flex w-full justify-center">
-            <OrangeCalender />
+          <div className="flex w-full justify-center mb-3">
+            <OrangeCalender /> {/* Smaller icon size */}
           </div>
           <div className="text-center">{selectedDate || next7Days[0]}</div>
         </div>
 
         {/* Time selection */}
         <div
-          className={`relative col-span-1 p-3 flex flex-col items-center justify-center ${
+          className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type == "hour" && isOpen
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
@@ -197,15 +303,15 @@ function ReservationData({ restId }: { restId: string }) {
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
             {type === "hour" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
           </span>
-          <div className="flex w-full justify-center">
-            <OrangeClock />
+          <div className="flex w-full justify-center mb-3">
+            <OrangeClock /> {/* Smaller icon size */}
           </div>
           <div className="text-center">{selectedHour || "Select a time"}</div>
         </div>
 
         {/* Guests selection */}
         <div
-          className={`relative col-span-1 p-3 flex flex-col items-center justify-center ${
+          className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type == "guests" && isOpen ? "border-[1px] border-orange" : ""
           } rounded-lg cursor-pointer `}
           onClick={() => {
@@ -217,8 +323,8 @@ function ReservationData({ restId }: { restId: string }) {
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
             {type === "guests" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
           </span>
-          <div className="flex w-full justify-center">
-            <OrangeGuests />
+          <div className="flex w-full justify-center mb-3">
+            <OrangeGuests /> {/* Smaller icon size */}
           </div>
           <div className="text-center">
             {selectedGuests} {selectedGuests == "1" ? "Guest" : "Guests"}
@@ -228,7 +334,7 @@ function ReservationData({ restId }: { restId: string }) {
         {/* Position selection */}
         {positions.length > 1 && (
           <div
-            className={`relative col-span-3 p-3 h-16 flex items-center justify-center ${
+            className={`relative col-span-3 p-3 h-16 flex items-center pl-6  ${
               type == "position" && isOpen
                 ? "border-[1px] border-orange"
                 : "border-t-[1px] border-white"
@@ -239,7 +345,7 @@ function ReservationData({ restId }: { restId: string }) {
             }}
           >
             {/* Arrow Icon */}
-            <span className="absolute top-3 left-1 text-sm w-4 pl-2">
+            <span className="absolute top-3 right-3 text-sm w-4 pl-2">
               {type === "position" && isOpen ? (
                 <FaChevronUp />
               ) : (
@@ -309,17 +415,21 @@ function ReservationData({ restId }: { restId: string }) {
                       position.position === selectedPosition
                         ? "bg-greySelected"
                         : ""
-                    } w-full h-10 flex items-center p-4 py-6 cursor-pointer`}
+                    } w-full h-10 flex items-center p-4 py-6 cursor-pointer border-t-[0.5px] border-greyFooterText`}
                     onClick={() => handlePositionSelection(position.position)}
                   >
                     <span>{position.position}</span>
                   </div>
-                  <Separator />
                 </div>
               ))
             : null}
         </div>
       )}
+      <ReserveBtn
+        onClick={() => {
+          console.log(allTables);
+        }}
+      />
     </>
   );
 }
