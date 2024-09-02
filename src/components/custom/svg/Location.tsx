@@ -7,7 +7,7 @@ const OpenMapIcon: React.FC = () => {
       data-name="Layer 1"
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 17.5 22.5"
-      className="w-[8%] h-[8%] lg:w-[40%] lg:h-[40%]"
+      className="w-[8%] h-[8%] md:w-[5%] md:h-[5%] lg:w-[9%]"
       preserveAspectRatio="xMidYMid meet"
       focusable="false"
     >
