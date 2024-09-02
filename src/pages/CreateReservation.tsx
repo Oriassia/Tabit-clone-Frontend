@@ -1,4 +1,5 @@
 import ReservationFooter from "@/components/custom/ReservationFooter/ReservationFooter";
+
 import ReservationData from "@/components/custom/ReservationForms/ReservationData";
 import api from "@/services/api.services";
 import { IRestaurant } from "@/types/restaurant";
@@ -45,6 +46,7 @@ function CreateReservation() {
         <h1 className="text-4xl text-white my-1">{restaurant?.name}</h1>
         <h3 className="text-xl text-white my-1 mb-3">{restaurant?.address}</h3>
         <ReservationData restId={restId} />
+
         <span>ReservBtn</span>
         <h3 className="text-xl text-white my-1">
           To reserve a table at {restaurant?.name}, choose a date, time, and

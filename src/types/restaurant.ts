@@ -44,7 +44,7 @@ export interface IReservation {
   phoneNumber: string;
   email: string;
   notes?: string;
-  date: Date;
+  date: string;
 }
 
 export interface ITable {
