@@ -7,6 +7,7 @@ import BookATablePage from "./pages/BookATablePage";
 import GiftItPage from "./pages/GiftItPage";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import CreateReservation from "./pages/CreateReservation";
+import ReservationDetailsPage from "./pages/ReservationDetailsPage";
 
 function App() {
   return (
@@ -30,6 +31,10 @@ function App() {
         </Route>
         <Route path="/online-reservations">
           <Route index element={<CreateReservation />} />
+          <Route
+            path="reservation-details"
+            element={<ReservationDetailsPage />}
+          />
         </Route>
       </Routes>
     </>

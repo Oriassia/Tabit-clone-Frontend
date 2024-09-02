@@ -58,7 +58,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
                 }`}
               >
                 <Link
-                  to={`/create-reservation?restId=${
+                  to={`/online-reservations?restId=${
                     restWithTables.restId || null
                   }&date=${slot.data?.time || null}&position=${
                     position || null
