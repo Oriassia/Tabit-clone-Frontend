@@ -33,7 +33,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
             : outline_triggerClass
         } rounded-[4px] py-3 px-5`}
       >
-        {slot.data?.time || "-"}
+        {slot.data?.time.split("T")[1] || "-"}
       </DialogTrigger>
       <DialogContent className="dark:text-white max-w-72 text-lg dark:bg-greyNavbar dark:rounded-none">
         <DialogHeader>
@@ -58,10 +58,11 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
                 }`}
               >
                 <Link
-                  to={`/create-reservation/?restId=${
+                  to={`/create-reservation?restId=${
                     restWithTables.restId || null
-                  }&date=${searchParams.get("date") || null}
-                  &position=${position || null}&tableId=${
+                  }&date=${slot.data?.time || null}&position=${
+                    position || null
+                  }&tableId=${
                     (slot.data && slot.data[position.toLowerCase()]) || null
                   }&guests=${searchParams.get("guests") || null}`}
                 >
