@@ -100,7 +100,7 @@ function BookATablePage() {
       }
 
       setAvailableTablesByRest(data);
-      updateSearchParams("date", postInputData.date);
+
       scrollToRestaurant(data[0].restId);
       setClickedId(data[0].restId);
     } catch (error: any) {

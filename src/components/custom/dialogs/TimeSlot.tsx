@@ -33,7 +33,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
             : outline_triggerClass
         } rounded-[4px] py-3 px-5`}
       >
-        {slot.data?.time}
+        {slot.data?.time || "-"}
       </DialogTrigger>
       <DialogContent className="dark:text-white max-w-72 text-lg dark:bg-greyNavbar dark:rounded-none">
         <DialogHeader>
@@ -65,7 +65,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
                     (slot.data && slot.data[position.toLowerCase()]) || null
                   }&guests=${searchParams.get("guests") || null}`}
                 >
-                  {position}
+                  {position || "-"}
                 </Link>
               </button>
             </li>

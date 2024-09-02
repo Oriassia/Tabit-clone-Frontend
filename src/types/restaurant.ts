@@ -84,11 +84,11 @@ export interface AvailableTablesByRestaurant extends IRestaurant {
     time: string;
   };
   half_hour_before: {
-    time: string;
     bar: number | null;
     inside: number;
     outside: number;
     available: number;
+    time: string;
   };
 }
 
