@@ -59,12 +59,11 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
               >
                 <Link
                   to={`/create-reservation/?restId=${
-                    restWithTables.restId
-                  }&date=${searchParams.get(
-                    "date"
-                  )}&position=${position}&tableId=${
-                    slot.data && slot.data[position.toLowerCase()]
-                  }`}
+                    restWithTables.restId || null
+                  }&date=${searchParams.get("date") || null}
+                  &position=${position || null}&tableId=${
+                    (slot.data && slot.data[position.toLowerCase()]) || null
+                  }&guests=${searchParams.get("guests") || null}`}
                 >
                   {position}
                 </Link>
