@@ -31,13 +31,15 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
           slot.data?.available === 1
             ? default_triggerClass
             : outline_triggerClass
-        } rounded-[4px] py-3 px-5`}
+        } rounded-[4px] font-medium py-3 px-5`}
       >
-        {slot.data?.time}
+        {slot.data?.time.split("T")[1] || "-"}
       </DialogTrigger>
-      <DialogContent className="dark:text-white max-w-72 text-lg dark:bg-greyNavbar dark:rounded-none">
+      <DialogContent className="dark:text-white max-w-80 text-2xl dark:bg-greyNavbar dark:rounded-none">
         <DialogHeader>
-          <DialogTitle className="text-center">Choose Area:</DialogTitle>
+          <DialogTitle className="text-center text-2xl">
+            Choose Area:
+          </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <ul className="flex flex-col">
@@ -58,14 +60,15 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
                 }`}
               >
                 <Link
-                  to={`/create-reservation/?restId=${
+                  to={`/online-reservations?restId=${
                     restWithTables.restId || null
-                  }&date=${searchParams.get("date") || null}
-                  &position=${position || null}&tableId=${
+                  }&date=${slot.data?.time || null}&position=${
+                    position || null
+                  }&tableId=${
                     (slot.data && slot.data[position.toLowerCase()]) || null
                   }&guests=${searchParams.get("guests") || null}`}
                 >
-                  {position}
+                  {position || "-"}
                 </Link>
               </button>
             </li>

@@ -30,6 +30,7 @@ function BookATablePage() {
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
+    setSearchParams(searchParams);
     handleSearchSubmit();
   }, []);
 
@@ -100,12 +101,11 @@ function BookATablePage() {
       }
 
       setAvailableTablesByRest(data);
-      updateSearchParams("date", postInputData.date);
       scrollToRestaurant(data[0].restId);
       setClickedId(data[0].restId);
     } catch (error: any) {
       console.error(error);
-      alert(error.message || "An unexpected error occurred. Please try again.");
+      error.message || "An unexpected error occurred. Please try again.";
     }
   };
 

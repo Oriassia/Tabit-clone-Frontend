@@ -385,14 +385,14 @@ function ReservationData({ restId }: { restId: string }) {
 
   return (
     <>
-      <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-xl shadow-greyShadow rounded-lg">
+      <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-slate-500 shadow rounded-lg text-lg">
         {/* Date selection */}
         <div
           className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type === "date" && isOpen
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
-          } rounded-lg cursor-pointer `}
+          }  cursor-pointer `}
           onClick={() => {
             setIsOpen(!isOpen);
             setType("date");
@@ -413,7 +413,7 @@ function ReservationData({ restId }: { restId: string }) {
             type === "hour" && isOpen
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
-          } rounded-lg cursor-pointer `}
+          } cursor-pointer `}
           onClick={() => {
             setIsOpen(!isOpen);
             setType("hour");
@@ -432,7 +432,7 @@ function ReservationData({ restId }: { restId: string }) {
         <div
           className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type === "guests" && isOpen ? "border-[1px] border-orange" : ""
-          } rounded-lg cursor-pointer `}
+          } cursor-pointer `}
           onClick={() => {
             setIsOpen(!isOpen);
             setType("guests");
@@ -456,7 +456,7 @@ function ReservationData({ restId }: { restId: string }) {
               type === "position" && isOpen
                 ? "border-[1px] border-orange"
                 : "border-t-[1px] border-white"
-            } rounded-lg w-full cursor-pointer`}
+            } w-full cursor-pointer`}
             onClick={() => {
               setIsOpen(!isOpen);
               setType("position");
