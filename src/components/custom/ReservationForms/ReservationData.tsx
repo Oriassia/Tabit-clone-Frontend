@@ -19,6 +19,8 @@ interface IAvaliableTable {
 function ReservationData({ restId }: { restId: string }) {
   const [searchParams] = useSearchParams();
   const position: string | null = searchParams.get("position");
+  console.log(position);
+
   const guests: string | null = searchParams.get("guests");
   const tableId: string | null = searchParams.get("tableId");
   const dateAndTime: string | null = searchParams.get("date");
@@ -312,15 +314,15 @@ function ReservationData({ restId }: { restId: string }) {
       try {
         const { data } = await api.get(`/tables/position/${restId}`);
         setPositions(data);
-        setSelectedPosition(data[0].position);
+
+        if (!position) {
+          setSelectedPosition(data[0].position);
+        }
       } catch (error) {
         console.error("Failed to fetch tables positions:", error);
       }
     }
     getTablesPositions();
-  }, [restId]);
-
-  useEffect(() => {
     getAllTables();
   }, [restId]);
 
