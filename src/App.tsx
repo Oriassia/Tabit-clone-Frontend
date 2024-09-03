@@ -8,6 +8,7 @@ import GiftItPage from "./pages/GiftItPage";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import CreateReservation from "./pages/CreateReservation";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
+import ModifyReservation from "./pages/ModifyReservation";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             path="reservation-details"
             element={<ReservationDetailsPage />}
           />
+          <Route path="modify-reservation" element={<ModifyReservation />} />
         </Route>
       </Routes>
     </>
