@@ -347,6 +347,22 @@ function ReservationData({ restId }: { restId: string }) {
     setIsOpen(false);
   };
 
+  const formatTo12HourClock = (dateTime: string) => {
+    // Extract time part from DateTime string
+    const timePart = dateTime.split("T")[1]; // e.g., "14:30:00"
+
+    // Split hours, minutes, and seconds
+    const [hours, minutes, seconds] = timePart.split(":");
+
+    // Convert hours from 24-hour format to 12-hour format
+    const hour = parseInt(hours);
+    const period = hour >= 12 ? "pm" : "am";
+    const formattedHour = hour % 12 || 12; // If hour is 0 or 12, it remains 12
+
+    // Construct the formatted time string
+    return `${formattedHour}:${minutes}${period}`;
+  };
+
   async function reserveATable() {
     if (tableId == null) {
       const availableTable = allTables?.find(
@@ -366,21 +382,6 @@ function ReservationData({ restId }: { restId: string }) {
       console.log("Table already selected:", tableId);
     }
   }
-  const formatTo12HourClock = (dateTime: string) => {
-    // Extract time part from DateTime string
-    const timePart = dateTime.split("T")[1]; // e.g., "14:30:00"
-
-    // Split hours, minutes, and seconds
-    const [hours, minutes, seconds] = timePart.split(":");
-
-    // Convert hours from 24-hour format to 12-hour format
-    const hour = parseInt(hours);
-    const period = hour >= 12 ? "pm" : "am";
-    const formattedHour = hour % 12 || 12; // If hour is 0 or 12, it remains 12
-
-    // Construct the formatted time string
-    return `${formattedHour}:${minutes}${period}`;
-  };
 
   return (
     <>
