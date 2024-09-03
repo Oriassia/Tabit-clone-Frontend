@@ -3,6 +3,7 @@ import ReservationFooter from "@/components/custom/ReservationFooter/Reservation
 import OrangeCalender from "@/components/custom/svg/OrangeCalender";
 import OrangeClock from "@/components/custom/svg/OrangeClock";
 import OrangeGuests from "@/components/custom/svg/OrangeGuests";
+import OrangeTablesIcon from "@/components/custom/svg/OrangeTablesIcon";
 import api from "@/services/api.services";
 import { IRestaurantReservation } from "@/types/restaurant";
 import { LucideShare2 } from "lucide-react";
@@ -24,7 +25,7 @@ const ActionButton = ({ icon, text }: ActionButtonProps) => (
 );
 
 const ReservationDetailsPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [reservationInfo, setReservationInfo] =
     useState<IRestaurantReservation>();
@@ -37,6 +38,8 @@ const ReservationDetailsPage = () => {
     const reservationId = searchParams.get("reservationId") || "101";
     try {
       const { data } = await api.get(`/reservations/${reservationId}`);
+      console.log(data);
+
       setReservationInfo(data);
     } catch (error: any) {
       console.error(error);
@@ -72,7 +75,7 @@ const ReservationDetailsPage = () => {
   return (
     <>
       {/* page wrapper */}
-      <div className="bg-greyBg flex flex-col gap-8 text-white font-sans h-screen">
+      <div className="bg-red-500 flex flex-col gap-8 text-white font-sans h-screen">
         {/* image */}
         <img
           src={reservationInfo?.mainPhoto}
@@ -81,7 +84,7 @@ const ReservationDetailsPage = () => {
         />
 
         {/* Header */}
-        <div className="flex flex-col gap-5 items-center">
+        <div className="bg-green-500 flex flex-col gap-5 items-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold">
               {reservationInfo?.restaurant_name || "Restaurant not found"}
@@ -91,7 +94,7 @@ const ReservationDetailsPage = () => {
             </p>
           </div>
 
-          <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-slate-500 shadow rounded-lg">
+          <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-slate-500 shadow rounded-lg text-lg">
             {/* Date selection */}
             <div
               className="flex flex-col gap-2 py-3  items-center justify-center
@@ -127,23 +130,37 @@ const ReservationDetailsPage = () => {
                 {reservationInfo?.partySize || "Guests not available"}
               </div>
             </div>
+
+            {/* Position selection */}
+            <div className="p-7 flex content-center items-center gap-5 col-start-1 col-end-4 border-t">
+              <OrangeTablesIcon />
+              <div className="text-center">
+                {reservationInfo?.position || "Table position not available"}
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Middel */}
+        {/* Middell */}
         <div className="bg-greyNavbar py-7 flex flex-col items-center">
-          <div>
-            <p className="text-xl text-left">
-              {reservationInfo
-                ? `Hey ${reservationInfo?.firstName} ${
-                    reservationInfo?.lastName
-                  }
-              ${(<br />)}
-              "Your reservation has been booked successfully`
-                : "Reservation data unavailable"}
-            </p>
+          <div className="bg-greyNavbar py-7 flex flex-col items-center">
+            <div>
+              {reservationInfo ? (
+                <p className="text-xl text-left">
+                  Hey {reservationInfo?.firstName} {reservationInfo?.lastName}
+                  ,
+                  <br />
+                  Your reservation has been booked successfully
+                </p>
+              ) : (
+                <p className="text-xl text-left">
+                  Reservation data unavailable
+                </p>
+              )}
+            </div>
           </div>
-          {!reservationInfo && (
+
+          {reservationInfo && (
             <div className="flex justify-center space-x-2 mt-4">
               <button className="border-opacity-60 bg-black border border-greenButton hover:bg-gray-800 text-white font-bold py-3 px-2 rounded-md transition duration-150">
                 Modify Reservation
@@ -156,7 +173,7 @@ const ReservationDetailsPage = () => {
           )}
         </div>
         {reservationInfo && (
-          <div className="flex gap-4 min-w-[10rem] w-2/3 max-w-[35rem] self-center">
+          <div className="flex gap-4 min-w-[10rem] w-2/3 max-w-[35rem]  self-center">
             <ActionButton
               icon={<LucideShare2 className="text-greenButton" />}
               text="Share"
@@ -175,9 +192,11 @@ const ReservationDetailsPage = () => {
             />
           </div>
         )}
-        <p className="text-xs text-center mt-4 opacity-75">
+
+        {/* Footer */}
+        {/* <p className="text-xs text-center mt-4 opacity-75">
           For any request regarding your order, please contact directly CW
-        </p>
+        </p> */}
         <ReservationFooter />
       </div>
     </>
