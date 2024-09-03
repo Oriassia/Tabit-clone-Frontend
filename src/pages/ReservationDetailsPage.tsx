@@ -18,7 +18,7 @@ interface ActionButtonProps {
 }
 
 const ActionButton = ({ icon, text }: ActionButtonProps) => (
-  <button className="w-full border border-opacity-60 border-greenButton flex flex-col py-2 items-center justify-center bg-none hover:bg-gray-800 text-white rounded-md transition duration-150">
+  <button className=" flex flex-col py-2 px-5 border border-opacity-60 border-greenButton  items-center justify-center bg-none hover:bg-gray-800 text-white rounded-md transition duration-150">
     <div className="text-xl">{icon}</div>
     <span className="text-lg">{text}</span>
   </button>
@@ -75,7 +75,7 @@ const ReservationDetailsPage = () => {
   return (
     <>
       {/* page wrapper */}
-      <div className="bg-red-500 flex flex-col gap-8 text-white font-sans h-screen">
+      <div className="bg-greyDarkBg flex flex-col gap-8 text-white font-sans">
         {/* image */}
         <img
           src={reservationInfo?.mainPhoto}
@@ -84,7 +84,7 @@ const ReservationDetailsPage = () => {
         />
 
         {/* Header */}
-        <div className="bg-green-500 flex flex-col gap-5 items-center">
+        <div className=" flex flex-col gap-5 items-center">
           <div className="text-center">
             <h1 className="text-2xl font-bold">
               {reservationInfo?.restaurant_name || "Restaurant not found"}
@@ -141,7 +141,7 @@ const ReservationDetailsPage = () => {
           </div>
         </div>
 
-        {/* Middell */}
+        {/* Feadback section */}
         <div className="bg-greyNavbar py-7 flex flex-col items-center">
           <div className="bg-greyNavbar py-7 flex flex-col items-center">
             <div>
@@ -161,7 +161,7 @@ const ReservationDetailsPage = () => {
           </div>
 
           {reservationInfo && (
-            <div className="flex justify-center space-x-2 mt-4">
+            <div className="flex justify-center space-x-2 py-5">
               <button className="border-opacity-60 bg-black border border-greenButton hover:bg-gray-800 text-white font-bold py-3 px-2 rounded-md transition duration-150">
                 Modify Reservation
               </button>
@@ -172,8 +172,10 @@ const ReservationDetailsPage = () => {
             </div>
           )}
         </div>
+
+        {/* Share section */}
         {reservationInfo && (
-          <div className="flex gap-4 min-w-[10rem] w-2/3 max-w-[35rem]  self-center">
+          <div className="flex gap-4 py-5 justify-center bg-greyDarkBg">
             <ActionButton
               icon={<LucideShare2 className="text-greenButton" />}
               text="Share"
@@ -194,9 +196,9 @@ const ReservationDetailsPage = () => {
         )}
 
         {/* Footer */}
-        {/* <p className="text-xs text-center mt-4 opacity-75">
+        <p className="text-xs text-center mt-4 opacity-75">
           For any request regarding your order, please contact directly CW
-        </p> */}
+        </p>
         <ReservationFooter />
       </div>
     </>

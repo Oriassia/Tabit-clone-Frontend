@@ -102,6 +102,7 @@ export interface TimeSlot {
 }
 
 export interface IRestaurantReservation {
+  position: string;
   category: string;
   date: string; // ISO 8601 date string
   email: string;
