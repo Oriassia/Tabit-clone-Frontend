@@ -104,3 +104,38 @@ export function getAvailableTimes(dateDayNumber: string | null) {
 
   return times;
 }
+
+export function generate30Days() {
+  const today = new Date();
+  const dates: Date[] = [];
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() + i);
+    dates.push(date);
+  }
+  return dates;
+}
+
+export function generate30DaysAsStrings(): string[] {
+  const today = new Date();
+  const dates: string[] = [];
+
+  for (let i = 0; i < 30; i++) {
+    const date = new Date();
+    date.setDate(today.getDate() + i);
+
+    // Get the short day name
+    const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+
+    // Get the date in dd/mm format
+    const dayMonth = date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+    });
+
+    dates.push(`${dayName} ${dayMonth}`);
+  }
+
+  return dates;
+}

@@ -1,4 +1,8 @@
-import { formatDate, getAvailableTimes } from "@/services/timefunctions";
+import {
+  formatDate,
+  generate30Days,
+  getAvailableTimes,
+} from "@/services/timefunctions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -31,17 +35,7 @@ export function ReservationSelector({
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
 
   useEffect(() => {
-    // Generate dates from today until the next 30 days
-    const today = new Date();
-    const dates: Date[] = [];
-
-    for (let i = 0; i < 30; i++) {
-      const date = new Date();
-      date.setDate(today.getDate() + i);
-      dates.push(date);
-    }
-
-    setAvailableDates(dates);
+    setAvailableDates(generate30Days());
   }, []);
 
   useEffect(() => {
