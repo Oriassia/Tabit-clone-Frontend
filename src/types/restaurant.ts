@@ -100,3 +100,30 @@ export interface TimeSlot {
     [key: string]: any;
   };
 }
+
+export interface IRestaurantReservation {
+  category: string;
+  date: string; // ISO 8601 date string
+  email: string;
+  facebook: string;
+  firstName: string;
+  instagram: string;
+  lastName: string;
+  longDescription: string;
+  mainPhoto: string;
+  notes: string;
+  opening_hours: {
+    [key: string]: string; // e.g., { monday: '08:00-23:00', ... }
+  };
+  partySize: number;
+  phoneNumber: string;
+  reservationId: number;
+  restId: number;
+  restaurant_address: string;
+  restaurant_lat: number;
+  restaurant_lng: number;
+  restaurant_name: string;
+  shortDescription: string;
+  tableId: number;
+  website: string;
+}
