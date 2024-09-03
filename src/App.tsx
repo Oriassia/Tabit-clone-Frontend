@@ -9,12 +9,13 @@ import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import CreateReservation from "./pages/CreateReservation";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
 import ModifyReservation from "./pages/ModifyReservation";
+import { ReservationProvider } from "./context/ReservationContext";
 
 function App() {
   return (
     <>
       <Routes>
-        {/* routes WITH navbar & footer */}
+        {/* Routes WITH navbar & footer */}
         <Route path="/" element={<MainLayout />}>
           <Route index element={<LandingPage />} />
           <Route path="deliveries" element={<DeliveriesPage />} />
@@ -25,13 +26,23 @@ function App() {
           />
         </Route>
 
-        {/* routes WITHOUT navbar & footer */}
+        {/* Routes WITHOUT navbar & footer */}
         <Route path="/" element={<Outlet />}>
           <Route path="book-a-table" element={<BookATablePage />} />
           <Route path="restaurants" element={<RestaurantsPage />} />
         </Route>
-        <Route path="/online-reservations">
-          <Route index element={<CreateReservation />} />
+
+        {/* Routes wrapped with ReservationProvider */}
+        <Route
+          path="/online-reservations"
+          element={
+            <ReservationProvider>
+              <Outlet />
+            </ReservationProvider>
+          }
+        >
+          <Route path="search" element={<CreateReservation />} />
+          <Route path="create" element={<CreateReservation />} />
           <Route
             path="reservation-details"
             element={<ReservationDetailsPage />}

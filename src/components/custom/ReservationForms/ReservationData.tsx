@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 import OrangeCalender from "../svg/OrangeCalender";
 import OrangeClock from "../svg/OrangeClock";
 import OrangeGuests from "../svg/OrangeGuests";
 import OrangeTablesIcon from "../svg/OrangeTablesIcon";
 import { Separator } from "@/components/ui/separator";
-import api from "@/services/api.services";
-import { useSearchParams } from "react-router-dom";
+import { useReservation } from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
+import { useSearchParams } from "react-router-dom";
 
 interface IAvaliableTable {
   DateTime: string;
@@ -16,130 +16,36 @@ interface IAvaliableTable {
   Capacity: string;
 }
 
-function ReservationData({ restId }: { restId: string }) {
-  const [searchParams] = useSearchParams();
-  const position: string | null = searchParams.get("position");
-  console.log(position);
-
-  const guests: string | null = searchParams.get("guests");
-  const tableId: string | null = searchParams.get("tableId");
-  const dateAndTime: string | null = searchParams.get("date");
-  const date: string | null = dateAndTime ? dateAndTime.split("T")[0] : null;
-  const hour: string | null = dateAndTime ? dateAndTime.split("T")[1] : null;
+const ReservationData: React.FC = () => {
+  const {
+    restId,
+    selectedDate,
+    setSelectedDate,
+    selectedHour,
+    setSelectedHour,
+    selectedGuests,
+    setSelectedGuests,
+    selectedPosition,
+    setSelectedPosition,
+    likeWantedTables,
+    setLikeWantedTables,
+    getLikeTables,
+    tableId,
+    setTableId,
+    allTables,
+    positions,
+    getAllTables,
+    getTablesPositions,
+  } = useReservation();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedHour, setSelectedHour] = useState<string>(hour || ""); // Ensure it's a string
-  const [selectedGuests, setSelectedGuests] = useState<string>(guests || "2");
-  const [selectedDate, setSelectedDate] = useState<string>(
-    date || formatDateToShortString(new Date().toDateString())
-  ); // Ensure it's a string
-  const [type, setType] = useState<string | null>(null);
-  const [positions, setPositions] = useState<any[]>([]); // Update to any[] to handle objects
-  const [selectedPosition, setSelectedPosition] = useState<string | null>(
-    position
-  );
-  const [allTables, setAllTables] = useState<IAvaliableTable[] | null>(null);
-  const [likeWantedTables, setLikeWantedTables] = useState<IAvaliableTable[]>(
-    []
-  );
-  const [likeWantedOpen, setLikeWantedOpen] = useState<boolean>(true);
+  const [type, setType] = useState<
+    "date" | "hour" | "guests" | "position" | null
+  >(null);
+  const [likeWantedOpen, setLikeWantedOpen] = useState<boolean>(false);
   const [filteredHours, setFilteredHours] = useState<string[]>([]);
-
-  // Function to convert 24-hour format to 12-hour format
-  function convertTo12HourFormat(hour: number, minute: number): string {
-    const ampm = hour >= 12 ? "pm" : "am";
-    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-    const minuteFormatted = minute.toString().padStart(2, "0");
-    return `${hour12}:${minuteFormatted}${ampm}`;
-  }
-
-  function formatDateToShortString(dateString: string) {
-    const date = new Date(dateString);
-    const day = date.toLocaleDateString("en-US", { weekday: "short" }); // "Mon"
-    const month = date.getMonth() + 1; // Month is 0-indexed, so add 1
-    const dayOfMonth = date.getDate(); // Day of the month
-    return `${day}, ${month}/${dayOfMonth}`;
-  }
-
-  function formatDateToYYYYMMDD(dateStr: string | undefined): string {
-    if (!dateStr) return ""; // Return empty or handle accordingly if undefined
-    const [_, datePart] = dateStr.split(", ");
-    if (!datePart) return ""; // Handle cases where the split does not produce expected results
-    const [month, day] = datePart.split("/").map(Number);
-    const year = 2024; // Fixed year
-    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
-      2,
-      "0"
-    )}`;
-  }
-
-  function formatToDateTime(datePart: string, timePart: string): string {
-    const targetYear = 2024;
-    const [_, dateString] = datePart.split(", ").map((part) => part.trim());
-    const [month, day] = dateString.split("/").map(Number);
-    const [time, period] = timePart.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-    if (period === "PM" && hours !== 12) {
-      hours += 12; // Convert PM to 24-hour format, except for 12 PM
-    } else if (period === "AM" && hours === 12) {
-      hours = 0; // Convert 12 AM to 0
-    }
-
-    const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
-    const formattedString = `${formattedDate.getFullYear()}-${(
-      formattedDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${formattedDate
-      .getDate()
-      .toString()
-      .padStart(2, "0")}T${formattedDate
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${formattedDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
-
-    return formattedString;
-  }
-
-  // Function to filter future times
-  function filterFutureTimes(timesArray: string[]): string[] {
-    const now = new Date();
-    const currentHour = now.getHours();
-    const currentMinute = now.getMinutes();
-
-    return timesArray
-      .map((time) => {
-        const [hour, minute] = time.split(":").map(Number);
-        return { hour, minute, original: time };
-      })
-      .filter(({ hour, minute }) => {
-        return (
-          hour > currentHour || (hour === currentHour && minute > currentMinute)
-        );
-      })
-      .map(({ hour, minute }) => convertTo12HourFormat(hour, minute));
-  }
-
-  // Function to generate the next 7 days
-  function generateNext7Days(): string[] {
-    const days = [];
-    const options = {
-      weekday: "short",
-      month: "numeric",
-      day: "numeric",
-    } as const;
-    for (let i = 0; i < 7; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() + i);
-      days.push(date.toLocaleDateString("en-US", options));
-    }
-    return days;
-  }
-
-  // Array of all half-hour slots from "00:00" to "23:30"
+  const [searchParams, setSearchParams] = useSearchParams();
+  const step = searchParams.get("step");
   const allHours = [
     "00:00",
     "00:30",
@@ -191,10 +97,126 @@ function ReservationData({ restId }: { restId: string }) {
     "23:30",
   ];
 
-  // Compute future hours and dates once and update state
   const futureHours = filterFutureTimes(allHours);
   const next7Days = generateNext7Days();
   const guestsArr = ["1", "2", "3", "4", "5", "6+"];
+  const formatTo24HourClock = (dateTime: string): string => {
+    const timePart = dateTime.split(" ")[1]; // Extract the time part from the dateTime string
+    if (!timePart) return ""; // Return empty string if no time part is found
+
+    const [hours, minutes] = timePart.split(":"); // Split the time into hours and minutes
+    const formattedHour = parseInt(hours).toString().padStart(2, "0"); // Format hours with leading zero if needed
+    const formattedMinutes = minutes.padStart(2, "0"); // Ensure minutes have two digits
+
+    return `${formattedHour}:${formattedMinutes}`; // Return formatted time in "HH:MM" format
+  };
+
+  useEffect(() => {
+    if (!selectedDate && next7Days.length > 0) {
+      setSelectedDate(next7Days[0]);
+    }
+  }, [selectedDate, next7Days, setSelectedDate]);
+
+  useEffect(() => {
+    if (selectedDate) {
+      updateHoursBasedOnDate(selectedDate);
+    }
+  }, [selectedDate]);
+
+  useEffect(() => {
+    if (
+      selectedDate &&
+      selectedHour &&
+      selectedPosition &&
+      allTables.length > 0
+    ) {
+      getLikeTables();
+    }
+  }, [selectedDate, selectedHour, selectedPosition, allTables]);
+
+  useEffect(() => {
+    if (filteredHours.length > 0) {
+      if (!selectedHour || !filteredHours.includes(selectedHour)) {
+        setSelectedHour(filteredHours[0]);
+      }
+    }
+  }, [filteredHours, selectedHour]);
+
+  function filterFutureTimes(timesArray: string[]): string[] {
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+
+    return timesArray
+      .map((time) => {
+        const [hour, minute] = time.split(":").map(Number);
+        return { hour, minute, original: time };
+      })
+      .filter(({ hour, minute }) => {
+        return (
+          hour > currentHour || (hour === currentHour && minute > currentMinute)
+        );
+      })
+      .map(({ hour, minute }) => {
+        const formattedHour = hour.toString().padStart(2, "0");
+        const formattedMinute = minute.toString().padStart(2, "0");
+        return `${formattedHour}:${formattedMinute}`;
+      });
+  }
+
+  function generateNext7Days(): string[] {
+    const days = [];
+    const options = {
+      weekday: "short",
+      month: "numeric",
+      day: "numeric",
+    } as const;
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      days.push(date.toLocaleDateString("en-US", options));
+    }
+    return days;
+  }
+
+  function formatDateToYYYYMMDD(dateStr: string | undefined): string {
+    if (!dateStr) return "";
+    const [_, datePart] = dateStr.split(", ");
+    if (!datePart) return "";
+    const [month, day] = datePart.split("/").map(Number);
+    const year = 2024;
+    return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+      2,
+      "0"
+    )}`;
+  }
+
+  function formatToDateTime(datePart: string, timePart: string): string {
+    const targetYear = 2024;
+    const [_, dateString] = datePart.split(", ").map((part) => part.trim());
+    const [month, day] = dateString.split("/").map(Number);
+    const [time] = timePart.split(" ");
+    let [hours, minutes] = time.split(":").map(Number);
+
+    const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
+    const formattedString = `${formattedDate.getFullYear()}-${(
+      formattedDate.getMonth() + 1
+    )
+      .toString()
+      .padStart(2, "0")}-${formattedDate
+      .getDate()
+      .toString()
+      .padStart(2, "0")} ${formattedDate
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${formattedDate
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+
+    return formattedString;
+  }
+
   function updateHoursBasedOnDate(date: string) {
     try {
       const formattedDate = new Date(formatDateToYYYYMMDD(date))
@@ -221,160 +243,58 @@ function ReservationData({ restId }: { restId: string }) {
     );
   }
 
-  async function getAllTables() {
-    try {
-      const { data } = await api.get(`/tables/${restId}`);
-      setAllTables(data);
-      console.log(data);
-    } catch (error) {
-      console.error("Failed to fetch tables:", error);
-    }
-  }
-
-  // Function to find "like" tables based on user preferences
-  function getLikeTables() {
-    if (!allTables || !selectedDate || !selectedHour || !selectedPosition)
-      return;
-
-    console.log("selectedDate: " + formatDateToYYYYMMDD(selectedDate));
-    console.log("selectedHour: ", selectedHour);
-
-    const desiredDate = formatDateToYYYYMMDD(selectedDate).trim();
-    const desiredHour = selectedHour.trim();
-    const desiredTime = desiredDate + "T" + desiredHour;
-    console.log("desiredTime: ", desiredTime);
-
-    const desiredPosition = selectedPosition.trim().toLowerCase();
-    const [desiredHourInt, desiredMinuteInt] = desiredHour
-      .split(":")
-      .map(Number);
-    const desiredTotalMinutes = desiredHourInt * 60 + desiredMinuteInt;
-
-    const nextDayDate = formatDateToYYYYMMDD(
-      new Date(new Date(selectedDate).getTime() + 86400000).toDateString()
-    );
-
-    const likeTables = allTables.filter((table) => {
-      const [tableDate, tableTime] = table.DateTime.split("T");
-      const tablePosition = table.Position.trim().toLowerCase();
-      const [tableHourInt, tableMinuteInt] = tableTime.split(":").map(Number);
-      const tableTotalMinutes = tableHourInt * 60 + tableMinuteInt;
-      const timeDifference = Math.abs(tableTotalMinutes - desiredTotalMinutes);
-
-      // Rule 1: Same date, same hour, different position
-      const isSameDateSameHourDifferentPosition =
-        tableDate === desiredDate &&
-        tableTime === desiredHour &&
-        tablePosition !== desiredPosition;
-
-      // Rule 2: Same date, different hour (3 hours before and after user's time), all positions
-      const isSameDateDifferentHourWithinRange =
-        tableDate === desiredDate &&
-        tableTime !== desiredHour &&
-        timeDifference <= 180;
-
-      // Rule 3: Next day, different hour (3 hours before and after user's time) or user's hour, all positions
-      const isNextDayDifferentHourWithinRangeOrUserHour =
-        tableDate === nextDayDate &&
-        (tableTime === desiredHour || timeDifference <= 180);
-
-      return (
-        isSameDateSameHourDifferentPosition ||
-        isSameDateDifferentHourWithinRange ||
-        isNextDayDifferentHourWithinRangeOrUserHour
-      );
-    });
-
-    console.log("like tables ", likeTables);
-    setLikeWantedTables(likeTables);
-  }
-
-  useEffect(() => {
-    if (selectedDate) {
-      updateHoursBasedOnDate(selectedDate);
-    }
-  }, [selectedDate]);
-
-  useEffect(() => {
-    if (selectedDate && selectedHour && selectedPosition && allTables) {
-      getLikeTables();
-    }
-  }, [selectedDate, selectedHour, selectedPosition, allTables]);
-
-  useEffect(() => {
-    if (filteredHours.length > 0) {
-      if (!selectedHour || !filteredHours.includes(selectedHour)) {
-        setSelectedHour(filteredHours[0]);
-      }
-    }
-  }, [filteredHours, selectedHour]);
-
-  useEffect(() => {
-    async function getTablesPositions() {
-      try {
-        const { data } = await api.get(`/tables/position/${restId}`);
-        setPositions(data);
-
-        if (!position) {
-          setSelectedPosition(data[0].position);
-        }
-      } catch (error) {
-        console.error("Failed to fetch tables positions:", error);
-      }
-    }
-    getTablesPositions();
-    getAllTables();
-  }, [restId]);
-
   const handleDateSelection = (date: string) => {
     setSelectedDate(date);
     setType("hour");
+    setIsOpen(true);
     updateHoursBasedOnDate(date);
   };
 
   const handleHourSelection = (hour: string) => {
     setSelectedHour(hour);
     setType("guests");
+    setIsOpen(true);
   };
 
   const handleGuestSelection = (guest: string) => {
     setSelectedGuests(guest);
     setType("position");
+    setIsOpen(true);
   };
 
   const handlePositionSelection = (position: string) => {
     setSelectedPosition(position);
     setIsOpen(false);
+    setType(null);
   };
 
-  const formatTo12HourClock = (dateTime: string) => {
-    // Extract time part from DateTime string
-    const timePart = dateTime.split("T")[1]; // e.g., "14:30:00"
-
-    // Split hours, minutes, and seconds
-    const [hours, minutes, seconds] = timePart.split(":");
-
-    // Convert hours from 24-hour format to 12-hour format
-    const hour = parseInt(hours);
-    const period = hour >= 12 ? "pm" : "am";
-    const formattedHour = hour % 12 || 12; // If hour is 0 or 12, it remains 12
-
-    // Construct the formatted time string
-    return `${formattedHour}:${minutes}${period}`;
+  const toggleDropdown = (
+    dropdownType: "date" | "hour" | "guests" | "position"
+  ) => {
+    if (step != "search") return;
+    if (type === dropdownType) {
+      setIsOpen(!isOpen);
+    } else {
+      setType(dropdownType);
+      setIsOpen(true);
+    }
   };
 
   async function reserveATable() {
     if (tableId == null) {
       const availableTable = allTables?.find(
-        (table) =>
+        (table: IAvaliableTable) =>
           table.Capacity === selectedGuests &&
           table.Position === selectedPosition &&
-          formatToDateTime(selectedDate, selectedHour) === table.DateTime
+          formatToDateTime(selectedDate, selectedHour) ===
+            table.DateTime.slice(0, 16)
       );
       if (availableTable) {
-        console.log("Found Available Table:", availableTable.TableId);
+        setTableId(availableTable.TableId);
+        searchParams.set("tableid", availableTable.TableId);
+
+        setSearchParams(searchParams);
       } else {
-        console.log("No Available Table Found.");
         getLikeTables();
         setLikeWantedOpen(true);
       }
@@ -383,8 +303,18 @@ function ReservationData({ restId }: { restId: string }) {
     }
   }
 
+  async function reserveLikeTable(tableId: string) {
+    console.log("Reserving like table:", tableId);
+    setTableId(tableId);
+
+    // Update the search parameters in the URL
+    searchParams.set("tableid", tableId); // This creates a new URLSearchParams object, but does not update the URL itself
+    setSearchParams(searchParams); // This will update the URL with the modified searchParams
+  }
+
   return (
     <>
+      {/* Main UI for Date, Time, Guests, and Position Selection */}
       <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-slate-500 shadow rounded-lg text-lg">
         {/* Date selection */}
         <div
@@ -393,13 +323,18 @@ function ReservationData({ restId }: { restId: string }) {
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
           }  cursor-pointer `}
-          onClick={() => {
-            setIsOpen(!isOpen);
-            setType("date");
-          }}
+          onClick={() => toggleDropdown("date")}
         >
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
-            {type === "date" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
+            {step == "search" ? (
+              type === "date" && isOpen ? (
+                <FaChevronUp />
+              ) : (
+                <FaChevronDown />
+              )
+            ) : (
+              ""
+            )}
           </span>
           <div className="flex w-full justify-center mb-3">
             <OrangeCalender />
@@ -414,13 +349,18 @@ function ReservationData({ restId }: { restId: string }) {
               ? "border-[1px] border-orange"
               : "border-r-[1px] border-white"
           } cursor-pointer `}
-          onClick={() => {
-            setIsOpen(!isOpen);
-            setType("hour");
-          }}
+          onClick={() => toggleDropdown("hour")}
         >
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
-            {type === "hour" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
+            {step == "search" ? (
+              type === "hour" && isOpen ? (
+                <FaChevronUp />
+              ) : (
+                <FaChevronDown />
+              )
+            ) : (
+              ""
+            )}
           </span>
           <div className="flex w-full justify-center mb-3">
             <OrangeClock />
@@ -433,13 +373,18 @@ function ReservationData({ restId }: { restId: string }) {
           className={`relative col-span-1 p-4 h-24 flex flex-col items-center justify-center ${
             type === "guests" && isOpen ? "border-[1px] border-orange" : ""
           } cursor-pointer `}
-          onClick={() => {
-            setIsOpen(!isOpen);
-            setType("guests");
-          }}
+          onClick={() => toggleDropdown("guests")}
         >
           <span className="absolute top-3 left-1 text-sm w-4 pl-2">
-            {type === "guests" && isOpen ? <FaChevronUp /> : <FaChevronDown />}
+            {step == "search" ? (
+              type === "guests" && isOpen ? (
+                <FaChevronUp />
+              ) : (
+                <FaChevronDown />
+              )
+            ) : (
+              ""
+            )}
           </span>
           <div className="flex w-full justify-center mb-3">
             <OrangeGuests />
@@ -452,21 +397,22 @@ function ReservationData({ restId }: { restId: string }) {
         {/* Position selection */}
         {positions.length > 1 && (
           <div
-            className={`relative col-span-3 p-3 h-16 flex items-center pl-6  ${
+            className={`relative col-span-3 p-3 h-16 flex items-center pl-6 ${
               type === "position" && isOpen
                 ? "border-[1px] border-orange"
                 : "border-t-[1px] border-white"
             } w-full cursor-pointer`}
-            onClick={() => {
-              setIsOpen(!isOpen);
-              setType("position");
-            }}
+            onClick={() => toggleDropdown("position")}
           >
             <span className="absolute top-3 right-3 text-sm w-4 pl-2">
-              {type === "position" && isOpen ? (
-                <FaChevronUp />
+              {step == "search" ? (
+                type === "position" && isOpen ? (
+                  <FaChevronUp />
+                ) : (
+                  <FaChevronDown />
+                )
               ) : (
-                <FaChevronDown />
+                ""
               )}
             </span>
             <OrangeTablesIcon />
@@ -476,9 +422,8 @@ function ReservationData({ restId }: { restId: string }) {
           </div>
         )}
       </div>
-
       {/* Dropdown area */}
-      {isOpen && (
+      {isOpen && type && (
         <div className="min-w-[14rem] w-[71%] max-w-[40rem] h-60 overflow-y-scroll scrollbar-none mt-5">
           {type === "date"
             ? next7Days.map((date) => (
@@ -542,12 +487,12 @@ function ReservationData({ restId }: { restId: string }) {
             : null}
         </div>
       )}
+      {/* Similar UI for likeWantedOpen */}
       {likeWantedOpen ? (
         <div className="w-full">
           <div className="w-full bg-greySelectedRestaurant text-white text-center p-3">
             No exact match, showing closest results:
           </div>
-          {/* Calculate and display tables for selected date and day after */}
           {[
             selectedDate,
             selectedDate &&
@@ -568,23 +513,17 @@ function ReservationData({ restId }: { restId: string }) {
                   key={index}
                   className="mb-4 border-b-[1px] border-white pb-5 w-3/5 mx-auto"
                 >
-                  {/* Display Date */}
                   <div className="mx-auto text-white text-center text-xl font-bold p-3 ">
-                    {/* Format date as "Tuesday, Sep 3" */}
                     {new Date(date).toLocaleDateString("en-US", {
                       weekday: "long",
                       month: "short",
                       day: "numeric",
                     })}
                   </div>
-
-                  {/* Display tables for each position on that date */}
                   {positions.map((positionObj, posIndex) => {
                     const filteredTables = likeWantedTables.filter(
                       (table) => table.Position === positionObj.position
-                    ); // Filter tables by position
-
-                    // Render only if there are tables for this position
+                    );
                     return filteredTables.length > 0 ? (
                       <div
                         key={posIndex}
@@ -596,16 +535,18 @@ function ReservationData({ restId }: { restId: string }) {
                         <div className="w-full flex px-0 justify-between align-middle">
                           {filteredTables.map((table) => (
                             <div
-                              key={table.TableId + table.DateTime} // Ensure a unique key
-                              className="bg-greySelectedRestaurant text-center p-2 border-[1px] rounded-md border-orange border-solid "
+                              key={table.TableId + table.DateTime}
+                              className="bg-greySelectedRestaurant text-center p-2 border-[1px] rounded-md border-orange border-solid cursor-pointer"
+                              onClick={() => {
+                                reserveLikeTable(table.TableId);
+                              }}
                             >
-                              {formatTo12HourClock(table.DateTime)}{" "}
-                              {/* Display the time part */}
+                              {formatTo24HourClock(table.DateTime)}
                             </div>
                           ))}
                         </div>
                       </div>
-                    ) : null; // Don't render anything if there are no tables for this position
+                    ) : null;
                   })}
                 </div>
               ) : null
@@ -614,14 +555,9 @@ function ReservationData({ restId }: { restId: string }) {
       ) : (
         ""
       )}
-
-      <ReserveBtn
-        onClick={() => {
-          console.log(allTables);
-        }}
-      />
+      {step == "search" ? <ReserveBtn onClick={reserveATable} /> : ""}
     </>
   );
-}
+};
 
 export default ReservationData;
