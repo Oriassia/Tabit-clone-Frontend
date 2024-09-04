@@ -85,9 +85,7 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
       if (data) {
         console.log("Reservation created successfully!: ", data);
         resetReservation(); // Reset the reservation context state
-        navigate(
-          `online-reservations/modify-reservation/${data.reservationId}`
-        );
+        navigate(`/modify-reservation/${data.reservationId}`);
       } else {
         console.error("Failed to create reservation.");
       }
