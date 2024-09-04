@@ -30,7 +30,7 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
   // Получаем часы работы для текущего дня
   const todayHours: string =
     (
-      restaurant.openingHours.find((hours) => today in hours) as IOpeningHours
+      restaurant.openingHours?.find((hours) => today in hours) as IOpeningHours
     )?.[today]?.toString() || "Closed";
 
   // Функция для проверки, открыт ли ресторан в данный момент
@@ -100,7 +100,7 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
           <div className="flex w-full">
             {/* Столбец с днями недели */}
             <div className="flex flex-col text-[0.8em]">
-              {restaurant.openingHours.map((hours, index) => (
+              {restaurant.openingHours?.map((hours, index) => (
                 <span
                   key={index}
                   className={`px-1 pr-[7em] py-1 ${
@@ -113,16 +113,20 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
             </div>
             {/* Столбец с часами работы */}
             <div className="flex flex-col flex-grow text-[0.8em]">
-              {restaurant.openingHours.map((hours, index) => (
-                <span
-                  key={index}
-                  className={`px-1 py-1 ${
-                    index % 2 === 0 ? "bg-greyDarkBg" : "bg-greyBg"
-                  } w-full`}
-                >
-                  {Object.values(hours)[0] || "Closed"}
-                </span>
-              ))}
+              {restaurant.openingHours?.map((hours, index) => {
+                console.log(restaurant.openingHours);
+
+                return (
+                  <span
+                    key={index}
+                    className={`px-1 py-1 ${
+                      index % 2 === 0 ? "bg-greyDarkBg" : "bg-greyBg"
+                    } w-full`}
+                  >
+                    {Object.values(hours)[0] || "Closed"}
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>

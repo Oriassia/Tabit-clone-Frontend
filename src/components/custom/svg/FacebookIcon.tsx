@@ -1,7 +1,7 @@
 const FacebookIcon = () => {
   return (
     <svg
-      className="w-[14%]  md:w-[9%] md:h-[9%] lg:w-[15%]"
+      className="w-[30px] h-[30px] md:w-[40px] md:h-[40px] lg:w-[30px] lg:h-[30px]"
       viewBox="0 0 120 120"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

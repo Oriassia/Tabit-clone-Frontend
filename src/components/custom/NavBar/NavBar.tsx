@@ -50,7 +50,7 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex items-center justify-between p-3 container shadow-2xl">
+      <div className="hidden sm:flex items-center justify-between container selection:px-[3em] py-3 shadow-2xl">
         <NavLink to={"/"}>
           <img
             src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"

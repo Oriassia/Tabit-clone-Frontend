@@ -21,7 +21,7 @@ export interface IRestaurant {
     title: string;
   }[];
   photos?: string[];
-  openingHours?: IOpeningHours;
+  openingHours?: IOpeningHours[];
 }
 
 export interface IOpeningHours {
