@@ -20,6 +20,8 @@ function CreateReservation() {
   const dateParams = searchParams.get("date");
   const positionParams = searchParams.get("position");
   const {
+    requestedReservation, //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
+
     getAllTables,
     tableId,
     setSelectedGuests,
@@ -27,6 +29,7 @@ function CreateReservation() {
     setSelectedDate,
     setSelectedHour,
   } = useReservation();
+
   useEffect(() => {
     if (tableId && guestsParams && dateParams && positionParams) {
       setSelectedGuests(guestsParams);
@@ -44,11 +47,13 @@ function CreateReservation() {
       setSearchParams(searchParams);
     }
   }, [tableId, searchParams]);
+
   useEffect(() => {
     console.log("got all tables");
-
-    getAllTables();
+    console.log("requestedReservation:", requestedReservation), //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
+      getAllTables();
   }, []);
+
   useEffect(() => {
     async function getRestaurantData() {
       if (restId) {

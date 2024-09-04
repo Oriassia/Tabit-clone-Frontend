@@ -6,8 +6,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useReservation } from "@/context/ReservationContext";
 import { AvailableTablesByRestaurant, TimeSlot } from "@/types/restaurant";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const default_triggerClass =
   "dark:bg-greenReservationActive text-slate-50 hover:bg-slate-900/90 dark:dark:bg-greenReservationActive dark:text-slate-900 dark:hover:bg-slate-50/90";
@@ -21,7 +22,26 @@ interface TimeSlotDialogProps {
 function navToReservation() {}
 
 const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const { setRequestedReservation } = useReservation();
+
+  function handleTableSubmit(position: string) {
+    setRequestedReservation({
+      dateTime: (slot.data && slot.data?.time) || "",
+      guests: searchParams.get("guests") || "",
+      tableId: slot.data && slot.data[position.toLowerCase()],
+      position: position,
+    });
+
+    navigate(
+      `/online-reservations?restId=${restWithTables.restId || null}&date=${
+        slot.data?.time || null
+      }&position=${position || null}&tableId=${
+        (slot.data && slot.data[position.toLowerCase()]) || null
+      }&guests=${searchParams.get("guests") || null}`
+    );
+  }
 
   return (
     <Dialog>
@@ -59,17 +79,9 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
                     : ""
                 }`}
               >
-                <Link
-                  to={`/online-reservations?restId=${
-                    restWithTables.restId || null
-                  }&date=${slot.data?.time || null}&position=${
-                    position || null
-                  }&tableId=${
-                    (slot.data && slot.data[position.toLowerCase()]) || null
-                  }&guests=${searchParams.get("guests") || null}`}
-                >
+                <button onClick={() => handleTableSubmit(position)}>
                   {position || "-"}
-                </Link>
+                </button>
               </button>
             </li>
           ))}
