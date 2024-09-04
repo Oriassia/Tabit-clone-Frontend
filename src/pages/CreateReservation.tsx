@@ -14,12 +14,32 @@ import { useReservation } from "@/context/ReservationContext";
 function CreateReservation() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
-  const restId = searchParams.get("restid");
+  const restId = searchParams.get("restId");
   const step = searchParams.get("step");
-  const tableId = searchParams.get("tableid");
-  const { getAllTables } = useReservation();
+  const guestsParams = searchParams.get("guests");
+  const dateParams = searchParams.get("date");
+  const positionParams = searchParams.get("position");
+  const {
+    getAllTables,
+    tableId,
+    setSelectedGuests,
+    setSelectedPosition,
+    setSelectedDate,
+    setSelectedHour,
+  } = useReservation();
   useEffect(() => {
-    if (tableId) {
+    if (tableId && guestsParams && dateParams && positionParams) {
+      setSelectedGuests(guestsParams);
+      setSelectedPosition(positionParams);
+      setSelectedDate(
+        new Date(dateParams).toLocaleDateString("en-US", {
+          weekday: "short",
+          month: "numeric",
+          day: "numeric",
+        })
+      );
+      setSelectedHour(dateParams.split("T")[1]);
+
       searchParams.set("step", "customer-details");
       setSearchParams(searchParams);
     }
