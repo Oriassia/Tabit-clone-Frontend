@@ -126,8 +126,6 @@ function ModifyReservation() {
           </div>
         </div>
 
-        <ReservationData />
-
         {/* Continue button */}
         <div className="flex justify-center  ">
           <button className="flex gap-3  items-center bg-greenButton py-3 px-8 text-xl rounded-full">
