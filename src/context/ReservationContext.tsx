@@ -93,33 +93,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Function to format date and time
-  const formatToDateTime = (datePart: string, timePart: string): string => {
-    const targetYear = 2024;
-    const [_, dateString] = datePart.split(", ").map((part) => part.trim());
-    const [month, day] = dateString.split("/").map(Number);
-    const [time] = timePart.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-
-    const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
-    const formattedString = `${formattedDate.getFullYear()}-${(
-      formattedDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${formattedDate
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${formattedDate
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${formattedDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
-
-    return formattedString;
-  };
-
   // Function to get like tables
   const getLikeTables = () => {
     if (
@@ -135,7 +108,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     // Manually construct selectedDateTime and nextDayDateTime to ensure the year is set to 2024
-    const [dayOfWeek, datePart] = selectedDate.split(", ");
+    const datePart = selectedDate.split(", ")[1];
     const [month, day] = datePart.split("/").map(Number);
     const [hours, minutes] = selectedHour.split(":").map(Number);
 

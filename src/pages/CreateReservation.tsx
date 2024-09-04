@@ -5,8 +5,8 @@ import { IRestaurant } from "@/types/restaurant";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ActionButton } from "./ReservationDetailsPage";
-import { LucideShare2 } from "lucide-react";
-import { FaCalendarPlus, FaPhone } from "react-icons/fa6";
+
+import { FaPhone } from "react-icons/fa6";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import ReservationForm from "@/components/custom/ReservationForms/ReservationForm";
 import { useReservation } from "@/context/ReservationContext";

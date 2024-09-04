@@ -1,4 +1,3 @@
-import { IoMdSearch } from "react-icons/io";
 import PhoneInput from "./PhoneInput";
 import { useState, useEffect } from "react";
 import { IReservation } from "@/types/restaurant";

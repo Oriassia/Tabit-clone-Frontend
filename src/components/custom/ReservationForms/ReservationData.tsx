@@ -18,7 +18,6 @@ interface IAvaliableTable {
 
 const ReservationData: React.FC = () => {
   const {
-    restId,
     selectedDate,
     setSelectedDate,
     selectedHour,
@@ -28,14 +27,12 @@ const ReservationData: React.FC = () => {
     selectedPosition,
     setSelectedPosition,
     likeWantedTables,
-    setLikeWantedTables,
+
     getLikeTables,
     tableId,
     setTableId,
     allTables,
     positions,
-    getAllTables,
-    getTablesPositions,
   } = useReservation();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
