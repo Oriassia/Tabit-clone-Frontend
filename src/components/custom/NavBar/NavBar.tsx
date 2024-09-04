@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useSearchParams } from "react-router-dom";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
 import { BsGlobe2 } from "react-icons/bs";
@@ -7,6 +7,9 @@ import { MdSearch } from "react-icons/md";
 
 function NavBar() {
   const [isInputVisible, setInputVisible] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // function handleSearchNameChange(ev:eve)
 
   return (
     <div className="left-0 right-0 z-50 opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
@@ -36,6 +39,8 @@ function NavBar() {
             <MdSearch className="size-6 text-greenHamburger" />
             <input
               type="text"
+              // value={searchParams.get("searchName") || ""}
+              // onChange={() => handleSearchNameChange(ev)}
               placeholder="Restaurant search"
               className="flex-grow bg-transparent border-none outline-none text-white placeholder-gray-300"
               autoFocus

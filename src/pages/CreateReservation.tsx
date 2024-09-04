@@ -13,9 +13,9 @@ import ReservationForm from "@/components/custom/ReservationForms/ReservationFor
 function CreateReservation() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
-  const restId = searchParams.get("restid");
+  const restId = searchParams.get("restId");
   const step = searchParams.get("step");
-  const tableId = searchParams.get("tableid");
+  const tableId = searchParams.get("tableId");
 
   useEffect(() => {
     if (tableId) {

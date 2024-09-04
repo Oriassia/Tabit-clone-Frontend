@@ -16,7 +16,18 @@ interface IAvaliableTable {
   Capacity: string;
 }
 
-const ReservationData: React.FC = () => {
+interface IInitialParameters {
+  date?: string;
+  time?: string;
+  guests?: string;
+  position?: string;
+}
+
+const ReservationData: React.FC = ({
+  initialParameters,
+}: {
+  initialParameters?: IInitialParameters;
+}) => {
   const {
     restId,
     selectedDate,

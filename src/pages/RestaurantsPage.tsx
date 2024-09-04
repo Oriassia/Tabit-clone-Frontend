@@ -86,6 +86,7 @@ function RestaurantsPage() {
 
       // Make the API request
       const { data } = await api.get("/restaurants", { params });
+      console.log(data);
 
       if (data.length === 0) {
         throw new Error("No tables available for the selected criteria.");
