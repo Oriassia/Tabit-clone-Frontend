@@ -11,18 +11,6 @@ import { useEffect, useState } from "react";
 import { FaCalendarPlus, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { MdSearch } from "react-icons/md";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import {
-  generate30Days,
-  generate30DaysAsStrings,
-} from "@/services/timefunctions";
-import ReservationData from "@/components/custom/ReservationForms/ReservationData";
 
 // Define an interface for the ActionButton props for TypeScript
 

@@ -5,13 +5,16 @@ import "./index.css";
 import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/custom/ThemeProvider/themeProvider.tsx";
 import { UserProvider } from "./context/UserContext.tsx";
+import { ReservationProvider } from "./context/ReservationContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
       <UserProvider>
         <BrowserRouter>
-          <App />
+          <ReservationProvider>
+            <App />
+          </ReservationProvider>
         </BrowserRouter>
       </UserProvider>
     </ThemeProvider>

@@ -95,7 +95,6 @@ function BookATablePage() {
       }
 
       const { data } = await api.post("/tables", postInputData);
-      console.log(data);
 
       if (!data.length) {
         throw new Error("No tables available for the selected criteria.");

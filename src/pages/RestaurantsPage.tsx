@@ -32,10 +32,6 @@ function RestaurantsPage() {
     setSearchParams(searchParams);
   };
 
-  const handleAddNewAddress = () => {
-    console.log("Add a new address clicked");
-  };
-
   const scrollToRestaurant = (restId: number) => {
     const targetIndex = restaurants.findIndex(
       (restaurant) => restaurant.restId === restId
@@ -86,7 +82,6 @@ function RestaurantsPage() {
 
       // Make the API request
       const { data } = await api.get("/restaurants", { params });
-      console.log(data);
 
       if (data.length === 0) {
         throw new Error("No tables available for the selected criteria.");

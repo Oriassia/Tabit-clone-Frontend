@@ -2,14 +2,21 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useSearchParams } from "react-router-dom";
+
 interface IRequestedReservation {
   dateTime: string;
   tableId: string;
   position: string | null;
   guests: string;
 }
+
 // Define types for context state
 interface ReservationContextType {
+  requestedReservation: IRequestedReservation | null;
+  setRequestedReservation: (
+    requestedReservationData: IRequestedReservation | null
+  ) => void;
+
   restaurant: IRestaurant | null;
   setRestaurant: (restaurant: IRestaurant | null) => void;
   restId: string;
@@ -42,6 +49,9 @@ const ReservationContext = createContext<ReservationContextType | undefined>(
 export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [requestedReservation, setRequestedReservation] =
+    useState<IRequestedReservation | null>(null);
+
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("");
   const [selectedHour, setSelectedHour] = useState<string>("");
@@ -315,6 +325,8 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <ReservationContext.Provider
       value={{
+        requestedReservation,
+        setRequestedReservation,
         restaurant,
         setRestaurant,
         restId,

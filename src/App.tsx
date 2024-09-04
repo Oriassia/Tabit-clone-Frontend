@@ -9,7 +9,6 @@ import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import CreateReservation from "./pages/CreateReservation";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
 import ModifyReservation from "./pages/ModifyReservation";
-import { ReservationProvider } from "./context/ReservationContext";
 
 function App() {
   return (
@@ -33,14 +32,7 @@ function App() {
         </Route>
 
         {/* Routes wrapped with ReservationProvider */}
-        <Route
-          path="/online-reservations"
-          element={
-            <ReservationProvider>
-              <Outlet />
-            </ReservationProvider>
-          }
-        >
+        <Route path="/online-reservations" element={<Outlet />}>
           <Route index element={<CreateReservation />} />
           <Route
             path="reservation-details"
