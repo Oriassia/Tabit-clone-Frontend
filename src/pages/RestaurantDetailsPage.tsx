@@ -7,7 +7,7 @@ import { useParams } from "react-router";
 
 import BikeIcon from "../components/custom/svg/BikeIcon";
 import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import PhotosDescriptionMenu from "@/components/custom/ComponentsForDetails/PhotosDescriptionMenu";
 import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
 
