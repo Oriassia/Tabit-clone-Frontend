@@ -34,18 +34,20 @@ const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
       {/* Pass the restaurant prop to OpeningHours */}
       <OpenHours restaurant={restaurant} />
 
-      <div className="flex items-center">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-6">
           <BillIcon />
           <Link to={`${restaurant.website}`} className="text-greenButton">
             Website
           </Link>
         </div>
-        <div className="flex gap-4 items-center justify-end">
-          <Link to={`${restaurant.website}`}>
+        <div className="flex items-center gap-6">
+          <Link to={`${restaurant.instagram}`}>
             <InstagramIcon />
           </Link>
-          <FacebookIcon />
+          <Link to={`${restaurant.facebook}`}>
+            <FacebookIcon />
+          </Link>
         </div>
       </div>
     </div>

@@ -16,7 +16,7 @@ const PhotosDescriptionMenu: React.FC<RestaurantDetailsProps> = ({
       case "menus":
         return (
           <ul className="text-gray-400 text-[1em] py-3">
-            {restaurant.menus.map((menu, index) => (
+            {restaurant.menus?.map((menu, index) => (
               <li
                 key={index}
                 className="flex justify-between items-center py-2 "
@@ -52,14 +52,14 @@ const PhotosDescriptionMenu: React.FC<RestaurantDetailsProps> = ({
 
       case "about":
         return (
-          <div className="flex justify-center max-w-4xl text-white text-[1em] py-3">
+          <div className="flex justify-center max-w-[54em] text-white text-[1em] py-3">
             {restaurant.longDescription}
           </div>
         );
       case "photos":
         return (
           <div className="grid grid-cols-3 gap-2 py-3">
-            {restaurant?.photos.map((photo, index) => (
+            {restaurant.photos?.map((photo, index) => (
               <img
                 key={index}
                 src={photo}
