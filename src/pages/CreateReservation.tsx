@@ -9,6 +9,7 @@ import { LucideShare2 } from "lucide-react";
 import { FaCalendarPlus, FaPhone } from "react-icons/fa6";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import ReservationForm from "@/components/custom/ReservationForms/ReservationForm";
+import { useReservation } from "@/context/ReservationContext";
 
 function CreateReservation() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,20 +17,23 @@ function CreateReservation() {
   const restId = searchParams.get("restid");
   const step = searchParams.get("step");
   const tableId = searchParams.get("tableid");
-
+  const { getAllTables } = useReservation();
   useEffect(() => {
     if (tableId) {
       searchParams.set("step", "customer-details");
       setSearchParams(searchParams);
     }
   }, [tableId, searchParams]);
+  useEffect(() => {
+    console.log("got all tables");
 
+    getAllTables();
+  }, []);
   useEffect(() => {
     async function getRestaurantData() {
       if (restId) {
         try {
           const { data } = await api.get(`/restaurants/${restId}`);
-          console.log(data[0]); // Debug log to verify fetched data
           setRestaurant(data[0]); // Set the fetched restaurant data
         } catch (error) {
           console.error("Failed to fetch restaurant data:", error); // Error handling
@@ -60,7 +64,7 @@ function CreateReservation() {
   if (step === "search") {
     return (
       <>
-        <div className="w-full flex flex-col items-center bg-greyBg text-white">
+        <div className="w-full min-h-dvh flex flex-col items-center bg-greyBg text-white">
           <img
             src={restaurant?.mainPhoto}
             alt={restaurant?.name}
@@ -74,14 +78,6 @@ function CreateReservation() {
           </h3>{" "}
           <div className="flex gap-4 py-5 justify-center bg-greyDarkBg mt-5">
             <ActionButton
-              icon={<LucideShare2 className="text-greenButton" />}
-              text="Share"
-            />
-            <ActionButton
-              icon={<FaCalendarPlus className="text-greenButton" />}
-              text="Add to Calendar"
-            />
-            <ActionButton
               icon={<FaPhone className="text-greenButton" />}
               text="Call"
             />
@@ -94,18 +90,29 @@ function CreateReservation() {
         <ReservationFooter />
       </>
     );
+  } else if (step === "customer-details") {
+    return (
+      <>
+        <div className="w-full min-h-dvh flex flex-col items-center bg-greyBg text-white">
+          {commonElements}
+          <ReservationForm restPhone={restaurant?.phoneNumber} />{" "}
+          <div className="flex gap-4 py-5 justify-center bg-greyDarkBg mt-5">
+            <ActionButton
+              icon={<FaPhone className="text-greenButton" />}
+              text="Call"
+            />
+            <ActionButton
+              icon={<FaMapMarkerAlt className="text-greenButton" />}
+              text="Navigate"
+            />
+          </div>{" "}
+        </div>{" "}
+        <ReservationFooter />
+      </>
+    );
+  } else {
+    return <div>404</div>;
   }
-
-  // Return scenario for any other step
-  return (
-    <>
-      <div className="w-full flex flex-col items-center bg-greyBg text-white">
-        {commonElements}
-        <ReservationForm />
-      </div>
-      <ReservationFooter />
-    </>
-  );
 }
 
 export default CreateReservation;

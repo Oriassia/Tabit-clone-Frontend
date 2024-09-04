@@ -6,15 +6,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input"; // Assuming Input is part of the `shadcn` component library
 
 interface Country {
   country: string;
   flagUrl: string;
   dialCode: string;
 }
+interface PhoneInputProps {
+  setUserPhone: (formattedNumber: string) => void; // Receive this function as a prop
+}
 
-function PhoneInput() {
+function PhoneInput({ setUserPhone }: PhoneInputProps) {
   const countriesWithFlags = [
     {
       country: "Israel",
@@ -987,7 +989,6 @@ function PhoneInput() {
     countriesWithFlags[0]
   ); // Default to Israel
   const [phoneNumber, setPhoneNumber] = useState<string>("");
-  const [formattedPhoneNumber, setFormattedPhoneNumber] = useState<string>("");
 
   const handleCountryChange = (country: Country) => {
     setSelectedCountry(country);
@@ -1007,41 +1008,40 @@ function PhoneInput() {
     if (phoneNumber.startsWith("0")) {
       formattedNumber = phoneNumber.substring(1); // Remove the leading '0' if present
     }
-
-    setFormattedPhoneNumber(`${selectedCountry.dialCode}${formattedNumber}`);
+    setUserPhone(`${selectedCountry.dialCode}${formattedNumber}`);
   };
 
   return (
     <div className="flex justify-center items-center align-middle ">
       <Select
+        value={selectedCountry.country} // Ensure `value` is set to the currently selected country
         onValueChange={(value: string) =>
           handleCountryChange(
             countriesWithFlags.find((c) => c.country === value)!
           )
         }
       >
-        <SelectTrigger className="flex items-center space-x-2 bg-transparent col-span-2 border-b-[1px] border-greyHoverDropDownMenu w-22">
+        <SelectTrigger className="bg-transparent flex items-center justify-center border-b border-greyHoverDropDownMenu w-30 h-[30px]">
           <img
             src={selectedCountry.flagUrl}
             alt={`${selectedCountry.country} flag`}
-            width="30"
-            className="inline-block"
+            width="40"
+            height="30"
+            className="inline-block m-1 p-[2px]"
           />
-          <SelectValue className="bg-transparent col-span-2 border-b-[1px] border-greyHoverDropDownMenu" />
         </SelectTrigger>
-        <SelectContent className="min-w-20 max-w-20">
+        <SelectContent className="bg-greyBorder ml-[0.3rem] w-full shadow-lg rounded-md overflow-hidden">
           {countriesWithFlags.map((country) => (
             <SelectItem
               key={country.country}
               value={country.country}
-              className="min-w-20 max-w-32 mx-auto  px-1 "
+              className={`h-[30px] flex w-full justify-start my-1 bg-greyBorder ${
+                country.country === selectedCountry.country
+                  ? "!text-blueBtn bg-blue-200" // Apply background and text color for the selected item
+                  : "text-white"
+              }`}
             >
-              <img
-                src={country.flagUrl}
-                alt={`${country.country} flag`}
-                width="30"
-                className="mx-auto"
-              />
+              <span className="text-left px-2">{country.country}</span>
             </SelectItem>
           ))}
         </SelectContent>
@@ -1053,15 +1053,9 @@ function PhoneInput() {
         value={phoneNumber}
         onChange={handlePhoneNumberChange}
         onBlur={formatPhoneNumber}
-        placeholder="Enter phone number"
-        className="w-full border-b-[1px] border-greyHoverDropDownMenu bg-transparent"
+        placeholder="Phone *"
+        className="bg-transparent w-full border-b ml-3 border-greyHoverDropDownMenu w-30 h-[30px]"
       />
-
-      {formattedPhoneNumber && (
-        <div className="mt-2">
-          <strong>Formatted Phone Number:</strong> {formattedPhoneNumber}
-        </div>
-      )}
     </div>
   );
 }

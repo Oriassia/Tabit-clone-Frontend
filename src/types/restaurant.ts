@@ -43,7 +43,7 @@ export interface IReservation {
   lastName: string;
   phoneNumber: string;
   email: string;
-  notes?: string;
+  notes?: string | null;
   date: string;
 }
 
