@@ -57,7 +57,7 @@ function ModifyReservation() {
 
   function computeDayName(dateStr: string) {
     const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-US", { weekday: "short" }).format(date);
+    return new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date);
   }
 
   function computeDateNumber(dateStr: string) {

@@ -21,7 +21,7 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
 
   // Получаем текущий день недели
   const today = new Date()
-    .toLocaleDateString("en-US", { weekday: "long" })
+    .toLocaleDateString("en-GB", { weekday: "long" })
     .toLowerCase() as keyof IOpeningHours;
 
   // Получаем текущую дату и время

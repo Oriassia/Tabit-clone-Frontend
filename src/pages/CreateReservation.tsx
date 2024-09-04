@@ -32,7 +32,7 @@ function CreateReservation() {
       setSelectedGuests(guestsParams);
       setSelectedPosition(positionParams);
       setSelectedDate(
-        new Date(dateParams).toLocaleDateString("en-US", {
+        new Date(dateParams).toLocaleDateString("en-GB", {
           weekday: "short",
           month: "numeric",
           day: "numeric",
