@@ -16,18 +16,7 @@ interface IAvaliableTable {
   Capacity: string;
 }
 
-interface IInitialParameters {
-  date?: string;
-  time?: string;
-  guests?: string;
-  position?: string;
-}
-
-const ReservationData: React.FC = ({
-  initialParameters,
-}: {
-  initialParameters?: IInitialParameters;
-}) => {
+const ReservationData: React.FC = () => {
   const {
     selectedDate,
     setSelectedDate,
@@ -167,7 +156,7 @@ const ReservationData: React.FC = ({
     for (let i = 0; i < 7; i++) {
       const date = new Date();
       date.setDate(date.getDate() + i);
-      days.push(date.toLocaleDateString("en-US", options));
+      days.push(date.toLocaleDateString("en-GB", options));
     }
     return days;
   }
@@ -316,7 +305,7 @@ const ReservationData: React.FC = ({
     console.log("Reserving like table:", table.TableId);
     setTableId(table.TableId);
 
-    const formattedDate = new Date(table.DateTime).toLocaleDateString("en-US", {
+    const formattedDate = new Date(table.DateTime).toLocaleDateString("en-GB", {
       weekday: "short",
       month: "numeric",
       day: "numeric",
@@ -521,7 +510,7 @@ const ReservationData: React.FC = ({
               new Date(
                 new Date(formatDateToYYYYMMDD(selectedDate)).getTime() +
                   86400000
-              ).toLocaleDateString("en-US", {
+              ).toLocaleDateString("en-GB", {
                 weekday: "short",
                 month: "numeric",
                 day: "numeric",
@@ -532,7 +521,7 @@ const ReservationData: React.FC = ({
               // Filter tables for the current date
               const tablesForDate = likeWantedTables.filter((table) => {
                 const tableDate = new Date(table.DateTime).toLocaleDateString(
-                  "en-US",
+                  "en-GB",
                   {
                     weekday: "short",
                     month: "numeric",
@@ -554,7 +543,7 @@ const ReservationData: React.FC = ({
                 >
                   <div className="mx-auto text-white text-center text-xl font-bold p-3 ">
                     {new Date(formatDateToYYYYMMDD(date)).toLocaleDateString(
-                      "en-US",
+                      "en-GB",
                       {
                         weekday: "long",
                         month: "short",

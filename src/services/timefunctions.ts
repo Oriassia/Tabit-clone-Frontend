@@ -1,6 +1,6 @@
 // Utility functions
 export const getDayName = (date: Date) =>
-  date.toLocaleString("en-US", { weekday: "long" });
+  date.toLocaleString("en-GB", { weekday: "long" });
 
 export const getFormattedDate = (date: Date) => {
   const hours = date.getHours();
@@ -126,7 +126,7 @@ export function generate30DaysAsStrings(): string[] {
     date.setDate(today.getDate() + i);
 
     // Get the short day name
-    const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+    const dayName = date.toLocaleDateString("en-GB", { weekday: "short" });
 
     // Get the date in dd/mm format
     const dayMonth = date.toLocaleDateString("en-GB", {

@@ -2,7 +2,12 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useSearchParams } from "react-router-dom";
-
+interface IRequestedReservation {
+  dateTime: string;
+  tableId: string;
+  position: string | null;
+  guests: string;
+}
 // Define types for context state
 interface ReservationContextType {
   restaurant: IRestaurant | null;
@@ -45,7 +50,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [tableId, setTableId] = useState<string>("0");
   const [likeWantedTables, setLikeWantedTables] = useState<any[]>([]);
   const [allTables, setAllTables] = useState<any[]>([]); // State for all tables
-  const [positions, setPositions] = useState<any[]>([]); // State for table positions
+  const [positions, setPositions] = useState<any[]>([]); // State for table `positions
   const [searchParams] = useSearchParams();
   const restId = searchParams.get("restId") || "0";
 
