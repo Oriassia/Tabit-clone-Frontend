@@ -47,7 +47,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [allTables, setAllTables] = useState<any[]>([]); // State for all tables
   const [positions, setPositions] = useState<any[]>([]); // State for table positions
   const [searchParams] = useSearchParams();
-  const restId = searchParams.get("restid") || "0";
+  const restId = searchParams.get("restId") || "0";
 
   // Fetch restaurant data based on restId
   useEffect(() => {
