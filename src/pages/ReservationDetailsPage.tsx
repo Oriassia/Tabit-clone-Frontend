@@ -17,7 +17,7 @@ interface ActionButtonProps {
   text: string;
 }
 
-const ActionButton = ({ icon, text }: ActionButtonProps) => (
+export const ActionButton = ({ icon, text }: ActionButtonProps) => (
   <button className=" flex flex-col py-2 px-5 border border-opacity-60 border-greenButton  items-center justify-center bg-none hover:bg-gray-800 text-white rounded-md transition duration-150">
     <div className="text-xl">{icon}</div>
     <span className="text-lg">{text}</span>
