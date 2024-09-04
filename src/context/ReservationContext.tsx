@@ -111,7 +111,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     const datePart = selectedDate.split(", ")[1];
     const [month, day] = datePart.split("/").map(Number);
     const [hours, minutes] = selectedHour.split(":").map(Number);
-
     const selectedDateTime = new Date(2024, month - 1, day, hours, minutes); // Manually set year to 2024
     const nextDayDateTime = new Date(2024, month - 1, day + 1, hours, minutes); // Manually add 1 day
 
@@ -125,6 +124,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     const filteredTables = allTables.filter((table) => {
       const tableDateTime = new Date(table.DateTime);
       const tableDate = tableDateTime.toISOString().split("T")[0]; // Get date part
+
       const selectedDateStr = selectedDateTime.toISOString().split("T")[0]; // Get date part
       const nextDayDateStr = nextDayDateTime.toISOString().split("T")[0]; // Get next day date part
       const timeDifference = Math.abs(
