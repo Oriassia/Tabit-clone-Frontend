@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 interface ReservationContextType {
   restaurant: IRestaurant | null;
   setRestaurant: (restaurant: IRestaurant | null) => void;
-  restId: string | null;
+  restId: string;
   selectedDate: string;
   setSelectedDate: (date: string) => void;
   selectedHour: string;
@@ -16,8 +16,8 @@ interface ReservationContextType {
   setSelectedGuests: (guests: string) => void;
   selectedPosition: string | null;
   setSelectedPosition: (position: string | null) => void;
-  tableId: string | null;
-  setTableId: (id: string | null) => void;
+  tableId: string;
+  setTableId: (id: string) => void;
   likeWantedTables: any[];
   setLikeWantedTables: (tables: any[]) => void;
   allTables: any[];
@@ -25,6 +25,7 @@ interface ReservationContextType {
   getLikeTables: () => void;
   getAllTables: () => void;
   getTablesPositions: () => void;
+  resetReservation: () => void; // Added resetReservation function type
 }
 
 // Create context
@@ -41,12 +42,12 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [selectedHour, setSelectedHour] = useState<string>("");
   const [selectedGuests, setSelectedGuests] = useState<string>("2");
   const [selectedPosition, setSelectedPosition] = useState<string | null>(null);
-  const [tableId, setTableId] = useState<string | null>(null);
+  const [tableId, setTableId] = useState<string>("0");
   const [likeWantedTables, setLikeWantedTables] = useState<any[]>([]);
   const [allTables, setAllTables] = useState<any[]>([]); // State for all tables
   const [positions, setPositions] = useState<any[]>([]); // State for table positions
   const [searchParams] = useSearchParams();
-  const restId = searchParams.get("restid");
+  const restId = searchParams.get("restId") || "0";
 
   // Fetch restaurant data based on restId
   useEffect(() => {
@@ -69,6 +70,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         const { data } = await api.get(`/tables/${restId}`);
         setAllTables(data);
+        console.log(data);
       } catch (error) {
         console.error("Failed to fetch tables:", error);
       }
@@ -91,33 +93,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  // Function to format date and time
-  const formatToDateTime = (datePart: string, timePart: string): string => {
-    const targetYear = 2024;
-    const [_, dateString] = datePart.split(", ").map((part) => part.trim());
-    const [month, day] = dateString.split("/").map(Number);
-    const [time] = timePart.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
-
-    const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
-    const formattedString = `${formattedDate.getFullYear()}-${(
-      formattedDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${formattedDate
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${formattedDate
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${formattedDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
-
-    return formattedString;
-  };
-
   // Function to get like tables
   const getLikeTables = () => {
     if (
@@ -133,12 +108,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     // Manually construct selectedDateTime and nextDayDateTime to ensure the year is set to 2024
-    const [dayOfWeek, datePart] = selectedDate.split(", ");
+    const datePart = selectedDate.split(", ")[1];
     const [month, day] = datePart.split("/").map(Number);
     const [hours, minutes] = selectedHour.split(":").map(Number);
-
     const selectedDateTime = new Date(2024, month - 1, day, hours, minutes); // Manually set year to 2024
-    const nextDayDateTime = new Date(selectedDateTime.getTime() + 86400000); // Add 1 day (in milliseconds)
+    const nextDayDateTime = new Date(2024, month - 1, day + 1, hours, minutes); // Manually add 1 day
 
     // Convert selectedGuests to a number for comparison
     const guestsCount = parseInt(selectedGuests, 10);
@@ -149,16 +123,21 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     // Filter likeWantedTables based on criteria
     const filteredTables = allTables.filter((table) => {
       const tableDateTime = new Date(table.DateTime);
+      const tableDate = tableDateTime.toISOString().split("T")[0]; // Get date part
+
+      const selectedDateStr = selectedDateTime.toISOString().split("T")[0]; // Get date part
+      const nextDayDateStr = nextDayDateTime.toISOString().split("T")[0]; // Get next day date part
       const timeDifference = Math.abs(
         selectedDateTime.getTime() - tableDateTime.getTime()
       );
-      const isSameDate =
-        tableDateTime.toDateString() === selectedDateTime.toDateString();
-      const isNextDay =
-        tableDateTime.toDateString() === nextDayDateTime.toDateString();
+      const timeDifferenceNextDay = Math.abs(
+        nextDayDateTime.getTime() - tableDateTime.getTime()
+      );
+      const isSameDate = tableDate === selectedDateStr;
+      const isNextDay = tableDate === nextDayDateStr;
       const isCapacitySufficient = parseInt(table.Capacity, 10) >= guestsCount; // Check capacity
 
-      // Rule 1: Same Date and Time, Different Position, and Capacity is sufficient
+      // Rule 1: Same Date, Same Hour, Different Position, Capacity sufficient
       if (
         isSameDate &&
         selectedHour === table.DateTime.split(" ")[1] &&
@@ -168,7 +147,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         return true;
       }
 
-      // Rule 2: Same Date, Close Time (within 2.5 hours), Same Position, and Capacity is sufficient
+      // Rule 2: Same Date, Within ±2.5 Hours, Same Position, Capacity sufficient
       if (
         isSameDate &&
         timeDifference <= timeWindowMs &&
@@ -178,7 +157,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         return true;
       }
 
-      // Rule 3: Same Date, Close Time (within 2.5 hours), Different Position, and Capacity is sufficient
+      // Rule 3: Same Date, Within ±2.5 Hours, Different Position, Capacity sufficient
       if (
         isSameDate &&
         timeDifference <= timeWindowMs &&
@@ -188,7 +167,27 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         return true;
       }
 
-      // Rule 4: Next Day, Same Time, Same Position, and Capacity is sufficient
+      // Rule 4: Next Day, Within ±2.5 Hours, Same Position, Capacity sufficient
+      if (
+        isNextDay &&
+        timeDifferenceNextDay <= timeWindowMs &&
+        table.Position === selectedPosition &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 5: Next Day, Within ±2.5 Hours, Different Position, Capacity sufficient
+      if (
+        isNextDay &&
+        timeDifferenceNextDay <= timeWindowMs &&
+        table.Position !== selectedPosition &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 6: Next Day, Same Hour, Same Position, Capacity sufficient
       if (
         isNextDay &&
         selectedHour === table.DateTime.split(" ")[1] &&
@@ -198,8 +197,13 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         return true;
       }
 
-      // Rule 5: Next Day, Close Time (within 2.5 hours), All Positions, and Capacity is sufficient
-      if (isNextDay && timeDifference <= timeWindowMs && isCapacitySufficient) {
+      // Rule 7: Next Day, Same Hour, Different Position, Capacity sufficient
+      if (
+        isNextDay &&
+        selectedHour === table.DateTime.split(" ")[1] &&
+        table.Position !== selectedPosition &&
+        isCapacitySufficient
+      ) {
         return true;
       }
 
@@ -269,11 +273,33 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     // Combine results
     const combinedTopTables = [...top5ForCurrentDay, ...top5ForNextDay];
 
+    // Sort the combined tables by position, then by hour, and finally by datetime
+    combinedTopTables.sort((a, b) => {
+      if (a.Position !== b.Position)
+        return a.Position.localeCompare(b.Position);
+      if (a.DateTime.split(" ")[1] !== b.DateTime.split(" ")[1])
+        return a.DateTime.split(" ")[1].localeCompare(b.DateTime.split(" ")[1]);
+      return new Date(a.DateTime).getTime() - new Date(b.DateTime).getTime();
+    });
+
     setLikeWantedTables(combinedTopTables); // Update state with the filtered like tables
     console.log(
       "Filtered Like Tables (Limited to 5 per position and day, no duplicate hours): ",
       combinedTopTables
     ); // Debug log to check filtered tables
+  };
+
+  // Function to reset all states to initial values
+  const resetReservation = () => {
+    setRestaurant(null);
+    setSelectedDate("");
+    setSelectedHour("");
+    setSelectedGuests("2");
+    setSelectedPosition(null);
+    setTableId("0");
+    setLikeWantedTables([]);
+    setAllTables([]);
+    setPositions([]);
   };
 
   useEffect(() => {
@@ -304,6 +330,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         getLikeTables,
         getAllTables,
         getTablesPositions,
+        resetReservation, // Added to context value
       }}
     >
       {children}

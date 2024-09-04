@@ -41,8 +41,7 @@ function App() {
             </ReservationProvider>
           }
         >
-          <Route path="search" element={<CreateReservation />} />
-          <Route path="create" element={<CreateReservation />} />
+          <Route index element={<CreateReservation />} />
           <Route
             path="reservation-details"
             element={<ReservationDetailsPage />}

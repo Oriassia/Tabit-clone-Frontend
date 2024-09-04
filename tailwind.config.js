@@ -36,7 +36,7 @@ module.exports = {
         greyFooterText: "#969696",
         orange: "#F08E74",
         greySelected: "#444444",
-        blueBtn: "#0CA3A7",
+        blueBtn: "#00CEBA",
       },
       fontFamily: {
         sans: ["Roboto", "sans-serif"],

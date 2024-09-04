@@ -29,7 +29,6 @@ const ReservationData: React.FC = ({
   initialParameters?: IInitialParameters;
 }) => {
   const {
-    restId,
     selectedDate,
     setSelectedDate,
     selectedHour,
@@ -39,14 +38,12 @@ const ReservationData: React.FC = ({
     selectedPosition,
     setSelectedPosition,
     likeWantedTables,
-    setLikeWantedTables,
+
     getLikeTables,
     tableId,
     setTableId,
     allTables,
     positions,
-    getAllTables,
-    getTablesPositions,
   } = useReservation();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -57,23 +54,8 @@ const ReservationData: React.FC = ({
   const [filteredHours, setFilteredHours] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const step = searchParams.get("step");
+
   const allHours = [
-    "00:00",
-    "00:30",
-    "01:00",
-    "01:30",
-    "02:00",
-    "02:30",
-    "03:00",
-    "03:30",
-    "04:00",
-    "04:30",
-    "05:00",
-    "05:30",
-    "06:00",
-    "06:30",
-    "07:00",
-    "07:30",
     "08:00",
     "08:30",
     "09:00",
@@ -292,20 +274,36 @@ const ReservationData: React.FC = ({
   };
 
   async function reserveATable() {
-    if (tableId == null) {
-      const availableTable = allTables?.find(
-        (table: IAvaliableTable) =>
-          table.Capacity === selectedGuests &&
+    if (tableId == "0") {
+      const formattedDateTime = formatToDateTime(selectedDate, selectedHour);
+
+      const availableTable = allTables?.find((table: IAvaliableTable) => {
+        const tableDateTime = table.DateTime.slice(0, 16); // Extract date and time up to minutes
+
+        // Debugging logs
+        console.log("Formatted DateTime:", formattedDateTime);
+        console.log("Table DateTime:", tableDateTime);
+        console.log(
+          "Guests:",
+          selectedGuests,
+          "Table Capacity:",
+          table.Capacity
+        );
+
+        return (
+          Number(table.Capacity) >= Number(selectedGuests) && // Ensure type consistency
           table.Position === selectedPosition &&
-          formatToDateTime(selectedDate, selectedHour) ===
-            table.DateTime.slice(0, 16)
-      );
+          formattedDateTime === tableDateTime // Compare formatted date-time
+        );
+      });
+
       if (availableTable) {
+        console.log("Table found:", availableTable);
         setTableId(availableTable.TableId);
         searchParams.set("tableid", availableTable.TableId);
-
         setSearchParams(searchParams);
       } else {
+        console.log("No exact match found, searching for similar tables.");
         getLikeTables();
         setLikeWantedOpen(true);
       }
@@ -314,12 +312,25 @@ const ReservationData: React.FC = ({
     }
   }
 
-  async function reserveLikeTable(tableId: string) {
-    console.log("Reserving like table:", tableId);
-    setTableId(tableId);
+  async function reserveLikeTable(table: IAvaliableTable) {
+    console.log("Reserving like table:", table.TableId);
+    setTableId(table.TableId);
+
+    const formattedDate = new Date(table.DateTime).toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "numeric",
+      day: "numeric",
+    });
+
+    setSelectedDate(formattedDate);
+    const formattedTime = formatTo24HourClock(table.DateTime);
+    setSelectedHour(formattedTime);
+    setSelectedPosition(table.Position);
+    setSelectedPosition(table.Position);
+    setSelectedGuests(table.Capacity);
 
     // Update the search parameters in the URL
-    searchParams.set("tableid", tableId); // This creates a new URLSearchParams object, but does not update the URL itself
+    searchParams.set("tableid", table.TableId); // This creates a new URLSearchParams object, but does not update the URL itself
     setSearchParams(searchParams); // This will update the URL with the modified searchParams
   }
 
@@ -507,35 +518,62 @@ const ReservationData: React.FC = ({
           {[
             selectedDate,
             selectedDate &&
-              formatDateToYYYYMMDD(
-                new Date(
-                  new Date(selectedDate).getTime() + 86400000
-                ).toLocaleDateString("en-US", {
-                  weekday: "short",
-                  month: "numeric",
-                  day: "numeric",
-                })
-              ),
+              new Date(
+                new Date(formatDateToYYYYMMDD(selectedDate)).getTime() +
+                  86400000
+              ).toLocaleDateString("en-US", {
+                weekday: "short",
+                month: "numeric",
+                day: "numeric",
+              }),
           ]
             .filter(Boolean)
-            .map((date, index) =>
-              date ? (
+            .map((date, index) => {
+              // Filter tables for the current date
+              const tablesForDate = likeWantedTables.filter((table) => {
+                const tableDate = new Date(table.DateTime).toLocaleDateString(
+                  "en-US",
+                  {
+                    weekday: "short",
+                    month: "numeric",
+                    day: "numeric",
+                  }
+                );
+                return tableDate === date;
+              });
+
+              // If no tables for this date, skip rendering
+              if (tablesForDate.length === 0) {
+                return null;
+              }
+
+              return (
                 <div
                   key={index}
                   className="mb-4 border-b-[1px] border-white pb-5 w-3/5 mx-auto"
                 >
                   <div className="mx-auto text-white text-center text-xl font-bold p-3 ">
-                    {new Date(date).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {new Date(formatDateToYYYYMMDD(date)).toLocaleDateString(
+                      "en-US",
+                      {
+                        weekday: "long",
+                        month: "short",
+                        day: "numeric",
+                      }
+                    )}
                   </div>
                   {positions.map((positionObj, posIndex) => {
-                    const filteredTables = likeWantedTables.filter(
+                    // Filter tables for the current position
+                    const filteredTables = tablesForDate.filter(
                       (table) => table.Position === positionObj.position
                     );
-                    return filteredTables.length > 0 ? (
+
+                    // If no tables for this position, skip rendering
+                    if (filteredTables.length === 0) {
+                      return null;
+                    }
+
+                    return (
                       <div
                         key={posIndex}
                         className="flex flex-col align-middle items-center"
@@ -543,13 +581,13 @@ const ReservationData: React.FC = ({
                         <div className="mx-auto text-white text-center p-3 text-xl">
                           {positionObj.position}
                         </div>
-                        <div className="w-full flex px-0 justify-between align-middle">
+                        <div className="w-full flex px-0 gap-2 justify-center align-middle">
                           {filteredTables.map((table) => (
                             <div
                               key={table.TableId + table.DateTime}
                               className="bg-greySelectedRestaurant text-center p-2 border-[1px] rounded-md border-orange border-solid cursor-pointer"
                               onClick={() => {
-                                reserveLikeTable(table.TableId);
+                                reserveLikeTable(table);
                               }}
                             >
                               {formatTo24HourClock(table.DateTime)}
@@ -557,15 +595,16 @@ const ReservationData: React.FC = ({
                           ))}
                         </div>
                       </div>
-                    ) : null;
+                    );
                   })}
                 </div>
-              ) : null
-            )}
+              );
+            })}
         </div>
       ) : (
         ""
       )}
+
       {step == "search" ? <ReserveBtn onClick={reserveATable} /> : ""}
     </>
   );
