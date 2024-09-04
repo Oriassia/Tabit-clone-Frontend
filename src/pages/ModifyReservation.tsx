@@ -22,6 +22,7 @@ import {
   generate30Days,
   generate30DaysAsStrings,
 } from "@/services/timefunctions";
+import ReservationData from "@/components/custom/ReservationForms/ReservationData";
 
 // Define an interface for the ActionButton props for TypeScript
 
@@ -71,36 +72,6 @@ function ModifyReservation() {
     return date.toTimeString().substring(0, 5);
   }
 
-  const CreateDropDownMenu = ({
-    icon,
-    text,
-    menuItems,
-  }: {
-    icon: JSX.Element;
-    text: string;
-    menuItems: string[];
-  }) => (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center lg:text-[19px]  py-[0.5em] border  border-red-500">
-        {icon}
-        <div className="text-center">
-          {reservationInfo?.date ? text : "Date not available"}
-        </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
-        style={{
-          scrollbarWidth: "none", // Firefox
-          msOverflowStyle: "none", // Internet Explorer and Edge
-        }}
-      >
-        {(menuItems || ["item 1, item 2, item 3"]).map((item) => (
-          <DropdownMenuItem>{item} </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-
   return (
     <>
       {/* page wrapper */}
@@ -124,19 +95,6 @@ function ModifyReservation() {
           </div>
 
           <div className="min-w-[10rem] w-2/3 max-w-[35rem] grid grid-cols-3 shadow-slate-500 shadow rounded-lg text-lg">
-            {/* testtttt */}
-            <CreateDropDownMenu
-              icon={<OrangeCalender />}
-              text={
-                reservationInfo?.date
-                  ? `${computeDayName(
-                      reservationInfo?.date
-                    )} ${computeDateNumber(reservationInfo?.date)}`
-                  : "unavailable"
-              }
-              menuItems={generate30DaysAsStrings()}
-            />
-
             {/* Time selection */}
             <div className="flex flex-col gap-2 py-3 items-center justify-center cursor-pointer border-r border-r-white ">
               <OrangeClock />
@@ -167,6 +125,8 @@ function ModifyReservation() {
             </div>
           </div>
         </div>
+
+        <ReservationData />
 
         {/* Continue button */}
         <div className="flex justify-center  ">
