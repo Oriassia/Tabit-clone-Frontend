@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { Link, NavLink, useSearchParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
 import { BsGlobe2 } from "react-icons/bs";
@@ -7,12 +7,22 @@ import { MdSearch } from "react-icons/md";
 
 function NavBar() {
   const [isInputVisible, setInputVisible] = useState(false);
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // function handleSearchNameChange(ev:eve)
+  function handleSearchNameChange(ev: React.ChangeEvent<HTMLInputElement>) {
+    searchParams.set("filterRestName", ev.currentTarget.value);
+    setSearchParams(searchParams);
+  }
+
+  const handleXClick = () => {
+    setInputVisible(false);
+    searchParams.delete("filterRestName");
+    setSearchParams(searchParams);
+  };
 
   return (
-    <div className=" opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
+    <div className="left-0 right-0 z-50 opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
       {/* Mobile View */}
       <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
         {!isInputVisible ? (
@@ -39,15 +49,24 @@ function NavBar() {
             <MdSearch className="size-6 text-greenHamburger" />
             <input
               type="text"
-              // value={searchParams.get("searchName") || ""}
-              // onChange={() => handleSearchNameChange(ev)}
+              onKeyDown={(ev) => {
+                if (ev.key === "Enter") {
+                  navigate(
+                    `/restaurants?filterRestName=${
+                      searchParams.get("filterRestName") || ""
+                    }`
+                  );
+                }
+              }}
               placeholder="Restaurant search"
-              className="flex-grow bg-transparent border-none outline-none text-white placeholder-gray-300"
+              value={searchParams.get("filterRestName") || ""}
+              onChange={handleSearchNameChange}
+              className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-48"
               autoFocus
             />
             <X
               className="text-lg cursor-pointer hover:text-gray-300 transition duration-200"
-              onClick={() => setInputVisible(false)}
+              onClick={handleXClick}
             />
             <BsGlobe2 className="size-7 text-gray-500 ml-4 hover:text-gray-300 transition duration-200 cursor-pointer" />
           </div>
@@ -55,7 +74,7 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex items-center justify-between px-[3em] py-3 shadow-2xl">
+      <div className="hidden sm:flex items-center justify-between container selection:px-[3em] py-3 shadow-2xl">
         <NavLink to={"/"}>
           <img
             src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
@@ -121,13 +140,24 @@ function NavBar() {
             <div className="relative flex items-center">
               <input
                 type="text"
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter") {
+                    navigate(
+                      `/restaurants?filterRestName=${
+                        searchParams.get("filterRestName") || ""
+                      }`
+                    );
+                  }
+                }}
                 placeholder="Restaurant search"
+                value={searchParams.get("filterRestName") || ""}
+                onChange={handleSearchNameChange}
                 className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-48"
                 autoFocus
               />
               <X
                 className="absolute right-0 text-lg cursor-pointer hover:text-gray-300 transition duration-200"
-                onClick={() => setInputVisible(false)}
+                onClick={handleXClick}
               />
             </div>
           )}

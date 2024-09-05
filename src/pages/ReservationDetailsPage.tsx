@@ -1,3 +1,4 @@
+import ActionButton from "@/components/custom/buttons/ActionButton";
 import CancelReservationDialog from "@/components/custom/dialogs/CancelReservationDialog";
 import ReservationFooter from "@/components/custom/ReservationFooter/ReservationFooter";
 import OrangeCalender from "@/components/custom/svg/OrangeCalender";
@@ -10,19 +11,6 @@ import { LucideShare2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { FaCalendarPlus, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-// Define an interface for the ActionButton props for TypeScript
-interface ActionButtonProps {
-  icon: JSX.Element;
-  text: string;
-}
-
-export const ActionButton = ({ icon, text }: ActionButtonProps) => (
-  <button className=" flex flex-col py-2 px-5 border border-opacity-60 border-greenButton  items-center justify-center bg-none hover:bg-gray-800 text-white rounded-md transition duration-150">
-    <div className="text-xl">{icon}</div>
-    <span className="text-lg">{text}</span>
-  </button>
-);
 
 const ReservationDetailsPage = () => {
   const [searchParams] = useSearchParams();
@@ -177,19 +165,19 @@ const ReservationDetailsPage = () => {
         {reservationInfo && (
           <div className="flex gap-4 py-5 justify-center bg-greyDarkBg">
             <ActionButton
-              icon={<LucideShare2 className="text-greenButton" />}
+              icon={<LucideShare2 className="text-greenReservationActive" />}
               text="Share"
             />
             <ActionButton
-              icon={<FaCalendarPlus className="text-greenButton" />}
+              icon={<FaCalendarPlus className="text-greenReservationActive" />}
               text="Add to Calendar"
             />
             <ActionButton
-              icon={<FaPhone className="text-greenButton" />}
+              icon={<FaPhone className="text-greenReservationActive" />}
               text="Call"
             />
             <ActionButton
-              icon={<FaMapMarkerAlt className="text-greenButton" />}
+              icon={<FaMapMarkerAlt className="text-greenReservationActive" />}
               text="Navigate"
             />
           </div>
@@ -197,7 +185,8 @@ const ReservationDetailsPage = () => {
 
         {/* Footer */}
         <p className="text-xs text-center mt-4 opacity-75">
-          For any request regarding your order, please contact directly CW
+          For any request regarding your order, please contact directly{" "}
+          {reservationInfo?.restaurant_name}
         </p>
         <ReservationFooter />
       </div>

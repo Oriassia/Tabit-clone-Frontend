@@ -4,12 +4,12 @@ import api from "@/services/api.services";
 import { IRestaurant } from "@/types/restaurant";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { ActionButton } from "./ReservationDetailsPage";
 
 import { FaPhone } from "react-icons/fa6";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import ReservationForm from "@/components/custom/ReservationForms/ReservationForm";
 import { useReservation } from "@/context/ReservationContext";
+import ActionButton from "@/components/custom/buttons/ActionButton";
 
 function CreateReservation() {
   const [searchParams, setSearchParams] = useSearchParams();
