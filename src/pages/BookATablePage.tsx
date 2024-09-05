@@ -26,7 +26,7 @@ function BookATablePage() {
     area: "Tel Aviv-Jaffa area",
   });
   const { usersLocation } = useUserContext();
-  const scrollAreaRef = useRef<HTMLDivElement | null>(null);
+  // const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
