@@ -5,10 +5,7 @@ import OrangeClock from "../svg/OrangeClock";
 import OrangeGuests from "../svg/OrangeGuests";
 import OrangeTablesIcon from "../svg/OrangeTablesIcon";
 import { Separator } from "@/components/ui/separator";
-import {
-  IRequestedReservation,
-  useReservation,
-} from "@/context/ReservationContext";
+import { useReservation } from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
 import { useSearchParams } from "react-router-dom";
 
@@ -18,21 +15,15 @@ interface IAvaliableTable {
   Position: string;
   Capacity: string;
 }
-
+interface ICurrentInitial {
+  dateTime: string;
+  guests: string;
+  position: string;
+}
 const ReservationData: React.FC = () => {
   const {
-    selectedDate,
-    setSelectedDate,
-    selectedHour,
-    setSelectedHour,
-    selectedGuests,
-    setSelectedGuests,
-    selectedPosition,
-    setSelectedPosition,
     likeWantedTables,
-    getLikeTables,
-    tableId,
-    setTableId,
+    setLikeWantedTables,
     allTables,
     positions,
     setRequestedReservation,
@@ -46,6 +37,7 @@ const ReservationData: React.FC = () => {
   const [likeWantedOpen, setLikeWantedOpen] = useState<boolean>(false);
   const [filteredHours, setFilteredHours] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
+
   const step = searchParams.get("step");
 
   const allHours = [
@@ -86,6 +78,20 @@ const ReservationData: React.FC = () => {
   const futureHours = filterFutureTimes(allHours);
   const next7Days = generateNext7Days();
   const guestsArr = ["1", "2", "3", "4", "5", "6+"];
+  const [currentInitials, setCurrentInitials] = useState<ICurrentInitial>({
+    dateTime: `${next7Days[0]}T${filteredHours[0]}`,
+    position: positions[0],
+    guests: "2",
+  });
+  const [stringDate, setStringDate] = useState(
+    new Date(`${next7Days[0]}T${filteredHours[0]}`)
+      .toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .toString()
+  );
   const formatTo24HourClock = (dateTime: string): string => {
     const timePart = dateTime.split(" ")[1]; // Extract the time part from the dateTime string
     if (!timePart) return ""; // Return empty string if no time part is found
@@ -97,12 +103,6 @@ const ReservationData: React.FC = () => {
     return `${formattedHour}:${formattedMinutes}`; // Return formatted time in "HH:MM" format
   };
 
-  const [currentInitials, setCurrentInitials] = useState({
-    dateTime: `${next7Days[0]}T${filteredHours[0]}`,
-    position: positions[0],
-    guests: "2",
-  });
-
   useEffect(() => {
     if (requestedReservation) {
       setCurrentInitials({
@@ -110,14 +110,21 @@ const ReservationData: React.FC = () => {
         position: requestedReservation.position,
         guests: requestedReservation.guests,
       });
+      setStringDate(
+        new Date(requestedReservation.dateTime).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+        })
+      );
     }
   }, []);
 
   useEffect(() => {
-    if (currentInitials.dateTime) {
-      updateHoursBasedOnDate(currentInitials.dateTime);
+    if (stringDate) {
+      updateHoursBasedOnDate(stringDate);
     }
-  }, [selectedDate]);
+  }, [stringDate]);
 
   useEffect(() => {
     if (
@@ -130,13 +137,207 @@ const ReservationData: React.FC = () => {
     }
   }, [currentInitials, allTables]);
 
-  useEffect(() => {
-    if (filteredHours.length > 0) {
-      if (!selectedHour || !filteredHours.includes(selectedHour)) {
-        setSelectedHour(filteredHours[0]);
-      }
+  function getLikeTables() {
+    // Check if all fields are filled
+    if (
+      !currentInitials.dateTime ||
+      !currentInitials.position ||
+      !currentInitials.guests
+    ) {
+      console.error(
+        "Incomplete selection criteria. Ensure date, time, position, and guests are selected."
+      );
+      return;
     }
-  }, [filteredHours, selectedHour]);
+
+    // Parse date and time from currentInitials
+    const datePart = stringDate.split(", ")[1];
+    const [day, month] = datePart.split("/").map(Number); // Corrected to use dd/mm format
+    const [hours, minutes] = currentInitials.dateTime
+      .split("T")[1]
+      .split(":")
+      .map(Number);
+
+    // Construct selectedDateTime and nextDayDateTime
+    const selectedDateTime = new Date(2024, month - 1, day, hours, minutes); // Manually set year to 2024
+    const nextDayDateTime = new Date(2024, month - 1, day + 1, hours, minutes); // Manually add 1 day
+
+    // Convert selectedGuests to a number for comparison
+    const guestsCount = parseInt(currentInitials.guests, 10);
+
+    // 1.5 hours window in milliseconds
+    const timeWindowMs = 1.5 * 3600000;
+
+    // Filter likeWantedTables based on criteria
+    const filteredTables = allTables.filter((table) => {
+      const tableDateTime = new Date(table.DateTime);
+      const tableDate = tableDateTime.toISOString().split("T")[0]; // Get date part
+      const selectedDateStr = selectedDateTime.toISOString().split("T")[0]; // Get date part
+      const nextDayDateStr = nextDayDateTime.toISOString().split("T")[0]; // Get next day date part
+      const timeDifference = Math.abs(
+        selectedDateTime.getTime() - tableDateTime.getTime()
+      );
+      const timeDifferenceNextDay = Math.abs(
+        nextDayDateTime.getTime() - tableDateTime.getTime()
+      );
+      const isSameDate = tableDate === selectedDateStr;
+      const isNextDay = tableDate === nextDayDateStr;
+      const isCapacitySufficient = parseInt(table.Capacity, 10) >= guestsCount; // Check capacity
+
+      // Rule 1: Same Date, Same Hour, Different Position, Capacity sufficient
+      if (
+        isSameDate &&
+        currentInitials.dateTime.split("T")[1] ===
+          table.DateTime.split(" ")[1] &&
+        table.Position !== currentInitials.position &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 2: Same Date, Within ±1.5 Hours, Same Position, Capacity sufficient
+      if (
+        isSameDate &&
+        timeDifference <= timeWindowMs &&
+        table.Position === currentInitials.position &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 3: Same Date, Within ±1.5 Hours, Different Position, Capacity sufficient
+      if (
+        isSameDate &&
+        timeDifference <= timeWindowMs &&
+        table.Position !== currentInitials.position &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 4: Next Day, Within ±1.5 Hours, Same Position, Capacity sufficient
+      if (
+        isNextDay &&
+        timeDifferenceNextDay <= timeWindowMs &&
+        table.Position === currentInitials.position &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 5: Next Day, Within ±1.5 Hours, Different Position, Capacity sufficient
+      if (
+        isNextDay &&
+        timeDifferenceNextDay <= timeWindowMs &&
+        table.Position !== currentInitials.position &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 6: Next Day, Same Hour, Same Position, Capacity sufficient
+      if (
+        isNextDay &&
+        currentInitials.dateTime.split("T")[1] ===
+          table.DateTime.split(" ")[1] &&
+        table.Position === currentInitials.position &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      // Rule 7: Next Day, Same Hour, Different Position, Capacity sufficient
+      if (
+        isNextDay &&
+        currentInitials.dateTime.split("T")[1] ===
+          table.DateTime.split(" ")[1] &&
+        table.Position !== currentInitials.position &&
+        isCapacitySufficient
+      ) {
+        return true;
+      }
+
+      return false; // If none of the rules match, it's not a "like" table.
+    });
+
+    // Helper function to get top 5 closest tables for each position and day, avoiding duplicate hours
+    const getTop5ClosestTables = (tables: any[], targetDate: Date) => {
+      // Group tables by position
+      const groupedByPosition = tables.reduce((acc: any, table: any) => {
+        if (!acc[table.Position]) acc[table.Position] = [];
+        acc[table.Position].push(table);
+        return acc;
+      }, {});
+
+      // Remove duplicate hours for each position
+      const removeDuplicateHours = (tables: any[]) => {
+        const uniqueByHour: { [key: string]: any } = {};
+        tables.forEach((table) => {
+          const hour = table.DateTime.split(" ")[1]; // Get the hour part of DateTime
+          if (!uniqueByHour[`${table.Position}-${hour}`]) {
+            // Ensure unique by position and hour
+            uniqueByHour[`${table.Position}-${hour}`] = table;
+          }
+        });
+        return Object.values(uniqueByHour);
+      };
+
+      // Get top 5 closest tables for each position without duplicate hours
+      const topTables = Object.values(groupedByPosition).flatMap(
+        (tables: any) => {
+          const uniqueTables = removeDuplicateHours(tables);
+          return uniqueTables
+            .sort(
+              (a: any, b: any) =>
+                Math.abs(
+                  new Date(a.DateTime).getTime() - targetDate.getTime()
+                ) -
+                Math.abs(new Date(b.DateTime).getTime() - targetDate.getTime())
+            )
+            .slice(0, 5); // Limit to 5 tables
+        }
+      );
+
+      return topTables;
+    };
+
+    // Get top 5 tables for each position and day (current day and next day)
+    const top5ForCurrentDay = getTop5ClosestTables(
+      filteredTables.filter(
+        (table) =>
+          new Date(table.DateTime).toDateString() ===
+          selectedDateTime.toDateString()
+      ),
+      selectedDateTime
+    );
+
+    const top5ForNextDay = getTop5ClosestTables(
+      filteredTables.filter(
+        (table) =>
+          new Date(table.DateTime).toDateString() ===
+          nextDayDateTime.toDateString()
+      ),
+      nextDayDateTime
+    );
+
+    // Combine results
+    const combinedTopTables = [...top5ForCurrentDay, ...top5ForNextDay];
+
+    // Sort the combined tables by position, then by hour, and finally by datetime
+    combinedTopTables.sort((a, b) => {
+      if (a.Position !== b.Position)
+        return a.Position.localeCompare(b.Position);
+      if (a.DateTime.split(" ")[1] !== b.DateTime.split(" ")[1])
+        return a.DateTime.split(" ")[1].localeCompare(b.DateTime.split(" ")[1]);
+      return new Date(a.DateTime).getTime() - new Date(b.DateTime).getTime();
+    });
+
+    setLikeWantedTables(combinedTopTables); // Update state with the filtered like tables
+    console.log(
+      "Filtered Like Tables (Limited to 5 per position and day, no duplicate hours): ",
+      combinedTopTables
+    ); // Debug log to check filtered tables
+  }
 
   function filterFutureTimes(timesArray: string[]): string[] {
     const now = new Date();
@@ -240,26 +441,34 @@ const ReservationData: React.FC = () => {
   }
 
   const handleDateSelection = (date: string) => {
-    setSelectedDate(date);
+    setStringDate(date);
+    setCurrentInitials((prev) => ({
+      ...prev, // Correctly spreading the previous state
+      dateTime: `${formatDateToYYYYMMDD(date)}T${prev.dateTime.split("T")[1]}`, // Concatenating the date with the new hour
+    }));
+
     setType("hour");
     setIsOpen(true);
     updateHoursBasedOnDate(date);
   };
 
   const handleHourSelection = (hour: string) => {
-    setSelectedHour(hour);
+    setCurrentInitials((prev) => ({
+      ...prev, // Correctly spreading the previous state
+      dateTime: `${prev.dateTime.split("T")[0]}T${hour}`, // Concatenating the date with the new hour
+    }));
     setType("guests");
     setIsOpen(true);
   };
 
-  const handleGuestSelection = (guest: string) => {
-    setSelectedGuests(guest);
+  const handleGuestSelection = (guests: string) => {
+    setCurrentInitials((prev) => ({ ...prev, guests }));
     setType("position");
     setIsOpen(true);
   };
 
   const handlePositionSelection = (position: string) => {
-    setSelectedPosition(position);
+    setCurrentInitials((prev) => ({ ...prev, position }));
     setIsOpen(false);
     setType(null);
   };
@@ -277,63 +486,54 @@ const ReservationData: React.FC = () => {
   };
 
   async function reserveATable() {
-    if (tableId == "0") {
-      const formattedDateTime = formatToDateTime(selectedDate, selectedHour);
+    const formattedDateTime = currentInitials.dateTime;
 
-      const availableTable = allTables?.find((table: IAvaliableTable) => {
-        const tableDateTime = table.DateTime.slice(0, 16); // Extract date and time up to minutes
+    const availableTable = allTables?.find((table: IAvaliableTable) => {
+      const tableDateTime = table.DateTime.slice(0, 16); // Extract date and time up to minutes
 
-        // Debugging logs
-        console.log("Formatted DateTime:", formattedDateTime);
-        console.log("Table DateTime:", tableDateTime);
-        console.log(
-          "Guests:",
-          selectedGuests,
-          "Table Capacity:",
-          table.Capacity
-        );
+      // Debugging logs
+      console.log("Formatted DateTime:", formattedDateTime);
+      console.log("Table DateTime:", tableDateTime);
+      console.log(
+        "Guests:",
+        currentInitials.guests,
+        "Table Capacity:",
+        table.Capacity
+      );
 
-        return (
-          Number(table.Capacity) >= Number(selectedGuests) && // Ensure type consistency
-          table.Position === selectedPosition &&
-          formattedDateTime === tableDateTime // Compare formatted date-time
-        );
+      return (
+        Number(table.Capacity) >= Number(currentInitials.guests) && // Ensure type consistency
+        table.Position === currentInitials.position &&
+        formattedDateTime === tableDateTime // Compare formatted date-time
+      );
+    });
+
+    if (availableTable) {
+      console.log("Table found:", availableTable);
+      setRequestedReservation({
+        ...currentInitials,
+        tableId: availableTable.TableId,
       });
-
-      if (availableTable) {
-        console.log("Table found:", availableTable);
-        setTableId(availableTable.TableId);
-        searchParams.set("tableid", availableTable.TableId);
-        setSearchParams(searchParams);
-      } else {
-        console.log("No exact match found, searching for similar tables.");
-        getLikeTables();
-        setLikeWantedOpen(true);
-      }
+      searchParams.set("step", "customer-details");
+      setSearchParams(searchParams);
     } else {
-      console.log("Table already selected:", tableId);
+      console.log("No exact match found, searching for similar tables.");
+      getLikeTables();
+      setLikeWantedOpen(true);
     }
   }
 
   async function reserveLikeTable(table: IAvaliableTable) {
     console.log("Reserving like table:", table.TableId);
-    setTableId(table.TableId);
 
-    const formattedDate = new Date(table.DateTime).toLocaleDateString("en-GB", {
-      weekday: "short",
-      month: "numeric",
-      day: "numeric",
+    setRequestedReservation({
+      dateTime: table.DateTime,
+      position: table.Position,
+      tableId: table.TableId,
+      guests: currentInitials.guests,
     });
-
-    setSelectedDate(formattedDate);
-    const formattedTime = formatTo24HourClock(table.DateTime);
-    setSelectedHour(formattedTime);
-    setSelectedPosition(table.Position);
-    setSelectedPosition(table.Position);
-    setSelectedGuests(table.Capacity);
-
     // Update the search parameters in the URL
-    searchParams.set("tableid", table.TableId); // This creates a new URLSearchParams object, but does not update the URL itself
+    searchParams.set("step", "customer-details"); // This creates a new URLSearchParams object, but does not update the URL itself
     setSearchParams(searchParams); // This will update the URL with the modified searchParams
   }
 
@@ -364,7 +564,7 @@ const ReservationData: React.FC = () => {
           <div className="flex w-full justify-center mb-3">
             <OrangeCalender />
           </div>
-          <div className="text-center">{selectedDate || next7Days[0]}</div>
+          <div className="text-center">{stringDate || next7Days[0]}</div>
         </div>
 
         {/* Time selection */}
@@ -417,7 +617,8 @@ const ReservationData: React.FC = () => {
             <OrangeGuests />
           </div>
           <div className="text-center">
-            {selectedGuests} {selectedGuests === "1" ? "Guest" : "Guests"}
+            {currentInitials.guests}{" "}
+            {currentInitials.guests === "1" ? "Guest" : "Guests"}
           </div>
         </div>
 
@@ -444,7 +645,7 @@ const ReservationData: React.FC = () => {
             </span>
             <OrangeTablesIcon />
             <span className="ml-3">
-              {selectedPosition || "Select position"}
+              {currentInitials.position || "Select position"}
             </span>
           </div>
         )}
@@ -457,7 +658,7 @@ const ReservationData: React.FC = () => {
                 <div key={date} className="w-full">
                   <div
                     className={`${
-                      date === selectedDate ? "bg-greySelected" : ""
+                      date === stringDate ? "bg-greySelected" : ""
                     } w-full h-10 flex items-center p-4 py-6 cursor-pointer`}
                     onClick={() => handleDateSelection(date)}
                   >
@@ -471,7 +672,9 @@ const ReservationData: React.FC = () => {
                 <div key={hour} className="w-full">
                   <div
                     className={`${
-                      hour === selectedHour ? "bg-greySelected" : ""
+                      hour === currentInitials.dateTime.split("T")[1]
+                        ? "bg-greySelected"
+                        : ""
                     } w-full h-10 flex items-center p-4 py-6 cursor-pointer`}
                     onClick={() => handleHourSelection(hour)}
                   >
@@ -485,7 +688,7 @@ const ReservationData: React.FC = () => {
                 <div key={guest} className="w-full">
                   <div
                     className={`${
-                      guest === selectedGuests ? "bg-greySelected" : ""
+                      guest === currentInitials.guests ? "bg-greySelected" : ""
                     } w-full h-10 flex items-center p-4 py-6 cursor-pointer`}
                     onClick={() => handleGuestSelection(guest)}
                   >
@@ -501,7 +704,7 @@ const ReservationData: React.FC = () => {
                 <div key={position.position} className="w-full">
                   <div
                     className={`${
-                      position.position === selectedPosition
+                      position.position === currentInitials.position
                         ? "bg-greySelected"
                         : ""
                     } w-full h-10 flex items-center p-4 py-6 cursor-pointer border-t-[0.5px] border-greyFooterText`}
@@ -521,11 +724,10 @@ const ReservationData: React.FC = () => {
             No exact match, showing closest results:
           </div>
           {[
-            selectedDate,
-            selectedDate &&
+            stringDate,
+            stringDate &&
               new Date(
-                new Date(formatDateToYYYYMMDD(selectedDate)).getTime() +
-                  86400000
+                new Date(formatDateToYYYYMMDD(stringDate)).getTime() + 86400000
               ).toLocaleDateString("en-GB", {
                 weekday: "short",
                 month: "numeric",

@@ -19,6 +19,7 @@ function CreateReservation() {
   const guestsParams = searchParams.get("guests");
   const dateParams = searchParams.get("date");
   const positionParams = searchParams.get("position");
+
   const {
     requestedReservation, //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
 
