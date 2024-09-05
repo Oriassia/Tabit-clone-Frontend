@@ -6,7 +6,7 @@ import { ReservationSelector } from "@/components/custom/ReservationSelector/Res
 import { Button } from "@/components/ui/button";
 import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
-import { getFormattedDate, getFormattedTime } from "@/services/timefunctions";
+import { getFormattedDate, getFormattedTime } from "@/services/time.services";
 import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
