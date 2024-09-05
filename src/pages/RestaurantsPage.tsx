@@ -11,26 +11,66 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 
 function RestaurantsPage() {
-  const [searchParams, setSearchParams] = useSearchParams({
+  const [searchParams] = useSearchParams({
     area: "Tel Aviv-Jaffa area",
-    category: "Tags",
   });
   const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
-  const [clickedId, setClickedId] = useState<number | null>(null); // State for clicked restaurant
+  const [clickedId, setClickedId] = useState<number | null>(null);
+  const [restaurants, setRestaurants] = useState<IRestaurant[]>([]);
+  const [filtersOptions, setFiltersOptions] = useState({
+    lat: 32.0661,
+    lng: 34.7748,
+    category: searchParams.get("category") || null,
+    name: searchParams.get("filterRestName") || null,
+  });
+  const [fetchData, setFetchData] = useState(false); // Track if search was initiated
 
   const { usersLocation } = useUserContext();
-  const [restaurants, setRestaurants] = useState<IRestaurant[]>([]);
 
   useEffect(() => {
-    setSearchParams(searchParams);
-    handleSearchSubmit();
-  }, []);
+    // Define default lat and lng values
+    let lat = 32.0661;
+    let lng = 34.7748;
 
-  const updateSearchParams = (title: string, value: string) => {
-    searchParams.set(title, value);
-    setSearchParams(searchParams);
-  };
+    // Check the area value from searchParams
+    const area = searchParams.get("area");
+    switch (area) {
+      case "Around me":
+        if (usersLocation?.lat && usersLocation?.lng) {
+          lat = usersLocation.lat;
+          lng = usersLocation.lng;
+        } else {
+          throw new Error("User location is not available.");
+        }
+        break;
+
+      case "Tel Aviv-Jaffa area":
+        lat = 32.0661;
+        lng = 34.7748;
+        break;
+
+      // Handle additional areas if needed
+      default:
+        break;
+    }
+
+    // Update state with the calculated values
+    setFiltersOptions((prev) => ({
+      ...prev,
+      category: searchParams.get("category"),
+      name: searchParams.get("filterRestName"),
+      lat,
+      lng,
+    }));
+  }, [searchParams, usersLocation]);
+
+  useEffect(() => {
+    if (fetchData) {
+      handleSearchSubmit();
+      setFetchData(false); // Reset the fetchData flag
+    }
+  }, [fetchData]); // Only trigger when fetchData changes
 
   const scrollToRestaurant = (restId: number) => {
     const targetIndex = restaurants.findIndex(
@@ -52,49 +92,19 @@ function RestaurantsPage() {
 
   const handleSearchSubmit = async () => {
     try {
-      // Default post data
-      let params = {
-        lat: 32.0661,
-        lng: 34.7748,
-        category: searchParams.get("category"),
-      };
-
-      // Handle different areas
-      switch (searchParams.get("area")) {
-        case "Around me":
-          if (usersLocation?.lat && usersLocation?.lng) {
-            params.lat = usersLocation.lat;
-            params.lng = usersLocation.lng;
-          } else {
-            throw new Error("User location is not available.");
-          }
-          break;
-
-        case "Tel Aviv-Jaffa area" || "Tags":
-          params.lat = 32.0661;
-          params.lng = 34.7748;
-          break;
-
-        // Add additional areas here if needed
-        default:
-          throw new Error("Selected area is not supported.");
-      }
-
-      // Make the API request
-      const { data } = await api.get("/restaurants", { params });
+      const { data } = await api.get("/restaurants", {
+        params: filtersOptions,
+      });
 
       if (data.length === 0) {
-        throw new Error("No tables available for the selected criteria.");
+        throw new Error("No restaurants available.");
       }
 
       setRestaurants(data);
-
-      // Scroll to the first available restaurant in the list
       scrollToRestaurant(data[0].restId);
       setClickedId(data[0].restId);
     } catch (error: any) {
       console.error(error);
-      // Provide user feedback on the error
       alert(error.message || "An unexpected error occurred. Please try again.");
     }
   };
@@ -118,21 +128,16 @@ function RestaurantsPage() {
             Search for a table at Tabit restaurants
           </div>
 
-          <TagsSelector
-            searchParams={searchParams}
-            updateSearchParams={updateSearchParams}
-          />
+          <TagsSelector />
 
           <Button
-            onClick={handleSearchSubmit}
+            onClick={() => setFetchData(true)} // Trigger data fetch on button click
             className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
           >
             Find a table
           </Button>
 
           <AreaDropDown
-            searchParams={searchParams}
-            updateSearchParams={updateSearchParams}
             onAddNewAddress={() => console.log("Add a new address clicked")}
           />
         </div>
@@ -159,7 +164,9 @@ function RestaurantsPage() {
               </li>
             </ul>
           ) : (
-            <div className="text-center py-4">No restaurants available</div>
+            <div className="dark:text-white min-h-20 h-full content-center text-center container">
+              No restaurants available
+            </div>
           )}
         </div>
 

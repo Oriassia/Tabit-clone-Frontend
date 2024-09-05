@@ -9,24 +9,23 @@ import {
 import { FaPlus } from "react-icons/fa6";
 import { GoDotFill } from "react-icons/go";
 import { MdMyLocation } from "react-icons/md";
+import { useSearchParams } from "react-router-dom";
 
-function AreaDropDown({
-  updateSearchParams,
-  onAddNewAddress,
-  searchParams,
-}: {
-  updateSearchParams: (title: string, value: string) => void;
-  onAddNewAddress: () => void;
-  searchParams: URLSearchParams;
-}) {
+function AreaDropDown({ onAddNewAddress }: { onAddNewAddress: () => void }) {
   const { usersLocation } = useUserContext();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const updateSearchParams = (title: string, value: string) => {
+    searchParams.set(title, value);
+    setSearchParams(searchParams);
+  };
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex items-center gap-2 pb-[2em]">
         <GoDotFill className="text-greenButton items-center text-[19px]" />
         <span className="font-bold font-rubik text-white text-[19px]">
-          {searchParams.get("area")}
+          {searchParams.get("area") || "Tel Aviv-Jaffa area"}
         </span>
         <span className="border items-center flex border-greenBorderForIcon bg-transparent dark:hover:bg-transparent dark:bg-transparent p-0 px-[1.5em] h-[2.9em] hover:bg-transparent rounded-full">
           <MdMyLocation className="size-7 text-white " />
