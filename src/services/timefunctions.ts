@@ -116,6 +116,29 @@ export function generate30Days() {
   }
   return dates;
 }
+export function getHourFromString(dateString: string): string {
+  const date = new Date(dateString); // Convert the string to a Date object
+  const hours = date.getHours(); // Get the hours part
+  return hours.toString().padStart(2, "0"); // Convert the hour to a string and pad with a leading zero if necessary
+}
+
+export const formatNowToCustomDateTime = () => {
+  const now = new Date();
+
+  // Use getFormattedDate to format the date part (DD/MM)
+  const formattedDate = getFormattedDate(now); // "DD/MM"
+
+  // Replace '/' with '-' for your specific format
+  const formattedDateWithDashes = formattedDate.replace(/\//g, "-");
+
+  // Use getFormattedTime to format the time part (HH:MM)
+  const formattedTime = getFormattedTime(now); // "HH:MM"
+
+  // Combine date and time to "DD-MM-YYYYTHH:MM"
+  return `2024-${formattedDateWithDashes}T${formattedTime}`;
+};
+
+// Example usage
 
 export function generate30DaysAsStrings(): string[] {
   const today = new Date();

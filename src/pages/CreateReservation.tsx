@@ -20,6 +20,7 @@ function CreateReservation() {
   const {
     requestedReservation, //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
     getAllTables,
+    setRequestedReservation,
   } = useReservation();
 
   useEffect(() => {
@@ -101,18 +102,30 @@ function CreateReservation() {
   } else if (step === "customer-details") {
     return (
       <>
-        <div className="w-full min-h-dvh flex flex-col items-center bg-greyBg text-white">
-          {commonElements}
-          <ReservationForm restPhone={restaurant?.phoneNumber} />{" "}
-          <div className="flex gap-4 py-5 justify-center bg-greyDarkBg mt-5">
-            <ActionButton
-              icon={<FaPhone className="text-greenButton" />}
-              text="Call"
-            />
-            <ActionButton
-              icon={<FaMapMarkerAlt className="text-greenButton" />}
-              text="Navigate"
-            />
+        <div className="w-full min-h-dvh flex justify-center bg-greyBg text-white ">
+          <div className="py-24 px-56 w-full flex flex-col items-center">
+            <span
+              className="absolute top-5 left-80 px-4 py-2 cursor-pointer"
+              onClick={() => {
+                setRequestedReservation(null);
+                searchParams.set("step", "search");
+                setSearchParams(searchParams);
+              }}
+            >
+              {"< Back to Search"}
+            </span>
+            {commonElements}
+            <ReservationForm restPhone={restaurant?.phoneNumber} />{" "}
+            <div className="flex gap-4 py-5 justify-center bg-greyDarkBg mt-5">
+              <ActionButton
+                icon={<FaPhone className="text-greenButton" />}
+                text="Call"
+              />
+              <ActionButton
+                icon={<FaMapMarkerAlt className="text-greenButton" />}
+                text="Navigate"
+              />
+            </div>
           </div>{" "}
         </div>{" "}
         <ReservationFooter />

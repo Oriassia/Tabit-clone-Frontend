@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 
 export interface IRequestedReservation {
   dateTime: string;
-  tableId?: string;
+  tableId: string;
   position: string;
   guests: string;
 }
@@ -19,7 +19,7 @@ interface ReservationContextType {
 
   restaurant: IRestaurant | null;
   setRestaurant: (restaurant: IRestaurant | null) => void;
-  restId: string;
+  restId: string | null;
   selectedDate: string;
   setSelectedDate: (date: string) => void;
   selectedHour: string;
@@ -61,7 +61,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [allTables, setAllTables] = useState<any[]>([]); // State for all tables
   const [positions, setPositions] = useState<any[]>([]); // State for table `positions
   const [searchParams] = useSearchParams();
-  const restId = searchParams.get("restId") || "0";
+  const restId = searchParams.get("restId");
 
   // Fetch restaurant data based on restId
   useEffect(() => {
@@ -95,6 +95,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const getTablesPositions = async () => {
     if (restId) {
       try {
+        console.log("restId: " + restId);
         const { data } = await api.get(`/tables/position/${restId}`);
         setPositions(data);
 
@@ -123,8 +124,10 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    getAllTables();
-    getTablesPositions();
+    if (restId) {
+      getAllTables();
+      getTablesPositions();
+    }
   }, [restId]);
 
   return (
@@ -151,7 +154,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         positions,
         getAllTables,
         getTablesPositions,
-
         resetReservation, // Added to context value
       }}
     >
