@@ -105,7 +105,6 @@ const ReservationData: React.FC = () => {
 
   useEffect(() => {
     if (requestedReservation) {
-      console.log(requestedReservation.position);
       setCurrentInitials({
         dateTime: requestedReservation.dateTime,
         position: requestedReservation.position,
@@ -331,8 +330,6 @@ const ReservationData: React.FC = () => {
       return new Date(a.DateTime).getTime() - new Date(b.DateTime).getTime();
     });
 
-    console.log("Combined tables: ", combinedTopTables);
-
     setLikeWantedTables(combinedTopTables); // Update state with the filtered like tables
   }
 
@@ -370,8 +367,6 @@ const ReservationData: React.FC = () => {
       date.setDate(date.getDate() + i);
       days.push(date.toLocaleDateString("en-GB", options));
     }
-    console.log("days:", days);
-
     return days;
   }
 
@@ -491,9 +486,6 @@ const ReservationData: React.FC = () => {
     const availableTable = allTables?.find((table: IAvaliableTable) => {
       const tableDateTime = table.DateTime.slice(0, 16); // Extract date and time up to minutes
 
-      if (formattedDateTime == tableDateTime) {
-        console.log(formattedDateTime + " " + tableDateTime);
-      }
       return (
         table.Capacity >= currentInitials.guests && // Ensure type consistency
         table.Position == currentInitials.position &&
