@@ -124,9 +124,7 @@ function ModifyReservation() {
           {/* Modify section */}
           <div className="text-xl font-semibold ">Modify Your Reservation</div>
           {/* Testtttt */}
-          <div className="">
-            <ReservationData />
-          </div>
+          <ReservationData />
 
           {/* Continue button */}
           <div className="flex justify-center  ">
