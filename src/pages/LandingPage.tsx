@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { formatDate, getAvailableTimes } from "@/services/timefunctions";
+import { formatDate, getAvailableHours } from "@/services/time.services";
 import { GoDotFill } from "react-icons/go";
 import { MdMyLocation } from "react-icons/md";
 import { FaPlus } from "react-icons/fa6";
@@ -61,7 +61,7 @@ function LandingPage() {
     }
 
     setAvailableDates(dates);
-    setAvailableTimes(getAvailableTimes(reservationInputData.dateDayNumber));
+    setAvailableTimes(getAvailableHours(reservationInputData.dateDayNumber));
   }, [reservationInputData.dateDayNumber]);
 
   useEffect(() => {

@@ -1,8 +1,8 @@
 import {
   formatDate,
   generate30Days,
-  getAvailableTimes,
-} from "@/services/timefunctions";
+  getAvailableHours,
+} from "@/services/time.services";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,7 +39,7 @@ export function ReservationSelector({
   }, []);
 
   useEffect(() => {
-    setAvailableTimes(getAvailableTimes(searchParams.get("dateDayNumber")));
+    setAvailableTimes(getAvailableHours(searchParams.get("dateDayNumber")));
   }, [searchParams.get("dateDayNumber")]);
 
   return (
