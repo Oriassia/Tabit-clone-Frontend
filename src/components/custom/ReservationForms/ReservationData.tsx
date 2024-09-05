@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useReservation } from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
 import { useSearchParams } from "react-router-dom";
+import { formatNowToCustomDateTime } from "@/services/timefunctions";
 
 interface IAvaliableTable {
   DateTime: string;
@@ -29,7 +30,6 @@ const ReservationData: React.FC = () => {
     setRequestedReservation,
     requestedReservation,
   } = useReservation();
-
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [type, setType] = useState<
     "date" | "hour" | "guests" | "position" | null
@@ -78,19 +78,19 @@ const ReservationData: React.FC = () => {
   const futureHours = filterFutureTimes(allHours);
   const next7Days = generateNext7Days();
   const guestsArr = ["1", "2", "3", "4", "5", "6+"];
+
   const [currentInitials, setCurrentInitials] = useState<ICurrentInitial>({
-    dateTime: `${next7Days[0]}T${filteredHours[0]}`,
-    position: positions[0],
+    dateTime: formatNowToCustomDateTime(),
+    position: positions[0]?.position || "inside",
     guests: "2",
   });
+
   const [stringDate, setStringDate] = useState(
-    new Date(`${next7Days[0]}T${filteredHours[0]}`)
-      .toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      })
-      .toString()
+    new Date(new Date()).toLocaleDateString("en-GB", {
+      weekday: "short",
+      month: "numeric",
+      day: "numeric",
+    })
   );
   const formatTo24HourClock = (dateTime: string): string => {
     const timePart = dateTime.split(" ")[1]; // Extract the time part from the dateTime string
@@ -105,37 +105,34 @@ const ReservationData: React.FC = () => {
 
   useEffect(() => {
     if (requestedReservation) {
+      console.log(requestedReservation.position);
       setCurrentInitials({
         dateTime: requestedReservation.dateTime,
         position: requestedReservation.position,
         guests: requestedReservation.guests,
       });
+
       setStringDate(
         new Date(requestedReservation.dateTime).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "2-digit",
-          year: "numeric",
+          weekday: "short",
+          month: "numeric",
+          day: "numeric",
         })
       );
     }
   }, []);
 
   useEffect(() => {
-    if (stringDate) {
-      updateHoursBasedOnDate(stringDate);
+    if (currentInitials) {
+      updateHoursBasedOnDate(currentInitials.dateTime);
     }
   }, [stringDate]);
 
   useEffect(() => {
-    if (
-      currentInitials.dateTime[0] &&
-      currentInitials.dateTime[1] &&
-      currentInitials.position &&
-      allTables.length > 0
-    ) {
+    if (requestedReservation && allTables.length > 0) {
       getLikeTables();
     }
-  }, [currentInitials, allTables]);
+  }, [requestedReservation, allTables]);
 
   function getLikeTables() {
     // Check if all fields are filled
@@ -161,7 +158,6 @@ const ReservationData: React.FC = () => {
     // Construct selectedDateTime and nextDayDateTime
     const selectedDateTime = new Date(2024, month - 1, day, hours, minutes); // Manually set year to 2024
     const nextDayDateTime = new Date(2024, month - 1, day + 1, hours, minutes); // Manually add 1 day
-
     // Convert selectedGuests to a number for comparison
     const guestsCount = parseInt(currentInitials.guests, 10);
 
@@ -170,16 +166,18 @@ const ReservationData: React.FC = () => {
 
     // Filter likeWantedTables based on criteria
     const filteredTables = allTables.filter((table) => {
-      const tableDateTime = new Date(table.DateTime);
-      const tableDate = tableDateTime.toISOString().split("T")[0]; // Get date part
-      const selectedDateStr = selectedDateTime.toISOString().split("T")[0]; // Get date part
-      const nextDayDateStr = nextDayDateTime.toISOString().split("T")[0]; // Get next day date part
-      const timeDifference = Math.abs(
-        selectedDateTime.getTime() - tableDateTime.getTime()
-      );
+      const tableDateTime = new Date(table.DateTime); // Convert table.DateTime to a Date object
+      const tableDate = tableDateTime.toDateString(); // Get the date part as a string
+      const tableTime = tableDateTime.getTime(); // Get time in milliseconds
+
+      const selectedDateStr = selectedDateTime.toDateString(); // Get date part as a string
+      const nextDayDateStr = nextDayDateTime.toDateString(); // Get next day date part as a string
+
+      const timeDifference = Math.abs(selectedDateTime.getTime() - tableTime);
       const timeDifferenceNextDay = Math.abs(
-        nextDayDateTime.getTime() - tableDateTime.getTime()
+        nextDayDateTime.getTime() - tableTime
       );
+
       const isSameDate = tableDate === selectedDateStr;
       const isNextDay = tableDate === nextDayDateStr;
       const isCapacitySufficient = parseInt(table.Capacity, 10) >= guestsCount; // Check capacity
@@ -273,7 +271,7 @@ const ReservationData: React.FC = () => {
       const removeDuplicateHours = (tables: any[]) => {
         const uniqueByHour: { [key: string]: any } = {};
         tables.forEach((table) => {
-          const hour = table.DateTime.split(" ")[1]; // Get the hour part of DateTime
+          const hour = new Date(table.DateTime).toTimeString().split(" ")[0]; // Get the hour part of DateTime
           if (!uniqueByHour[`${table.Position}-${hour}`]) {
             // Ensure unique by position and hour
             uniqueByHour[`${table.Position}-${hour}`] = table;
@@ -327,16 +325,15 @@ const ReservationData: React.FC = () => {
     combinedTopTables.sort((a, b) => {
       if (a.Position !== b.Position)
         return a.Position.localeCompare(b.Position);
-      if (a.DateTime.split(" ")[1] !== b.DateTime.split(" ")[1])
+      if (a.DateTime.split(" ")[1] !== b.DateTime.split(" ")[1]) {
         return a.DateTime.split(" ")[1].localeCompare(b.DateTime.split(" ")[1]);
+      }
       return new Date(a.DateTime).getTime() - new Date(b.DateTime).getTime();
     });
 
+    console.log("Combined tables: ", combinedTopTables);
+
     setLikeWantedTables(combinedTopTables); // Update state with the filtered like tables
-    console.log(
-      "Filtered Like Tables (Limited to 5 per position and day, no duplicate hours): ",
-      combinedTopTables
-    ); // Debug log to check filtered tables
   }
 
   function filterFutureTimes(timesArray: string[]): string[] {
@@ -373,6 +370,8 @@ const ReservationData: React.FC = () => {
       date.setDate(date.getDate() + i);
       days.push(date.toLocaleDateString("en-GB", options));
     }
+    console.log("days:", days);
+
     return days;
   }
 
@@ -380,7 +379,7 @@ const ReservationData: React.FC = () => {
     if (!dateStr) return "";
     const [_, datePart] = dateStr.split(", ");
     if (!datePart) return "";
-    const [month, day] = datePart.split("/").map(Number);
+    const [day, month] = datePart.split("/").map(Number);
     const year = 2024;
     return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
       2,
@@ -417,8 +416,9 @@ const ReservationData: React.FC = () => {
   function updateHoursBasedOnDate(date: string) {
     try {
       const formattedDate = new Date(formatDateToYYYYMMDD(date))
-        .toISOString()
+        .toString()
         .split("T")[0];
+
       if (isToday(formattedDate)) {
         setFilteredHours(futureHours);
       } else {
@@ -486,30 +486,22 @@ const ReservationData: React.FC = () => {
   };
 
   async function reserveATable() {
-    const formattedDateTime = currentInitials.dateTime;
+    const formattedDateTime = currentInitials.dateTime.replace("T", " ");
 
     const availableTable = allTables?.find((table: IAvaliableTable) => {
       const tableDateTime = table.DateTime.slice(0, 16); // Extract date and time up to minutes
 
-      // Debugging logs
-      console.log("Formatted DateTime:", formattedDateTime);
-      console.log("Table DateTime:", tableDateTime);
-      console.log(
-        "Guests:",
-        currentInitials.guests,
-        "Table Capacity:",
-        table.Capacity
-      );
-
+      if (formattedDateTime == tableDateTime) {
+        console.log(formattedDateTime + " " + tableDateTime);
+      }
       return (
-        Number(table.Capacity) >= Number(currentInitials.guests) && // Ensure type consistency
-        table.Position === currentInitials.position &&
-        formattedDateTime === tableDateTime // Compare formatted date-time
+        table.Capacity >= currentInitials.guests && // Ensure type consistency
+        table.Position == currentInitials.position &&
+        formattedDateTime == tableDateTime // Compare formatted date-time
       );
     });
 
     if (availableTable) {
-      console.log("Table found:", availableTable);
       setRequestedReservation({
         ...currentInitials,
         tableId: availableTable.TableId,
@@ -517,15 +509,12 @@ const ReservationData: React.FC = () => {
       searchParams.set("step", "customer-details");
       setSearchParams(searchParams);
     } else {
-      console.log("No exact match found, searching for similar tables.");
       getLikeTables();
       setLikeWantedOpen(true);
     }
   }
 
   async function reserveLikeTable(table: IAvaliableTable) {
-    console.log("Reserving like table:", table.TableId);
-
     setRequestedReservation({
       dateTime: table.DateTime,
       position: table.Position,
@@ -644,8 +633,8 @@ const ReservationData: React.FC = () => {
               )}
             </span>
             <OrangeTablesIcon />
-            <span className="ml-3">
-              {currentInitials.position || "Select position"}
+            <span className="px-3">
+              {currentInitials.position || "Select Position"}
             </span>
           </div>
         )}

@@ -19,13 +19,8 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
   const [searchParams, setSearchParams] = useSearchParams(); // Correctly initialize searchParams and setSearchParams
   const navigate = useNavigate();
 
-  const {
-    restId,
-    selectedGuests,
-    selectedDate,
-    selectedHour,
-    resetReservation,
-  } = useReservation();
+  const { requestedReservation, restId, setRequestedReservation } =
+    useReservation();
 
   // Countdown Timer
   useEffect(() => {
@@ -47,9 +42,9 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
   }, []);
   function goBack() {
     // Create a new instance of URLSearchParams based on current search parameters
-
+    setRequestedReservation(null);
     searchParams.set("step", "search");
-    searchParams.delete("tableid");
+
     // Update the search params using setSearchParams function
     setSearchParams(searchParams); // Correct usage of setSearchParams
   }
@@ -64,18 +59,17 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
 
   // Create reservation function
   async function createReservation() {
-    const tableId = searchParams.get("tableid")?.toString() || "56660";
-
+    if (!requestedReservation || !restId) return;
     const newReservation: IReservation = {
-      tableId: parseInt(tableId), // Provide a default value or adjust as needed
+      tableId: parseInt(requestedReservation.tableId), // Provide a default value or adjust as needed
       restId: parseInt(restId), // Provide a default value or adjust as needed
-      partySize: parseInt(selectedGuests),
+      partySize: parseInt(requestedReservation.guests),
       firstName,
       lastName,
       phoneNumber: userPhone,
       email,
       notes,
-      date: formatToDateTime(selectedDate, selectedHour),
+      date: requestedReservation.dateTime,
     };
     console.log(newReservation);
 
@@ -84,8 +78,10 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
 
       if (data) {
         console.log("Reservation created successfully!: ", data);
-        resetReservation(); // Reset the reservation context state
-        navigate(`/modify-reservation/${data.reservationId}`);
+        setRequestedReservation(null);
+        navigate(
+          `/online-reservations/reservation-details?reservationId=${data.reservationId}`
+        );
       } else {
         console.error("Failed to create reservation.");
       }
@@ -95,31 +91,31 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
   }
 
   // Format date and time
-  const formatToDateTime = (datePart: string, timePart: string): string => {
-    const targetYear = 2024;
-    const [_, dateString] = datePart.split(", ").map((part) => part.trim());
-    const [month, day] = dateString.split("/").map(Number);
-    const [time] = timePart.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
+  // const formatToDateTime = (datePart: string, timePart: string): string => {
+  //   const targetYear = 2024;
+  //   const [_, dateString] = datePart.split(", ").map((part) => part.trim());
+  //   const [month, day] = dateString.split("/").map(Number);
+  //   const [time] = timePart.split(" ");
+  //   let [hours, minutes] = time.split(":").map(Number);
 
-    const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
-    const formattedString = `${formattedDate.getFullYear()}-${(
-      formattedDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${formattedDate
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${formattedDate
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${formattedDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
+  //   const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
+  //   const formattedString = `${formattedDate.getFullYear()}-${(
+  //     formattedDate.getMonth() + 1
+  //   )
+  //     .toString()
+  //     .padStart(2, "0")}-${formattedDate
+  //     .getDate()
+  //     .toString()
+  //     .padStart(2, "0")} ${formattedDate
+  //     .getHours()
+  //     .toString()
+  //     .padStart(2, "0")}:${formattedDate
+  //     .getMinutes()
+  //     .toString()
+  //     .padStart(2, "0")}`;
 
-    return formattedString;
-  };
+  //   return formattedString;
+  // };
 
   return (
     <div className="w-full flex flex-col align-middle justify-center items-center">
