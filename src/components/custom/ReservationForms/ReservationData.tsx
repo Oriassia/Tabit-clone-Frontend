@@ -388,31 +388,31 @@ const ReservationData: React.FC = () => {
     )}`;
   }
 
-  function formatToDateTime(datePart: string, timePart: string): string {
-    const targetYear = 2024;
-    const [_, dateString] = datePart.split(", ").map((part) => part.trim());
-    const [month, day] = dateString.split("/").map(Number);
-    const [time] = timePart.split(" ");
-    let [hours, minutes] = time.split(":").map(Number);
+  // function formatToDateTime(datePart: string, timePart: string): string {
+  //   const targetYear = 2024;
+  //   const [_, dateString] = datePart.split(", ").map((part) => part.trim());
+  //   const [month, day] = dateString.split("/").map(Number);
+  //   const [time] = timePart.split(" ");
+  //   let [hours, minutes] = time.split(":").map(Number);
 
-    const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
-    const formattedString = `${formattedDate.getFullYear()}-${(
-      formattedDate.getMonth() + 1
-    )
-      .toString()
-      .padStart(2, "0")}-${formattedDate
-      .getDate()
-      .toString()
-      .padStart(2, "0")} ${formattedDate
-      .getHours()
-      .toString()
-      .padStart(2, "0")}:${formattedDate
-      .getMinutes()
-      .toString()
-      .padStart(2, "0")}`;
+  //   const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);
+  //   const formattedString = `${formattedDate.getFullYear()}-${(
+  //     formattedDate.getMonth() + 1
+  //   )
+  //     .toString()
+  //     .padStart(2, "0")}-${formattedDate
+  //     .getDate()
+  //     .toString()
+  //     .padStart(2, "0")} ${formattedDate
+  //     .getHours()
+  //     .toString()
+  //     .padStart(2, "0")}:${formattedDate
+  //     .getMinutes()
+  //     .toString()
+  //     .padStart(2, "0")}`;
 
-    return formattedString;
-  }
+  //   return formattedString;
+  // }
 
   function updateHoursBasedOnDate(date: string) {
     try {
