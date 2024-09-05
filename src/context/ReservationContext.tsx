@@ -3,10 +3,10 @@ import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useSearchParams } from "react-router-dom";
 
-interface IRequestedReservation {
+export interface IRequestedReservation {
   dateTime: string;
-  tableId: string;
-  position: string | null;
+  tableId?: string;
+  position: string;
   guests: string;
 }
 
@@ -110,6 +110,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Function to get like tables
   const getLikeTables = () => {
+    ///move to reservationData
     if (
       !selectedDate ||
       !selectedHour ||
@@ -347,6 +348,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
         getLikeTables,
         getAllTables,
         getTablesPositions,
+
         resetReservation, // Added to context value
       }}
     >

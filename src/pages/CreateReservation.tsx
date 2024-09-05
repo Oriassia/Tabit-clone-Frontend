@@ -31,21 +31,22 @@ function CreateReservation() {
   } = useReservation();
 
   useEffect(() => {
-    if (tableId && guestsParams && dateParams && positionParams) {
-      setSelectedGuests(guestsParams);
-      setSelectedPosition(positionParams);
-      setSelectedDate(
-        new Date(dateParams).toLocaleDateString("en-GB", {
-          weekday: "short",
-          month: "numeric",
-          day: "numeric",
-        })
-      );
-      setSelectedHour(dateParams.split("T")[1]);
-
+    if (requestedReservation && requestedReservation.tableId) {
+      // setSelectedGuests(guestsParams);
+      // setSelectedPosition(positionParams);
+      // setSelectedDate(
+      //   new Date(dateParams).toLocaleDateString("en-GB", {
+      //     weekday: "short",
+      //     month: "numeric",
+      //     day: "numeric",
+      //   })
+      // );
+      // setSelectedHour(dateParams.split("T")[1]);
       searchParams.set("step", "customer-details");
-      setSearchParams(searchParams);
+    } else {
+      searchParams.set("step", "search");
     }
+    setSearchParams(searchParams);
   }, [tableId, searchParams]);
 
   useEffect(() => {

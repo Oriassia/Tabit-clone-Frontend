@@ -5,7 +5,10 @@ import OrangeClock from "../svg/OrangeClock";
 import OrangeGuests from "../svg/OrangeGuests";
 import OrangeTablesIcon from "../svg/OrangeTablesIcon";
 import { Separator } from "@/components/ui/separator";
-import { useReservation } from "@/context/ReservationContext";
+import {
+  IRequestedReservation,
+  useReservation,
+} from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
 import { useSearchParams } from "react-router-dom";
 
@@ -27,12 +30,13 @@ const ReservationData: React.FC = () => {
     selectedPosition,
     setSelectedPosition,
     likeWantedTables,
-
     getLikeTables,
     tableId,
     setTableId,
     allTables,
     positions,
+    setRequestedReservation,
+    requestedReservation,
   } = useReservation();
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -93,28 +97,38 @@ const ReservationData: React.FC = () => {
     return `${formattedHour}:${formattedMinutes}`; // Return formatted time in "HH:MM" format
   };
 
-  useEffect(() => {
-    if (!selectedDate && next7Days.length > 0) {
-      setSelectedDate(next7Days[0]);
-    }
-  }, [selectedDate, next7Days, setSelectedDate]);
+  const [currentInitials, setCurrentInitials] = useState({
+    dateTime: `${next7Days[0]}T${filteredHours[0]}`,
+    position: positions[0],
+    guests: "2",
+  });
 
   useEffect(() => {
-    if (selectedDate) {
-      updateHoursBasedOnDate(selectedDate);
+    if (requestedReservation) {
+      setCurrentInitials({
+        dateTime: requestedReservation.dateTime,
+        position: requestedReservation.position,
+        guests: requestedReservation.guests,
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (currentInitials.dateTime) {
+      updateHoursBasedOnDate(currentInitials.dateTime);
     }
   }, [selectedDate]);
 
   useEffect(() => {
     if (
-      selectedDate &&
-      selectedHour &&
-      selectedPosition &&
+      currentInitials.dateTime[0] &&
+      currentInitials.dateTime[1] &&
+      currentInitials.position &&
       allTables.length > 0
     ) {
       getLikeTables();
     }
-  }, [selectedDate, selectedHour, selectedPosition, allTables]);
+  }, [currentInitials, allTables]);
 
   useEffect(() => {
     if (filteredHours.length > 0) {
@@ -376,7 +390,9 @@ const ReservationData: React.FC = () => {
           <div className="flex w-full justify-center mb-3">
             <OrangeClock />
           </div>
-          <div className="text-center">{selectedHour || futureHours[0]}</div>
+          <div className="text-center">
+            {currentInitials?.dateTime.split("T")[1] || futureHours[0]}
+          </div>
         </div>
 
         {/* Guests selection */}
