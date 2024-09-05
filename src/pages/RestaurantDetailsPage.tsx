@@ -3,7 +3,7 @@ import CalendarIcon from "@/components/custom/svg/CalendarIcon";
 import LockIcon from "@/components/custom/svg/LockIcon";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 import BikeIcon from "../components/custom/svg/BikeIcon";
 import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
@@ -22,6 +22,8 @@ const RestaurantDetailsPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams({
     area: "Tel Aviv-Jaffa area",
   });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (restaurantId) {
@@ -47,8 +49,6 @@ const RestaurantDetailsPage: React.FC = () => {
         console.error("Failed to fetch restaurant data");
         return null;
       }
-      console.log(response.data[0]);
-
       return response.data[0];
     } catch (error) {
       console.error("Failed to fetch restaurant:", error);
@@ -140,7 +140,12 @@ const RestaurantDetailsPage: React.FC = () => {
               <div className="flex flex-col justify-center">
                 <div className="flex flex-row border border-greyBorder rounded-3xl lg:max-w-fit">
                   {/* {RESERVE} */}
-                  <button className="pt-3 pb-3 border-r border-greyBorder w-full lg:w-auto">
+                  <button
+                    onClick={() =>
+                      navigate(`/online-reservations?restId=${restaurantId}`)
+                    }
+                    className="pt-3 pb-3 border-r border-greyBorder w-full lg:w-auto"
+                  >
                     <div className="items-center flex justify-center">
                       <CalendarIcon />
                     </div>
