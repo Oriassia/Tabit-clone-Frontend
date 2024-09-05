@@ -12,7 +12,7 @@ function NavBar() {
   // function handleSearchNameChange(ev:eve)
 
   return (
-    <div className="left-0 right-0 z-50 opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
+    <div className=" opacity-90 font-rubik w-full items-center  bg-greyNavbar text-white">
       {/* Mobile View */}
       <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
         {!isInputVisible ? (
@@ -55,7 +55,7 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex items-center justify-between container selection:px-[3em] py-3 shadow-2xl">
+      <div className="hidden sm:flex items-center justify-between px-[3em] py-3 shadow-2xl">
         <NavLink to={"/"}>
           <img
             src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
