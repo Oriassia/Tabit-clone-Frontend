@@ -2,15 +2,18 @@ import {
   DropdownMenu,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import api from "@/services/api.services";
 import { IRestaurant } from "@/types/restaurant";
-import { DropdownMenuContent, Label } from "@radix-ui/react-dropdown-menu";
+
 import { SlidersHorizontal } from "lucide-react";
 import { useEffect, useState } from "react";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import GiftCard from "@/components/custom/CardsForRestaurants/GiftCard";
+import { Label } from "@/components/ui/label";
 
 function GiftItPage() {
   const [allRestaurants, setAllRestaurants] = useState<IRestaurant[]>([]);
@@ -55,24 +58,20 @@ function GiftItPage() {
 
   // Toggle category selection
   const handleCategoryToggle = (category: string) => {
-    if (selectedCategories.includes(category)) {
-      setSelectedCategories((prev) => prev.filter((cat) => cat !== category)); // Remove category if already selected
-    } else {
-      setSelectedCategories((prev) => [...prev, category]); // Add category if not selected
-    }
-  };
-
-  // Get filtered restaurants based on selected categories
-  const getFilteredRestaurants = () => {
-    if (selectedCategories.length === 0) return allRestaurants; // Show all restaurants if no filter is applied
-
-    return selectedCategories.flatMap(
-      (category) => restaurantsByCategory[category] || []
-    );
+    setSelectedCategories((prevSelected) => {
+      if (prevSelected.includes(category)) {
+        // Убираем категорию из выбранных
+        return prevSelected.filter((cat) => cat !== category);
+      } else {
+        // Добавляем категорию к выбранным
+        return [...prevSelected, category];
+      }
+    });
   };
 
   return (
     <div className="dark:bg-greyBg bg-white px-[3em]">
+      {/* Header */}
       <div className="pt-16 dark:text-white flex flex-col justify-center items-center">
         <h2 className="pt-[0.6em] text-[2.5em] font-rubik font-medium">
           Tabit Gift It
@@ -94,42 +93,52 @@ function GiftItPage() {
           />
         </div>
 
+        {/* Display selected categories as badges (centered between the two divs) */}
+        {selectedCategories.length > 0 && (
+          <div className="flex justify-center mt-4 gap-2">
+            {selectedCategories.map((category) => (
+              <span
+                key={category}
+                className=" text-white py-1 flex border border-greyBorder rounded-3xl items-center gap-2 px-3 cursor-pointer"
+                onClick={() => handleCategoryToggle(category)}
+              >
+                <p className="border text-[1em] text-black  border-greenBorder rounded-full px-2 h-fit bg-greenButton">
+                  &times;
+                </p>
+                {/* "×" allows removing */}
+                <p className="text-[1em]">{category}</p>
+              </span>
+            ))}
+          </div>
+        )}
+
         <div>
           <DropdownMenu>
             <DropdownMenuTrigger className="p-[0.5em] border rounded-md border-zinc-700">
-              <div className="flex items-center justify-center">
-                <SlidersHorizontal className="text-white" size={25} />
-              </div>
+              <SlidersHorizontal className="text-white" size={25} />
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik max-h-48 overflow-y-auto">
+            <DropdownMenuContent className="absolute bg-greyDropDownMenu right-5 border-none text-white p-0 rounded-[1%] font-rubik max-h-[25em] overflow-y-auto">
               {Object.keys(restaurantsByCategory).map((category) => (
-                <DropdownMenuItem
+                <DropdownMenuCheckboxItem
+                  className={`bg-greyDropDownMenu py-[0.5em] px-[2em] text-[1.2em] rounded-none hover:bg-greyHoverDropDownMenu ${
+                    selectedCategories.includes(category)
+                      ? "text-greenButton"
+                      : ""
+                  }`}
                   key={category}
-                  onClick={() => handleCategoryToggle(category)}
+                  checked={selectedCategories.includes(category)} // Checkbox selection
+                  onCheckedChange={() => handleCategoryToggle(category)} // Toggle category
                 >
                   {category}
-                </DropdownMenuItem>
+                </DropdownMenuCheckboxItem>
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
 
-      {/* Display selected categories as badges */}
-      <div className="flex flex-wrap mt-4 gap-2">
-        {selectedCategories.map((category) => (
-          <span
-            key={category}
-            className="bg-blue-500 text-white py-1 px-3 rounded-full cursor-pointer"
-            onClick={() => handleCategoryToggle(category)}
-          >
-            {category} &times; {/* "×" allows removing */}
-          </span>
-        ))}
-      </div>
-
       <div className="flex flex-col mt-4">
-        {/* Display restaurants based on selected categories */}
+        {/* If no category is selected, display all categories and restaurants */}
         {selectedCategories.length === 0
           ? Object.keys(restaurantsByCategory).map((category) => (
               <div key={category} className="mb-8">
@@ -148,13 +157,23 @@ function GiftItPage() {
                 </div>
               </div>
             ))
-          : getFilteredRestaurants().map((restaurant) => (
-              <GiftCard
-                key={restaurant.restId}
-                restaurant={restaurant}
-                buttonLabel="Get a gift card"
-                linkLabel="More information"
-              />
+          : // For each selected category, display the restaurants under it
+            selectedCategories.map((category) => (
+              <div key={category} className="mb-8">
+                <h2 className="text-white text-2xl font-bold sticky top-[6.2em] bg-greyBg py-2 z-10">
+                  {category}
+                </h2>
+                <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyBorder">
+                  {restaurantsByCategory[category]?.map((restaurant) => (
+                    <GiftCard
+                      key={restaurant.restId}
+                      restaurant={restaurant}
+                      buttonLabel="Get a gift card"
+                      linkLabel="More information"
+                    />
+                  )) || <p>No restaurants available for {category}</p>}
+                </div>
+              </div>
             ))}
       </div>
     </div>
