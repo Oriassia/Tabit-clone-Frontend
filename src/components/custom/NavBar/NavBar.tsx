@@ -74,8 +74,8 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex gap-5 px-[3em] py-4 shadow-2xl">
-        <div className="flex items-center  font-extrabold text-lg">
+      <div className="hidden sm:block gap-5 px-[3em] py-4 shadow-2xl">
+        <div className="flex flex-grow items-center justify-between flex-row text-center font-extrabold text-lg">
           <div>
             <NavLink to={"/"}>
               <img
@@ -85,7 +85,7 @@ function NavBar() {
             </NavLink>
           </div>
 
-          <div>
+          <div className="flex items-center gap-4 flex-row justify-center">
             <NavLink
               to={"/book-a-table"}
               className={({ isActive }) =>
