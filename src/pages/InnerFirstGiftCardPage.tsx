@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import { Friend } from "@/components/custom/svg/Friend";
+import { BsUniversalAccessCircle } from "react-icons/bs";
+import { MdLaptop } from "react-icons/md";
+import { FaHouse } from "react-icons/fa6";
 
 function InnerFirstGiftCardPage() {
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
@@ -78,23 +81,32 @@ function InnerFirstGiftCardPage() {
           <Button className="rounded-full text-[1.3em] py-[1.25em] w-2/3 self-center">
             <span className="text-white">Next</span>
           </Button>
-          <p>
+          <p className="text-white text-[0.8em] py-[1em]">
             This voucher is valid for 5 years from date of purchase, as required
             by Consumer Protection Law 14(h)
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-2 text-white">
             <div>
-              <Link to="https://legal.tabit.cloud/accessibility-statement/il">
-                <p>Icon</p>
+              <Link
+                to="https://legal.tabit.cloud/accessibility-statement/il"
+                className="flex items-center gap-2"
+              >
+                <p>
+                  <BsUniversalAccessCircle />
+                </p>
                 <p>Accessibility Statement</p>
               </Link>
             </div>
-            <div>
-              <p>Icon</p>
+            <div className="flex items-center gap-2">
+              <p>
+                <MdLaptop />
+              </p>
               <p>{restaurant?.website}</p>
             </div>
-            <div>
-              <p>Icon</p>
+            <div className="flex items-center gap-2">
+              <p>
+                <FaHouse />
+              </p>
               <p>{restaurant?.address}</p>
             </div>
           </div>
