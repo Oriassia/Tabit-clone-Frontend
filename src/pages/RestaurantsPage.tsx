@@ -1,4 +1,5 @@
 import RestaurantsListItem from "@/components/custom/CardsForRestaurants/RestaurantsListItem";
+import Spinner from "@/components/custom/Loaders/Spinner";
 import Map from "@/components/custom/Map/Map";
 import NavBar from "@/components/custom/NavBar/NavBar";
 import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
@@ -18,15 +19,20 @@ function RestaurantsPage() {
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [clickedId, setClickedId] = useState<number | null>(null);
   const [restaurants, setRestaurants] = useState<IRestaurant[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
   const [filtersOptions, setFiltersOptions] = useState({
     lat: 32.0661,
     lng: 34.7748,
     category: searchParams.get("category") || null,
     name: searchParams.get("filterRestName") || null,
   });
-  const [fetchData, setFetchData] = useState(false); // Track if search was initiated
 
   const { usersLocation } = useUserContext();
+
+  useEffect(() => {
+    handleSearchSubmit();
+  }, []);
 
   useEffect(() => {
     // Define default lat and lng values
@@ -65,13 +71,6 @@ function RestaurantsPage() {
     }));
   }, [searchParams, usersLocation]);
 
-  useEffect(() => {
-    if (fetchData) {
-      handleSearchSubmit();
-      setFetchData(false); // Reset the fetchData flag
-    }
-  }, [fetchData]); // Only trigger when fetchData changes
-
   const scrollToRestaurant = (restId: number) => {
     const targetIndex = restaurants.findIndex(
       (restaurant) => restaurant.restId === restId
@@ -92,6 +91,7 @@ function RestaurantsPage() {
 
   const handleSearchSubmit = async () => {
     try {
+      setIsLoading(true);
       const { data } = await api.get("/restaurants", {
         params: filtersOptions,
       });
@@ -103,9 +103,12 @@ function RestaurantsPage() {
       setRestaurants(data);
       scrollToRestaurant(data[0].restId);
       setClickedId(data[0].restId);
+      setIsError(false); // Clear previous error state
     } catch (error: any) {
       console.error(error);
-      alert(error.message || "An unexpected error occurred. Please try again.");
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -131,7 +134,7 @@ function RestaurantsPage() {
           <TagsSelector />
 
           <Button
-            onClick={() => setFetchData(true)} // Trigger data fetch on button click
+            onClick={handleSearchSubmit} // Trigger data fetch on button click
             className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
           >
             Find a table
@@ -144,7 +147,15 @@ function RestaurantsPage() {
 
         {/* Rests list section */}
         <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
-          {restaurants && restaurants.length > 0 ? (
+          {isLoading ? (
+            <div className="text-white flex flex-col gap-4 items-center mt-10 h-full ">
+              <Spinner />
+            </div>
+          ) : isError ? (
+            <div className="dark:text-red-500 min-h-20 h-full content-center text-center container">
+              There was an error. Please try again.
+            </div>
+          ) : restaurants.length > 0 ? (
             <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
               {restaurants.map((restaurant, index) => (
                 <li
