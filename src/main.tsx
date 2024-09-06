@@ -10,13 +10,13 @@ import { ReservationProvider } from "./context/ReservationContext.tsx";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ThemeProvider>
-      <UserProvider>
-        <BrowserRouter>
+      <BrowserRouter>
+        <UserProvider>
           <ReservationProvider>
             <App />
           </ReservationProvider>
-        </BrowserRouter>
-      </UserProvider>
+        </UserProvider>
+      </BrowserRouter>
     </ThemeProvider>
   </StrictMode>
 );

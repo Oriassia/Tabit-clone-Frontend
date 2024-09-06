@@ -69,7 +69,7 @@ export const formatDate = (date: Date) => {
   return { dayName, dayNumber };
 };
 
-export function getAvailableTimes(dateDayNumber: string | null) {
+export function getAvailableHours(dateDayNumber: string | null) {
   // Generate time options based on selected date
   const times: string[] = [];
   const now = new Date();
@@ -161,4 +161,42 @@ export function generate30DaysAsStrings(): string[] {
   }
 
   return dates;
+}
+
+export const formatTo24HourClock = (dateTime: string): string => {
+  const timePart = dateTime.split(" ")[1]; // Extract the time part from the dateTime string
+  if (!timePart) return ""; // Return empty string if no time part is found
+
+  const [hours, minutes] = timePart.split(":"); // Split the time into hours and minutes
+  const formattedHour = parseInt(hours).toString().padStart(2, "0"); // Format hours with leading zero if needed
+  const formattedMinutes = minutes.padStart(2, "0"); // Ensure minutes have two digits
+
+  return `${formattedHour}:${formattedMinutes}`; // Return formatted time in "HH:MM" format
+};
+
+export function formatDateToYYYYMMDD(dateStr: string | undefined): string {
+  if (!dateStr) return "";
+  const [_, datePart] = dateStr.split(", ");
+  if (!datePart) return "";
+  const [day, month] = datePart.split("/").map(Number);
+  const year = 2024;
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0"
+  )}`;
+}
+
+export function generateNext7Days(): string[] {
+  const days = [];
+  const options = {
+    weekday: "short",
+    month: "numeric",
+    day: "numeric",
+  } as const;
+  for (let i = 0; i < 7; i++) {
+    const date = new Date();
+    date.setDate(date.getDate() + i);
+    days.push(date.toLocaleDateString("en-GB", options));
+  }
+  return days;
 }
