@@ -9,6 +9,7 @@ import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import CreateReservation from "./pages/CreateReservation";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
 import ModifyReservation from "./pages/ModifyReservation";
+import InnerFirstGiftCardPage from "./pages/InnerFirstGiftCardPage";
 
 function App() {
   return (
@@ -29,6 +30,10 @@ function App() {
         <Route path="/" element={<Outlet />}>
           <Route path="book-a-table" element={<BookATablePage />} />
           <Route path="restaurants" element={<RestaurantsPage />} />
+          <Route
+            path="gift-cards/create-card/:restaurantId"
+            element={<InnerFirstGiftCardPage />}
+          />
         </Route>
 
         {/* Routes wrapped with ReservationProvider */}

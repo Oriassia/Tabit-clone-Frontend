@@ -7,6 +7,7 @@ import OrangeTablesIcon from "../svg/OrangeTablesIcon";
 import { Separator } from "@/components/ui/separator";
 import { useReservation } from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
+
 import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   formatDateToYYYYMMDD,
@@ -16,6 +17,9 @@ import {
   getAvailableHours,
 } from "@/services/time.services";
 import { useGetLikeTables } from "@/services/tables.services";
+
+import { formatNowToCustomDateTime } from "@/services/time.services";
+
 
 interface IAvaliableTable {
   DateTime: string;
