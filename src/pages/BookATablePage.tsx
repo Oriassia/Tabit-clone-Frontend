@@ -11,6 +11,7 @@ import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
+import Spinner from "@/components/custom/Loaders/Spinner"; // Import Spinner
 
 function BookATablePage() {
   const currentDate = new Date();
@@ -25,14 +26,14 @@ function BookATablePage() {
     guests: "2",
     area: "Tel Aviv-Jaffa area",
   });
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const [isError, setIsError] = useState(false); // Add error state
   const { usersLocation } = useUserContext();
-  // const scrollAreaRef = useRef<HTMLDivElement | null>(null);
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
-    setSearchParams(searchParams);
     handleSearchSubmit();
-  }, []);
+  }, [searchParams]);
 
   const updateSearchParams = (key: string, value: string) => {
     searchParams.set(key, value);
@@ -48,6 +49,9 @@ function BookATablePage() {
   };
 
   const handleSearchSubmit = async () => {
+    setIsLoading(true); // Set loading state
+    setIsError(false); // Reset error state
+
     try {
       const [day, month] = (searchParams.get("dateDayNumber") ?? "")
         .split("/")
@@ -76,7 +80,7 @@ function BookATablePage() {
       const reservationDateString = format(
         reservationDate,
         "yyyy-MM-dd'T'HH:mm"
-      ); // Remove milliseconds and trailing "Z"
+      );
 
       const postInputData = {
         lat: 32.0661,
@@ -105,7 +109,9 @@ function BookATablePage() {
       setClickedId(data[0].restId);
     } catch (error: any) {
       console.error(error);
-      error.message || "An unexpected error occurred. Please try again.";
+      setIsError(true); // Set error state
+    } finally {
+      setIsLoading(false); // Reset loading state
     }
   };
 
@@ -158,14 +164,21 @@ function BookATablePage() {
           </Button>
 
           <AreaDropDown
-            searchParams={searchParams}
-            updateSearchParams={updateSearchParams}
             onAddNewAddress={() => console.log("Add a new address clicked")}
           />
         </div>
 
-        <div className="dark:bg-greyNavbar flex flex-col">
-          {availableTablesByRest.length > 0 ? (
+        {/* Rests list section */}
+        <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
+          {isLoading ? (
+            <div className="text-white flex flex-col gap-4 items-center mt-10 h-full">
+              <Spinner />
+            </div>
+          ) : isError ? (
+            <div className="text-center py-4">
+              There was an error. Please try again.
+            </div>
+          ) : availableTablesByRest.length > 0 ? (
             <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
               {availableTablesByRest.map((restWithTables, index) => (
                 <li
@@ -187,6 +200,7 @@ function BookATablePage() {
           )}
         </div>
 
+        {/* MAP section */}
         <div title="map section" className="hidden sm:block flex-grow">
           <Map
             restaurants={availableTablesByRest}
