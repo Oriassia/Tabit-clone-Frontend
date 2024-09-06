@@ -69,7 +69,7 @@ const RestaurantDetailsPage: React.FC = () => {
   return (
     <div className="bg-greyBg font-rubik text-white min-h-screen lg:pt-20 pt-[4.2em] ">
       <div
-        className="text-[16px] w-full text-white py-2 px-[3em]"
+        className="text-[16px] w-full text-white lg:mt-2 md:mt-2 py-2 px-[3em]"
         style={{ background: "#616161" }}
       >
         <div className="flex gap-1">
@@ -132,7 +132,7 @@ const RestaurantDetailsPage: React.FC = () => {
         </div>
       </div>
       {/* Bottom Section */}
-      <div className="bg-greyBg text-white py-8">
+      <div className="bg-greyBg text-white py-8 px-[3em]">
         <div className="flex flex-col lg:flex-row  justify-evenly">
           <div className="">
             <div className="px-3 flex flex-col justify-center">
