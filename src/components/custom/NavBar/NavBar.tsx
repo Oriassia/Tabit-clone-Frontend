@@ -22,7 +22,7 @@ function NavBar() {
   };
 
   return (
-    <div className="left-0 right-0 z-50 opacity-90 font-rubik bg-greyNavbar text-white">
+    <div className=" z-50 opacity-90 font-rubik bg-greyNavbar text-white">
       {/* Mobile View */}
       <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
         {!isInputVisible ? (
@@ -74,7 +74,7 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex gap-5 container selection:px-[3em] py-4 shadow-2xl">
+      <div className="hidden sm:flex gap-5 px-[3em] py-4 shadow-2xl">
         <div className="flex items-center gap-8 font-extrabold text-lg">
           <NavLink to={"/"}>
             <img

@@ -1,6 +1,5 @@
 import {
   DropdownMenu,
-  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
@@ -82,7 +81,7 @@ function GiftItPage() {
       </div>
 
       {/* Sticky Search and Filter Bar */}
-      <div className="flex items-center sticky top-[5.2em] z-50 justify-between border-b border-greyBorder py-[1em] bg-greyBg">
+      <div className="flex items-center sticky top-[5.5em] z-50 justify-between border-b border-greyBorder py-[1em] bg-greyBg">
         <div className="relative">
           <Label>
             <RxMagnifyingGlass className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white" />
@@ -142,7 +141,7 @@ function GiftItPage() {
         {selectedCategories.length === 0
           ? Object.keys(restaurantsByCategory).map((category) => (
               <div key={category} className="mb-8">
-                <h2 className="text-white text-2xl font-bold sticky top-[6.2em] bg-greyBg py-2 z-10">
+                <h2 className="text-white text-2xl font-bold sticky top-[6.5em] bg-greyBg py-2 z-10">
                   {category}
                 </h2>
                 <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyBorder">
