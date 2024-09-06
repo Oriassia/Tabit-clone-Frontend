@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useReservation } from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
 import { useSearchParams } from "react-router-dom";
-import { formatNowToCustomDateTime } from "@/services/timefunctions";
+import { formatNowToCustomDateTime } from "@/services/time.services";
 
 interface IAvaliableTable {
   DateTime: string;
