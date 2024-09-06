@@ -23,7 +23,10 @@ const GiftCard = ({ restaurant, buttonLabel, linkLabel }: GiftCardProps) => {
         <p className="dark:text-zinc-500 text-gray-400">{restaurant.address}</p>
       </div>
       <div>
-        <Link to={`gift-cards/create-card/${restaurant.restId}`}>
+        <Link
+          to={`/gift-cards/create-card/${restaurant.restId}`} // Notice the leading '/'
+          target="_blank"
+        >
           <Button className="w-[268px] bg-greenButton hover:bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton dark:text-white text-black h-8 rounded">
             {buttonLabel}
           </Button>
