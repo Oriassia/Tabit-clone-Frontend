@@ -74,109 +74,113 @@ function NavBar() {
       </div>
 
       {/* Desktop View */}
-      <div className="hidden sm:flex gap-5 px-[3em] py-4 shadow-2xl">
-        <div className="flex items-center gap-8 font-extrabold text-lg">
-          <NavLink to={"/"}>
-            <img
-              src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
-              className="w-32"
-            />
-          </NavLink>
+      <div className="hidden sm:block gap-5 px-[3em] py-4 shadow-2xl">
+        <div className="flex flex-grow items-center justify-between flex-row text-center font-extrabold text-lg">
+          <div>
+            <NavLink to={"/"}>
+              <img
+                src="https://tabitisrael.co.il/assets/images/tabit_white_yellow_ribbon.svg?v=4_11_1"
+                className="w-32"
+              />
+            </NavLink>
+          </div>
 
-          <NavLink
-            to={"/book-a-table"}
-            className={({ isActive }) =>
-              isActive
-                ? `text-greenHamburger transition duration-200`
-                : "hover:text-gray-300 transition duration-200"
-            }
-          >
-            Reserve a table
-          </NavLink>
-          <NavLink
-            to={"/deliveries"}
-            className={({ isActive }) =>
-              isActive
-                ? `text-greenHamburger transition duration-200`
-                : "hover:text-gray-300 transition duration-200"
-            }
-          >
-            Deliveries & Takeouts
-          </NavLink>
-          <NavLink
-            to={"/restaurants"}
-            className={({ isActive }) =>
-              isActive
-                ? `text-greenHamburger transition duration-200`
-                : "hover:text-gray-300 transition duration-200"
-            }
-          >
-            Restaurants
-          </NavLink>
-          <NavLink
-            to={"/gift-it"}
-            className={({ isActive }) =>
-              isActive
-                ? `text-greenHamburger transition duration-200`
-                : "hover:text-gray-300 transition duration-200"
-            }
-          >
-            Tabit Gift it
-          </NavLink>
-          <NavLink
-            to={"/"}
-            className={({ isActive }) =>
-              isActive
-                ? `text-greenHamburger transition duration-200`
-                : "hover:text-gray-300 transition duration-200"
-            }
-          >
-            Restaurant owner?
-          </NavLink>
-        </div>
-
-        <div className="flex items-center gap-4 w-72 justify-end">
-          {isInputVisible && (
-            <form
-              className="flex py-2 px-2 items-center border-2 rounded-full "
-              onSubmit={() =>
-                navigate(
-                  `/restaurants?filterRestName=${
-                    searchParams.get("filterRestName") || ""
-                  }`
-                )
+          <div className="flex items-center gap-4 flex-row justify-center">
+            <NavLink
+              to={"/book-a-table"}
+              className={({ isActive }) =>
+                isActive
+                  ? `text-greenHamburger transition duration-200`
+                  : "hover:text-gray-300 transition duration-200"
               }
             >
-              <X
-                size={23}
-                className="text-greenHamburger cursor-pointer hover:text-gray-300 transition duration-200"
-                onClick={handleXClick}
-              />
-              <input
-                type="text"
-                placeholder="Restaurant search"
-                value={searchParams.get("filterRestName") || ""}
-                onChange={handleSearchNameChange}
-                className="bg-transparent border-none outline-none text-white placeholder-gray-400 "
-                autoFocus
-              />
-              {searchParams.get("filterRestName") && (
-                <button type="submit" className="text-greenHamburger">
-                  Search
-                </button>
-              )}
-            </form>
-          )}
-          <div className="flex gap-2 items-center">
-            {!isInputVisible && (
-              <div
-                className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
-                onClick={() => setInputVisible(true)}
+              Reserve a table
+            </NavLink>
+            <NavLink
+              to={"/deliveries"}
+              className={({ isActive }) =>
+                isActive
+                  ? `text-greenHamburger transition duration-200`
+                  : "hover:text-gray-300 transition duration-200"
+              }
+            >
+              Deliveries & Takeouts
+            </NavLink>
+            <NavLink
+              to={"/restaurants"}
+              className={({ isActive }) =>
+                isActive
+                  ? `text-greenHamburger transition duration-200`
+                  : "hover:text-gray-300 transition duration-200"
+              }
+            >
+              Restaurants
+            </NavLink>
+            <NavLink
+              to={"/gift-it"}
+              className={({ isActive }) =>
+                isActive
+                  ? `text-greenHamburger transition duration-200`
+                  : "hover:text-gray-300 transition duration-200"
+              }
+            >
+              Tabit Gift it
+            </NavLink>
+            <NavLink
+              to={"/"}
+              className={({ isActive }) =>
+                isActive
+                  ? `text-greenHamburger transition duration-200`
+                  : "hover:text-gray-300 transition duration-200"
+              }
+            >
+              Restaurant owner?
+            </NavLink>
+          </div>
+
+          <div className="flex items-center gap-4 w-72 justify-end">
+            {isInputVisible && (
+              <form
+                className="flex py-2 px-2 items-center border-2 rounded-full "
+                onSubmit={() =>
+                  navigate(
+                    `/restaurants?filterRestName=${
+                      searchParams.get("filterRestName") || ""
+                    }`
+                  )
+                }
               >
-                <MdSearch className="size-5 text-greenHamburger" />
-              </div>
+                <X
+                  size={23}
+                  className="text-greenHamburger cursor-pointer hover:text-gray-300 transition duration-200"
+                  onClick={handleXClick}
+                />
+                <input
+                  type="text"
+                  placeholder="Restaurant search"
+                  value={searchParams.get("filterRestName") || ""}
+                  onChange={handleSearchNameChange}
+                  className="bg-transparent border-none outline-none text-white placeholder-gray-400 "
+                  autoFocus
+                />
+                {searchParams.get("filterRestName") && (
+                  <button type="submit" className="text-greenHamburger">
+                    Search
+                  </button>
+                )}
+              </form>
             )}
-            <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
+            <div className="flex gap-2 items-center">
+              {!isInputVisible && (
+                <div
+                  className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+                  onClick={() => setInputVisible(true)}
+                >
+                  <MdSearch className="size-5 text-greenHamburger" />
+                </div>
+              )}
+              <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
+            </div>
           </div>
         </div>
       </div>
