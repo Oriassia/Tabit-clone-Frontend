@@ -149,6 +149,7 @@ const ReservationData: React.FC = () => {
     // Parse date and time from currentInitials
     const datePart = stringDate.split(", ")[1];
     const [day, month] = datePart.split("/").map(Number); // Corrected to use dd/mm format
+
     const [hours, minutes] = currentInitials.dateTime
       .split("T")[1]
       .split(":")

@@ -50,7 +50,7 @@ export interface IReservation {
 export interface ITable {
   tableId?: number; // Matches the AUTO_INCREMENT primary key from SQL
   restId: number; // Foreign key reference to `Restaurants`
-  position: string; // E.g., 'inside', 'outside'
+  position: string; // E.g., 'Inside', 'outside'
   capacity: number; // Number of guests the table can accommodate
 }
 
