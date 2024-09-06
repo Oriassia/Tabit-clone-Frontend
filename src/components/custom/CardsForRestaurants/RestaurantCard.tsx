@@ -19,7 +19,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
           <p className="text-zinc-500">{restaurant.category}</p>
           <p className="text-slate-300">{restaurant.shortDescription}</p>
           <div className="flex gap-2">
-            <p className="text-greenButton">distance from user-#Elad Help</p>
+            <p className="text-greenButton">{restaurant.distance_km} Km</p>
             <p className="text-slate-700">|</p>
             <p className="dark:text-zinc-500 text-gray-400">
               {restaurant.address}
