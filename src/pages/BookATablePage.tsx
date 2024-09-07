@@ -13,7 +13,6 @@ import { format } from "date-fns";
 import Spinner from "@/components/custom/Loaders/Spinner"; // Import Spinner
 import { useLocationsContext } from "@/context/LocationsContext";
 import InfiniteScroll from "react-infinite-scroll-component";
-import SearchbarDialog from "@/components/SearchbarDialog";
 
 function BookATablePage() {
   const currentDate = new Date();
