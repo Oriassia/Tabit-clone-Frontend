@@ -19,8 +19,6 @@ interface TimeSlotDialogProps {
   restWithTables: AvailableTablesByRestaurant;
 }
 
-function navToReservation() {}
-
 const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -63,7 +61,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
               className={`${index === 2 ? "" : "border-b"}  py-3`}
             >
               <button
-                onClick={navToReservation}
+                onClick={() => handleTableSubmit(position)}
                 disabled={
                   slot.data && slot.data[position.toLowerCase()] === null
                 }
@@ -73,9 +71,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
                     : ""
                 }`}
               >
-                <button onClick={() => handleTableSubmit(position)}>
-                  {position || "-"}
-                </button>
+                {position || "-"}
               </button>
             </li>
           ))}

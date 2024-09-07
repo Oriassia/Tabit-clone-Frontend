@@ -2,15 +2,17 @@ import {
   formatDate,
   generate30Days,
   getAvailableHours,
+  getFormattedDate,
+  getFormattedTime,
 } from "@/services/time.services";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 export interface IReservationInput {
   dayName: string;
@@ -20,23 +22,36 @@ export interface IReservationInput {
   area: string;
 }
 
-export interface ReservationSelectorProps {
-  onDateChange: (newDate: Date) => void;
-  updateSearchParams: (title: string, value: string) => void;
-  searchParams: URLSearchParams;
-}
+export function ReservationSelector() {
+  const currentDate = new Date();
 
-export function ReservationSelector({
-  onDateChange,
-  updateSearchParams,
-  searchParams,
-}: ReservationSelectorProps) {
+  const [searchParams, setSearchParams] = useSearchParams({
+    dayName: currentDate.toLocaleDateString("en-GB", { weekday: "long" }),
+    dateDayNumber: getFormattedDate(currentDate),
+    time: getFormattedTime(currentDate),
+    guests: "2",
+    area: "Tel Aviv-Jaffa area",
+  });
+
   const [availableTimes, setAvailableTimes] = useState<string[]>([]);
   const [availableDates, setAvailableDates] = useState<Date[]>([]);
 
   useEffect(() => {
     setAvailableDates(generate30Days());
   }, []);
+
+  const updateSearchParams = (key: string, value: string) => {
+    searchParams.set(key, value);
+    setSearchParams(searchParams);
+  };
+
+  const onDateChange = (newDate: Date) => {
+    updateSearchParams(
+      "dayName",
+      newDate.toLocaleDateString("en-GB", { weekday: "long" })
+    );
+    updateSearchParams("dateDayNumber", getFormattedDate(newDate));
+  };
 
   useEffect(() => {
     setAvailableTimes(getAvailableHours(searchParams.get("dateDayNumber")));

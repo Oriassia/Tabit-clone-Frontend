@@ -84,11 +84,13 @@ export function getAvailableHours(dateDayNumber: string | null) {
   let startHour = 8;
   let startMinute = 0;
 
-  if (isToday && now.getHours() >= 8) {
+  if (isToday && now.getHours() >= 8 && now.getHours() <= 23) {
     // Start time should be one hour ahead of the current time
-    const nextAvailableTime = new Date(now.getTime() + 60 * 60 * 1000);
+    const nextAvailableTime = new Date(now.getTime() + 60 * 90 * 1000);
     startHour = nextAvailableTime.getHours();
     startMinute = nextAvailableTime.getMinutes() < 30 ? 30 : 0;
+  } else {
+    startHour = 8;
   }
 
   for (let hour = startHour; hour <= 23; hour++) {

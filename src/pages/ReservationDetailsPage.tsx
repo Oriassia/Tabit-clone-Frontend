@@ -150,7 +150,14 @@ const ReservationDetailsPage = () => {
 
           {reservationInfo && (
             <div className="flex justify-center space-x-2 py-5">
-              <button className="border-opacity-60 bg-black border border-greenButton hover:bg-gray-800 text-white font-bold py-3 px-2 rounded-md transition duration-150">
+              <button
+                onClick={() =>
+                  navigate(
+                    `/online-reservations/modify-reservation?reservationId=200&step=search`
+                  )
+                }
+                className="border-opacity-60 bg-black border border-greenButton hover:bg-gray-800 text-white font-bold py-3 px-2 rounded-md transition duration-150"
+              >
                 Modify Reservation
               </button>
               <CancelReservationDialog
