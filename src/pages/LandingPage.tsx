@@ -17,8 +17,8 @@ import { formatDate, getAvailableHours } from "@/services/time.services";
 import { GoDotFill } from "react-icons/go";
 import { MdMyLocation } from "react-icons/md";
 import { FaPlus } from "react-icons/fa6";
-import { useUserContext } from "@/context/UserContext";
 import { Link } from "react-router-dom";
+import { useLocationsContext } from "@/context/LocationsContext";
 
 const getRoundedTime = (date: Date) => {
   const minutes = date.getMinutes();
@@ -33,7 +33,7 @@ const getRoundedTime = (date: Date) => {
 
 function LandingPage() {
   const [AllRestaurants, setAllRestaurants] = useState<IRestaurant[]>([]);
-  const { usersLocation } = useUserContext();
+  const { locationsCoordinates } = useLocationsContext();
   const [reservationInputData, setReservationInputData] =
     useState<IReservationInput>({
       dayName: new Date().toLocaleDateString("en-GB", { weekday: "long" }),
@@ -270,12 +270,18 @@ function LandingPage() {
               className="hover:bg-greyHoverDropDownMenu cursor-pointer px-[0.6em] py-[0.7em]"
               onClick={() =>
                 handleAreaChange(
-                  usersLocation ? "Around me" : "Actual location unavailable"
+                  locationsCoordinates.userLocation.lat &&
+                    locationsCoordinates.userLocation.lng
+                    ? "Around me"
+                    : "Actual location unavailable"
                 )
               }
             >
               <DropdownMenuLabel className="font-thin">
-                {usersLocation ? "Around me" : "Actual location unavailable"}
+                {locationsCoordinates.userLocation.lat &&
+                locationsCoordinates.userLocation.lng
+                  ? "Around me"
+                  : "Actual location unavailable"}
               </DropdownMenuLabel>
             </DropdownMenuItem>
             {[

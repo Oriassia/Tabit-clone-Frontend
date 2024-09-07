@@ -4,7 +4,6 @@ import NavBar from "@/components/custom/NavBar/NavBar";
 import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
 import { ReservationSelector } from "@/components/custom/ReservationSelector/ReservationSelector";
 import { Button } from "@/components/ui/button";
-import { useUserContext } from "@/context/UserContext";
 import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/time.services";
 import { AvailableTablesByRestaurant } from "@/types/restaurant";
@@ -12,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 import Spinner from "@/components/custom/Loaders/Spinner"; // Import Spinner
+import { useLocationsContext } from "@/context/LocationsContext";
 
 function BookATablePage() {
   const currentDate = new Date();
@@ -28,7 +28,7 @@ function BookATablePage() {
   });
   const [isLoading, setIsLoading] = useState(false); // Add loading state
   const [isError, setIsError] = useState(false); // Add error state
-  const { usersLocation } = useUserContext();
+  const { getCoordinates } = useLocationsContext();
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
   useEffect(() => {
@@ -89,16 +89,13 @@ function BookATablePage() {
         date: reservationDateString,
       };
 
-      if (searchParams.get("area") === "Around me") {
-        if (usersLocation?.lat && usersLocation?.lng) {
-          postInputData.lat = usersLocation.lat;
-          postInputData.lng = usersLocation.lng;
-        } else {
-          throw new Error("User location is not available.");
-        }
+      const coordinates = getCoordinates(searchParams.get("area") || "");
+      if (coordinates) {
+        postInputData.lat = coordinates.lat;
+        postInputData.lng = coordinates.lng;
       }
 
-      const { data } = await api.post("/tables", postInputData);
+      const { data } = await api.get("/tables", { params: postInputData });
 
       if (!data.length) {
         throw new Error("No tables available for the selected criteria.");

@@ -25,7 +25,7 @@ function NavBar() {
     <div className=" z-50 opacity-90 font-rubik bg-greyNavbar text-white">
       {/* Mobile View */}
       <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
-        {!isInputVisible ? (
+        {!isInputVisible && (
           <>
             <SideMenu />
             <Link to={"/"}>
@@ -44,7 +44,8 @@ function NavBar() {
               <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
             </div>
           </>
-        ) : (
+        )}
+        {isInputVisible && (
           <div className="flex items-center w-full">
             <MdSearch className="size-6 text-greenHamburger" />
             <input
@@ -139,38 +140,38 @@ function NavBar() {
           </div>
 
           <div className="flex items-center gap-4 w-72 justify-end">
-            {isInputVisible && (
-              <form
-                className="flex py-2 px-2 items-center border-2 rounded-full "
-                onSubmit={() =>
-                  navigate(
-                    `/restaurants?filterRestName=${
-                      searchParams.get("filterRestName") || ""
-                    }`
-                  )
-                }
-              >
-                <X
-                  size={23}
-                  className="text-greenHamburger cursor-pointer hover:text-gray-300 transition duration-200"
-                  onClick={handleXClick}
-                />
-                <input
-                  type="text"
-                  placeholder="Restaurant search"
-                  value={searchParams.get("filterRestName") || ""}
-                  onChange={handleSearchNameChange}
-                  className="bg-transparent border-none outline-none text-white placeholder-gray-400 "
-                  autoFocus
-                />
-                {searchParams.get("filterRestName") && (
-                  <button type="submit" className="text-greenHamburger">
-                    Search
-                  </button>
-                )}
-              </form>
-            )}
             <div className="flex gap-2 items-center">
+              {isInputVisible && (
+                <form
+                  className="flex py-2 px-2 items-center border-2 rounded-full "
+                  onSubmit={() =>
+                    navigate(
+                      `/restaurants?filterRestName=${
+                        searchParams.get("filterRestName") || ""
+                      }`
+                    )
+                  }
+                >
+                  <X
+                    size={23}
+                    className="text-greenHamburger cursor-pointer hover:text-gray-300 transition duration-200"
+                    onClick={handleXClick}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Restaurant search"
+                    value={searchParams.get("filterRestName") || ""}
+                    onChange={handleSearchNameChange}
+                    className="bg-transparent border-none outline-none text-white placeholder-gray-400 "
+                    autoFocus
+                  />
+                  {searchParams.get("filterRestName") && (
+                    <button type="submit" className="text-greenHamburger">
+                      Search
+                    </button>
+                  )}
+                </form>
+              )}
               {!isInputVisible && (
                 <div
                   className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"

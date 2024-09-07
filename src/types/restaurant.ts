@@ -1,7 +1,19 @@
 export interface ILocation {
-  lat: number;
-  lng: number;
+  lat: number | null;
+  lng: number | null;
 }
+
+export interface ILocationsCoordinates {
+  userLocation: ILocation;
+  telAviv: ILocation;
+  Jerusalem: ILocation;
+  haifa: ILocation;
+  center: ILocation;
+  north: ILocation;
+  south: ILocation;
+  [key: string]: ILocation;
+}
+
 export interface IRestaurant {
   restId: number;
   name?: string;

@@ -62,7 +62,9 @@ function TagsSelector() {
                 ? "bg-greyHoverDropDownMenu"
                 : ""
             }`}
-            onClick={() => updateSearchParams("category", category)}
+            onClick={() =>
+              updateSearchParams("category", category.toLowerCase())
+            }
           >
             <p>{category}</p>
           </DropdownMenuItem>
