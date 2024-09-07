@@ -43,7 +43,6 @@ function App() {
             path="reservation-details"
             element={<ReservationDetailsPage />}
           />
-          <Route path="modify-reservation" element={<ModifyReservation />} />
         </Route>
       </Routes>
     </>

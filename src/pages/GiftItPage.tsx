@@ -38,8 +38,10 @@ function GiftItPage() {
   // Group restaurants by category
   function groupRestaurantsByCategory(restaurants: IRestaurant[]) {
     const grouped = restaurants.reduce((acc, restaurant) => {
-      const category = restaurant.category || "Uncategorized"; // Default if no category
-      const categories = category.split(","); // Split in case of multiple categories
+      const category = restaurant.category || "Uncategorized";
+      const categories = category
+        .split(",")
+        .map((cat) => cat.replace(/\s*\|\s*$/, "").trim()); // Trim and remove trailing "|"
 
       categories.forEach((cat) => {
         const trimmedCategory = cat.trim();
@@ -55,14 +57,15 @@ function GiftItPage() {
     setRestaurantsByCategory(grouped);
   }
 
-  // Toggle category selection
-  const handleCategoryToggle = (category: string) => {
+  const handleCategoryToggle = (
+    ev: React.MouseEvent<HTMLSpanElement, MouseEvent>,
+    category: string
+  ) => {
+    ev.preventDefault(); // Prevent the menu from closing when selecting a category
     setSelectedCategories((prevSelected) => {
       if (prevSelected.includes(category)) {
-        // Убираем категорию из выбранных
         return prevSelected.filter((cat) => cat !== category);
       } else {
-        // Добавляем категорию к выбранным
         return [...prevSelected, category];
       }
     });
@@ -71,7 +74,7 @@ function GiftItPage() {
   return (
     <div className="dark:bg-greyBg bg-white px-[3em]">
       {/* Header */}
-      <div className="pt-16 dark:text-white flex flex-col justify-center items-center">
+      <div className="pt-24 dark:text-white flex flex-col justify-center items-center">
         <h2 className="pt-[0.6em] text-[2.5em] font-rubik font-medium">
           Tabit Gift It
         </h2>
@@ -81,7 +84,7 @@ function GiftItPage() {
       </div>
 
       {/* Sticky Search and Filter Bar */}
-      <div className="flex items-center sticky top-[5.5em] z-50 justify-between border-b border-greyBorder py-[1em] bg-greyBg">
+      <div className="flex items-center sticky top-[5.7em] z-50 justify-between border-b border-greyNavbar py-[1em] bg-greyBg">
         <div className="relative">
           <Label>
             <RxMagnifyingGlass className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white" />
@@ -98,8 +101,8 @@ function GiftItPage() {
             {selectedCategories.map((category) => (
               <span
                 key={category}
-                className=" text-white py-1 flex border border-greyBorder rounded-3xl items-center gap-2 px-3 cursor-pointer"
-                onClick={() => handleCategoryToggle(category)}
+                className=" text-white py-1 flex border border-greyNavbar rounded-3xl items-center gap-2 px-3 cursor-pointer"
+                onClick={(ev) => handleCategoryToggle(ev, category)}
               >
                 <p className="border text-[1em] text-black  border-greenBorder rounded-full px-2 h-fit bg-greenButton">
                   &times;
@@ -126,7 +129,7 @@ function GiftItPage() {
                   }`}
                   key={category}
                   checked={selectedCategories.includes(category)} // Checkbox selection
-                  onCheckedChange={() => handleCategoryToggle(category)} // Toggle category
+                  onClick={(ev) => handleCategoryToggle(ev, category)} // Toggle category
                 >
                   {category}
                 </DropdownMenuCheckboxItem>
@@ -144,14 +147,9 @@ function GiftItPage() {
                 <h2 className="text-white text-2xl font-bold sticky top-[6.5em] bg-greyBg py-2 z-10">
                   {category}
                 </h2>
-                <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyBorder">
+                <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyNavbar">
                   {restaurantsByCategory[category].map((restaurant) => (
-                    <GiftCard
-                      key={restaurant.restId}
-                      restaurant={restaurant}
-                      buttonLabel="Get a gift card"
-                      linkLabel="More information"
-                    />
+                    <GiftCard key={restaurant.restId} restaurant={restaurant} />
                   ))}
                 </div>
               </div>
@@ -162,14 +160,9 @@ function GiftItPage() {
                 <h2 className="text-white text-2xl font-bold sticky top-[6.2em] bg-greyBg py-2 z-10">
                   {category}
                 </h2>
-                <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyBorder">
+                <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyNavbar">
                   {restaurantsByCategory[category]?.map((restaurant) => (
-                    <GiftCard
-                      key={restaurant.restId}
-                      restaurant={restaurant}
-                      buttonLabel="Get a gift card"
-                      linkLabel="More information"
-                    />
+                    <GiftCard key={restaurant.restId} restaurant={restaurant} />
                   )) || <p>No restaurants available for {category}</p>}
                 </div>
               </div>

@@ -87,7 +87,7 @@ function NavBar() {
             </NavLink>
           </div>
 
-          <div className="flex items-center gap-4 flex-row justify-center">
+          <div className="flex items-center gap-8 flex-row justify-center ">
             <NavLink
               to={"/book-a-table"}
               className={({ isActive }) =>

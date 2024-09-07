@@ -143,3 +143,20 @@ export interface IRestaurantReservation {
   tableId: number;
   website: string;
 }
+
+export interface GiftCard {
+  to: {
+    firstName: string;
+    lastName: string;
+  };
+  from: {
+    firstName: string;
+    lastName: string;
+  };
+  contact: {
+    phone?: string;
+    email?: string;
+  };
+  amount: number;
+  termsAccepted: boolean;
+}

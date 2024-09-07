@@ -8,11 +8,12 @@ import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/time.services";
 import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 import Spinner from "@/components/custom/Loaders/Spinner"; // Import Spinner
 import { useLocationsContext } from "@/context/LocationsContext";
 import InfiniteScroll from "react-infinite-scroll-component";
+import SearchbarDialog from "@/components/SearchbarDialog";
 
 function BookATablePage() {
   const currentDate = new Date();
@@ -24,6 +25,7 @@ function BookATablePage() {
   const [isLoading, setIsLoading] = useState(false); // Add loading state
   const [isError, setIsError] = useState<String | null>(null); // Add error state
   const { getCoordinates } = useLocationsContext();
+
   const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
   const [searchParams] = useSearchParams({
     dayName: currentDate.toLocaleDateString("en-GB", { weekday: "long" }),
@@ -133,6 +135,7 @@ function BookATablePage() {
         title="content-wrapper"
         className="h-full flex flex-col sm:flex-row sm:overflow-hidden"
       >
+        {" "}
         {/* Reserve a table section */}
         <div
           title="reserve-a-table-section"
@@ -156,15 +159,12 @@ function BookATablePage() {
             Find a table
           </Button>
 
-          <AreaDropDown
-            onAddNewAddress={() => console.log("Add a new address clicked")}
-          />
+          <AreaDropDown />
         </div>
-
         {/* Rests list section */}
         <InfiniteScroll
           height={"100%"}
-          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px]"
+          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px] scrollbar-none"
           dataLength={availableTablesByRest.length}
           next={fetchMoreData}
           hasMore={hasMore}
@@ -193,7 +193,6 @@ function BookATablePage() {
             ))}
           </ul>
         </InfiniteScroll>
-
         {/* MAP section */}
         <div title="map section" className="hidden sm:block flex-grow">
           <Map

@@ -42,7 +42,7 @@ function TagsSelector() {
         <div>{searchParams.get("category") || "Tags"}</div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+        className="bg-greyDropDownMenu border-none text-white rounded-[1%] w-[250px] font-rubik max-h-48 overflow-y-auto"
         style={{
           scrollbarWidth: "none",
           msOverflowStyle: "none",

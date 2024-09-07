@@ -113,11 +113,12 @@ export default function PlacesAutocomplete({
               input: evt.target.value,
               // Restrict results to Israel
               componentRestrictions: { country: "IL" },
-              types: ["address"], // Limit to addresses only
+              // types: ["address"], // Limit to addresses only
             });
           }}
           className="w-full px-0 py-4 pt-6 !bg-transparent border-b border-[#c9c9c9] text-[#c9c9c9] focus:border-teal-400 focus:text-teal-400 outline-none rounded-none"
           placeholder=" "
+          aria-label="Type a place, city, or a full address" // Accessibility
         />
       </div>
 

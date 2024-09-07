@@ -74,61 +74,74 @@ export const LocationsProvider: React.FC<{ children: ReactNode }> = ({
     fetchUserLocation();
   }, []);
 
-  function getCoordinates(areaName: string) {
-    switch (areaName) {
-      case "Around You":
-        if (
-          locationsCoordinates.userLocation.lat &&
-          locationsCoordinates.userLocation.lng
-        ) {
-          return {
-            lat: locationsCoordinates.userLocation.lat,
-            lng: locationsCoordinates.userLocation.lng,
-          };
-        }
+  function getCoordinates(areaName: string): Coordinates | undefined {
+    // 1. If the areaName matches "My Location", return userLocation coordinates.
+    if (areaName === "My Location") {
+      if (
+        locationsCoordinates.userLocation.lat !== null &&
+        locationsCoordinates.userLocation.lng !== null
+      ) {
         return {
-          lat: locationsCoordinates.telAviv.lat || 0,
-          lng: locationsCoordinates.telAviv.lng || 0,
+          lat: locationsCoordinates.userLocation.lat,
+          lng: locationsCoordinates.userLocation.lng,
         };
+      }
+      // If userLocation is not available, fallback to Tel Aviv coordinates.
+      return {
+        lat: locationsCoordinates.telAviv.lat || 32.0661,
+        lng: locationsCoordinates.telAviv.lng || 34.7748,
+      };
+    }
 
+    // 2. If an addedLocation exists and matches the areaName, return addedLocation coordinates.
+    if (addedLocation && areaName === addedLocation.title) {
+      return {
+        lat: addedLocation.lat || 32.0661, // Fallback to Tel Aviv coordinates if null
+        lng: addedLocation.lng || 34.7748,
+      };
+    }
+
+    // 3. Handle predefined area names and return their respective coordinates.
+    switch (areaName) {
       case "Tel Aviv-Jaffa area":
         return {
-          lat: locationsCoordinates.telAviv.lat || 0,
-          lng: locationsCoordinates.telAviv.lng || 0,
+          lat: locationsCoordinates.telAviv.lat || 32.0661,
+          lng: locationsCoordinates.telAviv.lng || 34.7748,
         };
 
       case "Jerusalem area":
         return {
-          lat: locationsCoordinates.Jerusalem.lat || 0,
-          lng: locationsCoordinates.Jerusalem.lng || 0,
+          lat: locationsCoordinates.Jerusalem.lat || 31.7748,
+          lng: locationsCoordinates.Jerusalem.lng || 35.2143,
         };
 
       case "Haifa area":
         return {
-          lat: locationsCoordinates.haifa.lat || 0,
-          lng: locationsCoordinates.haifa.lng || 0,
+          lat: locationsCoordinates.haifa.lat || 32.8098,
+          lng: locationsCoordinates.haifa.lng || 34.997,
         };
 
       case "Center":
         return {
-          lat: locationsCoordinates.center.lat || 0,
-          lng: locationsCoordinates.center.lng || 0,
+          lat: locationsCoordinates.center.lat || 31.8878,
+          lng: locationsCoordinates.center.lng || 35.0106,
         };
 
       case "North":
         return {
-          lat: locationsCoordinates.north.lat || 0,
-          lng: locationsCoordinates.north.lng || 0,
+          lat: locationsCoordinates.north.lat || 32.9693,
+          lng: locationsCoordinates.north.lng || 35.5421,
         };
 
       case "South":
         return {
-          lat: locationsCoordinates.south.lat || 0,
-          lng: locationsCoordinates.south.lng || 0,
+          lat: locationsCoordinates.south.lat || 29.5567,
+          lng: locationsCoordinates.south.lng || 34.9511,
         };
 
       default:
-        return { lat: 32.0661, lng: 34.7748 }; // Return default coordinates if areaName doesn't match
+        // 4. Return default coordinates (Tel Aviv) if areaName doesn't match any predefined areas.
+        return { lat: 32.0661, lng: 34.7748 };
     }
   }
 

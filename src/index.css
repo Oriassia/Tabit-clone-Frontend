@@ -7,6 +7,11 @@
 @tailwind components;
 @tailwind utilities;
 
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
 /* Custom radio button styling */
 .custom-radio {
   appearance: none; /* Remove default styling */
@@ -79,14 +84,7 @@
     url("https://tabitisrael.co.il/assets/images/dashboard-desktop.jpg?v=4_11_1");
   box-shadow: inset 0 0 1rem #000;
 }
-@keyframes growCircle {
-  from {
-    transform: translate(-50%, -50%) scale(0); /* Start small */
-  }
-  to {
-    transform: translate(-50%, -50%) scale(1); /* Grow to full size */
-  }
-}
+
 /* Works on Firefox */
 * {
   scrollbar-width: thin;

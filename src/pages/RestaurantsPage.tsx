@@ -103,30 +103,33 @@ function RestaurantsPage() {
       >
         <div
           title="reserve-a-table-section"
-          className="flex flex-col gap-5 px-10 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
+          className="flex flex-col gap-5 px-10 sm:w-[370px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
         >
-          <div className="text-3xl text-white font-rubik font-normal pt-14">
-            Reserve a table!
+          <div className="text-4xl text-white font-rubik font-normal pt-14">
+            Where do you want to hang out?
           </div>
-          <div className="text-white font-rubik w-full text-center">
-            Search for a table at Tabit restaurants
+          <div className="text-white font-rubik w-full text-center text-lg">
+            Reserve a table quickly and easily at one of the country's best
+            restaurants{" "}
           </div>
-          <TagsSelector />
-          <Button
-            onClick={() => fetchRestaurants(true)}
-            disabled={isLoading}
-            className="bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
-          >
-            {isLoading ? "Loading..." : "Find a table"}
-          </Button>
-          <AreaDropDown
-            onAddNewAddress={() => console.log("Add a new address clicked")}
-          />
+          <div className="flex flex-col gap-3">
+            <TagsSelector />
+            <Button
+              onClick={() => fetchRestaurants(true)}
+              disabled={isLoading}
+              className="bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
+            >
+              {isLoading ? "Loading..." : "Search"}
+            </Button>
+            <AreaDropDown
+              onAddNewAddress={() => console.log("Add a new address clicked")}
+            />
+          </div>
         </div>
 
         <InfiniteScroll
           height={"100%"}
-          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px]"
+          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px] scrollbar-none"
           dataLength={restaurants.length}
           next={fetchMoreData}
           hasMore={hasMore}

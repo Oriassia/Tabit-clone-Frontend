@@ -19,6 +19,7 @@
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
+    "@radix-ui/react-toast": "^1.2.1",
     "@react-google-maps/api": "^2.19.3",
     "@shadcn/ui": "^0.0.4",
     "@tanstack/react-query": "^5.52.1",
@@ -41,6 +42,7 @@
     "react-query": "^3.39.3",
     "react-router": "^6.26.1",
     "react-router-dom": "^6.26.1",
+    "react-transition-group": "^4.4.5",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

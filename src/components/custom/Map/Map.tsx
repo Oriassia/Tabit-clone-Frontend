@@ -11,15 +11,14 @@ interface IProps {
 }
 
 const containerStyle = {
-  width: "",
+  width: "100%", // Fixed width for the map container
   height: "100%",
 };
 
 const libraries: "places"[] = ["places"];
 
 function Map({ restaurants, onClickFun }: IProps) {
-  const { getCoordinates } = useLocationsContext();
-
+  const { getCoordinates, locationsCoordinates } = useLocationsContext();
   const [searchParams] = useSearchParams();
   const [clickedId, setClickedId] = useState<number | null>(null);
   const { isLoaded, loadError } = useJsApiLoader({
@@ -29,13 +28,13 @@ function Map({ restaurants, onClickFun }: IProps) {
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [center, setCenter] = useState(
-    getCoordinates(searchParams.get("area") || "")
-  ); // Initial center set to Tel Aviv
+    getCoordinates(searchParams.get("area") || "Around You")
+  ); // Initial center set to user's location or default
 
   useEffect(() => {
-    // Update center only if usersLocation is available
-    setCenter(getCoordinates(searchParams.get("area") || ""));
-  }, [searchParams.get("area")]);
+    // Update center when `userLocation` or `addedLocation` changes
+    setCenter(getCoordinates(searchParams.get("area") || "Around You"));
+  }, [searchParams.get("area"), locationsCoordinates.userLocation]);
 
   function isClicked(id: number): boolean {
     return clickedId === id;
@@ -74,13 +73,15 @@ function Map({ restaurants, onClickFun }: IProps) {
       }}
     >
       {/* Render the user's location marker */}
-      <MarkerF
-        position={new google.maps.LatLng(center)}
-        icon={{
-          url: "https://tabitisrael.co.il/assets/images/map-pin-me.png?v=4_11_2",
-          scaledSize: new google.maps.Size(40, 45), // Set a consistent size for all pins
-        }}
-      />
+      {center && (
+        <MarkerF
+          position={center}
+          icon={{
+            url: "https://tabitisrael.co.il/assets/images/map-pin-me.png?v=4_11_2",
+            scaledSize: new google.maps.Size(40, 45), // Set a consistent size for all pins
+          }}
+        />
+      )}
 
       {/* Render restaurant markers */}
       {restaurants.map(
