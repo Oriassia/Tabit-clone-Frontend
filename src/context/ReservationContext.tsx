@@ -34,7 +34,7 @@ interface ReservationContextType {
   setLikeWantedTables: (tables: any[]) => void;
   allTables: any[];
   positions: any[];
-  getAllTables: () => void;
+  getAllTables: (restIdGiven?: string) => void;
   getTablesPositions: () => void;
   resetReservation: () => void; // Added resetReservation function type
 }
@@ -79,12 +79,18 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   }, [restId]);
 
   // Fetch all tables data
-  const getAllTables = async () => {
-    if (restId) {
+  const getAllTables = async (restIdGiven?: string) => {
+    if (restIdGiven) {
+      try {
+        const { data } = await api.get(`/tables/${restIdGiven}`);
+        setAllTables(data);
+      } catch (error) {
+        console.error("Failed to fetch tables:", error);
+      }
+    } else if (restId) {
       try {
         const { data } = await api.get(`/tables/${restId}`);
         setAllTables(data);
-        console.log(data);
       } catch (error) {
         console.error("Failed to fetch tables:", error);
       }
@@ -95,7 +101,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const getTablesPositions = async () => {
     if (restId) {
       try {
-        console.log("restId: " + restId);
         const { data } = await api.get(`/tables/position/${restId}`);
         setPositions(data);
 

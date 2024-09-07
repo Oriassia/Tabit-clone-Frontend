@@ -5,6 +5,8 @@ import OrangeCalender from "@/components/custom/svg/OrangeCalender";
 import OrangeClock from "@/components/custom/svg/OrangeClock";
 import OrangeGuests from "@/components/custom/svg/OrangeGuests";
 import OrangeTablesIcon from "@/components/custom/svg/OrangeTablesIcon";
+import { useReservation } from "@/context/ReservationContext";
+
 import api from "@/services/api.services";
 import { IRestaurantReservation } from "@/types/restaurant";
 import { LucideShare2 } from "lucide-react";
@@ -17,7 +19,7 @@ const ReservationDetailsPage = () => {
   const navigate = useNavigate();
   const [reservationInfo, setReservationInfo] =
     useState<IRestaurantReservation>();
-
+  const { setRequestedReservation } = useReservation();
   useEffect(() => {
     fetchReservation();
   }, []);
@@ -25,10 +27,17 @@ const ReservationDetailsPage = () => {
   async function fetchReservation() {
     const reservationId = searchParams.get("reservationId") || "101";
     console.log(reservationId);
-
     try {
       const { data } = await api.get(`/reservations/${reservationId}`);
+      console.log(data);
+
       setReservationInfo(data);
+      setRequestedReservation({
+        dateTime: data.date,
+        tableId: data.tableId,
+        position: data.position,
+        guests: data.partySize,
+      });
     } catch (error: any) {
       console.error(error);
     }

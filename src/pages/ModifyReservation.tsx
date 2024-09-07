@@ -4,29 +4,82 @@ import ReservationData from "@/components/custom/ReservationForms/ReservationDat
 import OrangeCalender from "@/components/custom/svg/OrangeCalender";
 import OrangeClock from "@/components/custom/svg/OrangeClock";
 import OrangeGuests from "@/components/custom/svg/OrangeGuests";
+import { useReservation } from "@/context/ReservationContext";
 import api from "@/services/api.services";
-import { IRestaurantReservation } from "@/types/restaurant";
+import { IReservation, IRestaurantReservation } from "@/types/restaurant";
+import { table } from "console";
 import { useEffect, useState } from "react";
 import { FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { MdSearch } from "react-icons/md";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 function ModifyReservation() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [reservationInfo, setReservationInfo] =
     useState<IRestaurantReservation>();
-
+  const { setRequestedReservation, getAllTables, requestedReservation } =
+    useReservation();
   useEffect(() => {
     fetchReservation();
   }, []);
+  useEffect(() => {
+    if (searchParams.get("step") == "customer-details") {
+      editReservation();
+    }
+  }, [searchParams]);
 
+  async function editReservation() {
+    if (!requestedReservation || !reservationInfo) {
+      return;
+    }
+    const newReservation: IReservation = {
+      tableId: parseInt(requestedReservation.tableId), // Provide a default value or adjust as needed
+      restId: reservationInfo.restId, // Provide a default value or adjust as needed
+      partySize: parseInt(requestedReservation.guests),
+      firstName: reservationInfo.firstName,
+      lastName: reservationInfo.lastName,
+      phoneNumber: reservationInfo.phoneNumber,
+      email: reservationInfo.email,
+      notes: reservationInfo.notes,
+      date: requestedReservation.dateTime,
+    };
+    console.log(newReservation);
+
+    try {
+      const { data } = await api.put("/reservations", {
+        reservationId: reservationInfo.reservationId,
+        tableId: requestedReservation.tableId,
+        newDate: requestedReservation.dateTime,
+        newPartySize: requestedReservation.guests,
+      });
+
+      if (data) {
+        console.log("Reservation edited successfully!: ");
+
+        navigate(
+          `/online-reservations/reservation-details?reservationId=${reservationInfo.reservationId}`
+        );
+      } else {
+        console.error("Failed to create reservation.");
+      }
+    } catch (error) {
+      console.error("An error occurred while creating the reservation:", error);
+    }
+  }
   async function fetchReservation() {
     const reservationId = searchParams.get("reservationId") || "101";
     try {
       const { data } = await api.get(`/reservations/${reservationId}`);
-      console.log(data);
-
+      console.log("date fetched: ", data);
       setReservationInfo(data);
+      setRequestedReservation({
+        dateTime: data.date.split(":")[0] + ":" + data.date.split(":")[1],
+        tableId: data.tableId,
+        position: data.position,
+        guests: data.partySize,
+      });
+      getAllTables(data.restId);
     } catch (error: any) {
       console.error(error);
     }
@@ -73,7 +126,6 @@ function ModifyReservation() {
           alt="Image"
           className="bg-cover w-2/3 h-52 max-h-72 self-center"
         />
-
         {/* Header */}
         <div className=" flex flex-col gap-5 items-center">
           <div className="text-center">
@@ -155,8 +207,8 @@ function ModifyReservation() {
             For any request regarding your order, please contact directly{" "}
             {reservationInfo?.restaurant_name}{" "}
           </p>
-          <ReservationFooter />
-        </div>
+        </div>{" "}
+        <ReservationFooter />
       </div>
     </>
   );
