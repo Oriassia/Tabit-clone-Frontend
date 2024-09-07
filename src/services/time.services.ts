@@ -211,3 +211,32 @@ export function formatDateString(input: string) {
 
   return formattedDate;
 }
+
+export function computeDayName(dateStr: string) {
+  try {
+    const date = new Date(dateStr);
+    return new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date);
+  } catch (error) {
+    return null;
+  }
+}
+
+export function computeDateNumber(dateStr: string) {
+  try {
+    const date = new Date(dateStr);
+    const dayNumber = date.getDate().toString().padStart(2, "0");
+    const monthNumber = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    return `${dayNumber}/${monthNumber}`;
+  } catch (error) {
+    return null;
+  }
+}
+
+export function computeTime(dateStr: string) {
+  try {
+    const date = new Date(dateStr);
+    return date.toTimeString().substring(0, 5);
+  } catch (error) {
+    return null;
+  }
+}
