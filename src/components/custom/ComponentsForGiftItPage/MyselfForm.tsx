@@ -5,17 +5,6 @@ import { MdLaptop } from "react-icons/md";
 import { FaHouse } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { IRestaurant } from "@/types/restaurant";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { X } from "lucide-react";
 import CreditCardDialog from "./CreditCardDialog";
 import ErrorModal from "./ErrorModal";
 import VerificationCodeDialog from "./VerificationCodeDialog";
