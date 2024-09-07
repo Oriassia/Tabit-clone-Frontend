@@ -22,7 +22,7 @@ function NavBar() {
   };
 
   return (
-    <div className=" z-50 opacity-90 font-rubik bg-greyNavbar text-white">
+    <div className="relative z-50 opacity-90 font-rubik bg-greyNavbar text-white shadow-2xl before:content-[''] before:absolute before:inset-0 before:bg-transparent before:pointer-events-none before:shadow-[inset_0_10px_15px_-10px_rgba(0,0,0,0.8),inset_0_0_10px_rgba(0,0,0,0.3)]">
       {/* Mobile View */}
       <div className="flex items-center justify-between p-3 sm:hidden shadow-2xl ">
         {!isInputVisible && (
@@ -36,40 +36,41 @@ function NavBar() {
             </Link>
             <div className="flex gap-2 items-center">
               <div
-                className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+                className="p-1 rounded-full border-2 border-greyBorder flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
                 onClick={() => setInputVisible(true)}
               >
                 <MdSearch className="size-5 text-greenHamburger" />
               </div>
-              <BsGlobe2 className="size-7 text-gray-500 hover:text-gray-300 transition duration-200 cursor-pointer" />
+              <BsGlobe2 className="size-7 text-greyBorder hover:text-gray-300 transition duration-200 cursor-pointer" />
             </div>
           </>
         )}
         {isInputVisible && (
-          <div className="flex items-center w-full">
-            <MdSearch className="size-6 text-greenHamburger" />
-            <input
-              type="text"
-              onKeyDown={(ev) => {
-                if (ev.key === "Enter") {
-                  navigate(
-                    `/restaurants?filterRestName=${
-                      searchParams.get("filterRestName") || ""
-                    }`
-                  );
-                }
-              }}
-              placeholder="Restaurant search"
-              value={searchParams.get("filterRestName") || ""}
-              onChange={handleSearchNameChange}
-              className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-48"
-              autoFocus
-            />
-            <X
-              className="text-lg cursor-pointer hover:text-gray-300 transition duration-200"
-              onClick={handleXClick}
-            />
-            <BsGlobe2 className="size-7 text-gray-500 ml-4 hover:text-gray-300 transition duration-200 cursor-pointer" />
+          <div className="flex items-center w-full px-4 gap-0">
+            <div className="flex items-center w-full border-greyBorder border-2 rounded-full px-1  py-1 gap-1">
+              <X
+                className="text-lg cursor-pointer hover:text-gray-300 transition duration-200 text-blueBtn"
+                onClick={handleXClick}
+              />
+              <input
+                type="text"
+                onKeyDown={(ev) => {
+                  if (ev.key === "Enter") {
+                    navigate(
+                      `/restaurants?filterRestName=${
+                        searchParams.get("filterRestName") || ""
+                      }`
+                    );
+                  }
+                }}
+                placeholder="Restaurant search"
+                value={searchParams.get("filterRestName") || ""}
+                onChange={handleSearchNameChange}
+                className="bg-transparent border-none outline-none text-white placeholder-gray-300 w-48"
+                autoFocus
+              />
+            </div>
+            <BsGlobe2 className="size-8 text-greyBorder ml-2 hover:text-gray-300 transition duration-200 cursor-pointer" />
           </div>
         )}
       </div>
@@ -174,7 +175,7 @@ function NavBar() {
               )}
               {!isInputVisible && (
                 <div
-                  className="p-1 rounded-full border-2 border-gray-500 flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
+                  className="p-1 rounded-full border-2 border-greyBorder flex items-center justify-center cursor-pointer hover:text-gray-300 transition duration-200"
                   onClick={() => setInputVisible(true)}
                 >
                   <MdSearch className="size-5 text-greenHamburger" />

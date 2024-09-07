@@ -34,6 +34,7 @@ export interface IRestaurant {
   }[];
   photos?: string[];
   openingHours?: IOpeningHours[];
+  distance_km?: number;
 }
 
 export interface IOpeningHours {

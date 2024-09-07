@@ -10,7 +10,7 @@ interface GiftCardProps {
 
 const GiftCard = ({ restaurant, buttonLabel, linkLabel }: GiftCardProps) => {
   return (
-    <div className="dark:bg-greyNavbar dark:border-none border border-gray-200 rounded-lg shadow-md px-4 py-2 h-fit w-[340px] text-center">
+    <div className="dark:bg-greyNavbar dark:border-none border border-gray-200 rounded-lg shadow-md px-4 py-2 h-fit max-w-[340px] text-center">
       <img
         src={restaurant.mainPhoto}
         alt={restaurant.name}

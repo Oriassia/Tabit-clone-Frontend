@@ -7,8 +7,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { LucideMenu, PersonStanding } from "lucide-react";
+import { LucideMenu } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import AccessabillityIcon from "../svg/AccessabillityIcon";
 
 function SideMenu() {
   return (
@@ -18,10 +19,7 @@ function SideMenu() {
           <LucideMenu className=" hover:text-gray-300 transition duration-200 cursor-pointer text-greenHamburger" />
         </button>
       </SheetTrigger>
-      <SheetContent
-        side={"left"}
-        className="font-rubik bg-greyNavbar text-white "
-      >
+      <SheetContent side={"left"} className="font-rubik  text-white ">
         <SheetHeader className="mb-8">
           <SheetClose asChild>
             <button>
@@ -32,7 +30,7 @@ function SideMenu() {
           <SheetDescription></SheetDescription>
         </SheetHeader>
 
-        <nav className="flex flex-col gap-5 font-semibold text-lg">
+        <nav className="flex flex-col md:gap-6 gap-[1.39rem] font-semibold md:text-lg text-md">
           <div>
             <NavLink
               to="/"
@@ -45,7 +43,7 @@ function SideMenu() {
               Main
             </NavLink>
           </div>
-          <hr />
+          <hr className="border-greySeparator" />
           <div>
             <NavLink
               to="/book-a-table"
@@ -58,7 +56,7 @@ function SideMenu() {
               Reserve a table
             </NavLink>
           </div>
-          <hr />
+          <hr className="border-greySeparator" />
           <div>
             <NavLink
               to="/deliveries"
@@ -71,7 +69,7 @@ function SideMenu() {
               Deliveries & Takeouts
             </NavLink>
           </div>
-          <hr />
+          <hr className="border-greySeparator" />
           <div>
             <NavLink
               to="/restaurants"
@@ -84,7 +82,7 @@ function SideMenu() {
               Restaurants
             </NavLink>
           </div>
-          <hr />
+          <hr className="border-greySeparator" />
           <div>
             <NavLink
               to="/gift-it"
@@ -97,33 +95,30 @@ function SideMenu() {
               Tabit Gift it
             </NavLink>
           </div>
-          <hr />
+          <hr className="border-greySeparator" />
           <div>
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                isActive
-                  ? `text-greenHamburger transition duration-200`
-                  : "hover:text-gray-300 transition duration-200"
+              className={
+                "hover:text-gray-300 flex gap-4 transition duration-200"
               }
             >
               Restaurant owner?
             </NavLink>
           </div>
-          <hr />
+          <hr className="border-greySeparator" />
           <div>
             <NavLink
               to="/"
-              className={({ isActive }) =>
-                isActive
-                  ? `text-greenHamburger flex gap-4 transition duration-200`
-                  : "hover:text-gray-300 flex gap-4 transition duration-200"
+              className={
+                "hover:text-gray-300 flex gap-4 transition duration-200"
               }
             >
               <span>Accessibility Statement</span>
-              <PersonStanding />
+              <AccessabillityIcon className="w-14" />
             </NavLink>
-          </div>
+          </div>{" "}
+          <hr className="border-greySeparator" />
         </nav>
       </SheetContent>
     </Sheet>
