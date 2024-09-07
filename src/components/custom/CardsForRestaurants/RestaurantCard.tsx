@@ -21,20 +21,26 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
               ?.split(",")
               .map((cat: string, index: number, arr: string[]) => (
                 <span key={index} className="inline-flex items-center">
-                  <span>{cat.trim()}</span>
+                  <span>{cat.replace(/\s*\|\s*$/, "").trim()}</span>
                   {/* Add the separator only if it's not the last category */}
                   {index < arr.length - 1 && (
-                    <span className="text-slate-500 mx-1">|</span>
+                    <span className="text-gray-500 mx-1">|</span>
                   )}
                 </span>
               )) || "No categories available"}
           </p>
-          <p className="text-slate-300 overflow-y-auto max-h-[1.5em]">
+          <p
+            className="text-slate-300 overflow-y-auto max-h-[1.5em]"
+            style={{
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // Internet Explorer and Edge
+            }}
+          >
             {restaurant.shortDescription}
           </p>
-          <div className="flex gap-[1.7px]">
-            <p className="text-greenButton">{restaurant.distance_km} Km</p>
-            <p className="text-slate-700">|</p>
+          <div className="flex gap-3">
+            <p className="text-greenButton">{restaurant.distance_km} Km </p>
+            <p className="text-slate-500"> | </p>
             <p className="dark:text-zinc-500 text-gray-400">
               {restaurant.address}
             </p>

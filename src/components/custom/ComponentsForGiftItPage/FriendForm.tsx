@@ -33,20 +33,53 @@ const FriendForm: React.FC<FriendFormProps> = ({
 }) => {
   const [fromFirstName, setFromFirstName] = useState("");
   const [fromLastName, setFromLastName] = useState("");
-  const [placeholder, setPlaceholder] = useState("0");
+  const [phoneNumber, setPhoneNumberLocal] = useState("");
+  const [email, setEmailLocal] = useState("");
+  const [amount, setAmount] = useState<number | string>(""); // Local state for the gift card amount and placeholder
 
-  const handleFocus = () => setPlaceholder("");
-  const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
-    if (event.target.value === "") setPlaceholder("0");
+  const handleFocus = () => setAmount(""); // Clear placeholder when focused
+
+  const handleBlur = () => {
+    // Set placeholder to "0" if empty when focus is lost
+    if (amount === "" || amount === 0) {
+      setAmount("0");
+    }
   };
+
   const isFormValid = () => {
-    // Ensure recipient, sender, and at least one contact (phone or email) is filled
     const isRecipientFilled = !!fromFirstName && !!fromLastName;
     const isSenderFilled = !!fromFirstName && !!fromLastName;
     const isContactFilled =
-      wayToSend === "phone" ? !!setPhoneNumber : !!setEmail;
+      (wayToSend === "phone" && phoneNumber.trim() !== "") ||
+      (wayToSend === "email" && email.trim() !== "");
+    const isGiftCardAmountFilled = Number(amount) > 0;
 
-    return isRecipientFilled && isSenderFilled && isContactFilled;
+    console.log({
+      isRecipientFilled,
+      isSenderFilled,
+      isContactFilled,
+      isGiftCardAmountFilled,
+    });
+
+    return (
+      isRecipientFilled &&
+      isSenderFilled &&
+      isGiftCardAmountFilled &&
+      isContactFilled
+    );
+  };
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let value = parseInt(e.target.value, 10);
+
+    if (value > 600) {
+      value = 600;
+    } else if (value < 0 || isNaN(value)) {
+      value = 0;
+    }
+
+    setAmount(value); // Update the local state for validation
+    setGiftCardAmount(value); // Pass the amount to the parent form
   };
 
   return (
@@ -140,7 +173,10 @@ const FriendForm: React.FC<FriendFormProps> = ({
                 wayToSend !== "phone" ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={wayToSend !== "phone"}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) => {
+                setPhoneNumberLocal(e.target.value);
+                setPhoneNumber(e.target.value); // This updates the parent state as well
+              }}
             />
             <input
               type="email"
@@ -149,7 +185,10 @@ const FriendForm: React.FC<FriendFormProps> = ({
                 wayToSend !== "email" ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={wayToSend !== "email"}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmailLocal(e.target.value);
+                setEmail(e.target.value); // This updates the parent state as well
+              }}
             />
           </div>
         </div>
@@ -165,10 +204,11 @@ const FriendForm: React.FC<FriendFormProps> = ({
               type="number"
               min={0}
               max={600}
-              placeholder={placeholder}
+              value={amount}
+              placeholder={amount === "" ? "0" : ""}
               onFocus={handleFocus}
               onBlur={handleBlur}
-              onChange={(e) => setGiftCardAmount(Number(e.target.value))}
+              onChange={handleAmountChange}
               className="bg-transparent text-greenButton text-2xl text-center self-center justify-center w-[8em] items-center border-b border-greenButton no-arrows placeholder-greenButton focus:outline-none focus:ring-0"
             />
           </div>

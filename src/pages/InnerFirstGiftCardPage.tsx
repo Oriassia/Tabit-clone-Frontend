@@ -96,7 +96,7 @@ const InnerFirstGiftCardPage: React.FC = () => {
                 onClick={() => handleSelectOption("myself")}
                 className={`${
                   selectedOption === "myself"
-                    ? "bg-greenButton"
+                    ? "bg-greenButton bordrer border-greenButton"
                     : "border border-greenButton bg-transparent"
                 } px-[1.8em] py-[1.3em] rounded-3xl flex items-center flex-col justify-center cursor-pointer`}
               >

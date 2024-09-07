@@ -1,9 +1,12 @@
 import { Link } from "react-router-dom";
+interface ShowMoreProps {
+  to: string; // Accepts the path as a prop
+}
 
-const ShowMore = () => {
+const ShowMore: React.FC<ShowMoreProps> = ({ to }) => {
   return (
     <Link
-      to="#"
+      to={to} // Use the dynamic path from props
       className="dark:text-white text-gray-500 flex items-center text-lg font-medium"
     >
       <p className="font-normal text-[1rem] font-rubik self-center pt-2">

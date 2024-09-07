@@ -10,6 +10,8 @@ import CreateReservation from "./pages/CreateReservation";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
 import ModifyReservation from "./pages/ModifyReservation";
 import InnerFirstGiftCardPage from "./pages/InnerFirstGiftCardPage";
+import NewRestaurants from "./pages/NewRestaurantsPage";
+import NearRestaurants from "./pages/NearRestaurants";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
             path="restaurants/:restaurantId"
             element={<RestaurantDetailsPage />}
           />
+          <Route path="/newRestaurants" element={<NewRestaurants />} />
+          <Route path="/nearRestaurants" element={<NearRestaurants />} />
         </Route>
 
         {/* Routes WITHOUT navbar & footer */}

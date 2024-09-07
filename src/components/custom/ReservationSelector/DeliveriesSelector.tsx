@@ -42,7 +42,7 @@ function DeliveriesSelector() {
         {/* deliveries Selector */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center py-[0.5em] lg:text-[19px] text-[15px] border-b  border-greenButton">
-            <div className="font-thin">service</div>
+            <div className="font-thin">Service</div>
             <div>{searchParams.get("service") || "Service"}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent
