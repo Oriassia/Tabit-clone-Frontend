@@ -58,8 +58,6 @@ function RestaurantsPage() {
     }
 
     try {
-      console.log({ params });
-
       const { data } = await api.get("/restaurants/", { params });
       if (override) {
         setRestaurants(data);
@@ -121,9 +119,7 @@ function RestaurantsPage() {
             >
               {isLoading ? "Loading..." : "Search"}
             </Button>
-            <AreaDropDown
-              onAddNewAddress={() => console.log("Add a new address clicked")}
-            />
+            <AreaDropDown />
           </div>
         </div>
 
