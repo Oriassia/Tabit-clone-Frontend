@@ -5,6 +5,18 @@ import { MdLaptop } from "react-icons/md";
 import { FaHouse } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { IRestaurant } from "@/types/restaurant";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { X } from "lucide-react";
+import CreditCardDialog from "./CreditCardDialog";
 
 interface MyselfFormProps {
   handlePreviousStep: () => void;
@@ -19,6 +31,12 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
   handleWayChange,
   restaurant,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // For error modal
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [inputCode, setInputCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [placeholder, setPlaceholder] = useState("0");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -86,12 +104,13 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
     e.preventDefault();
 
     // Assuming you want to send a confirmation code as SMS
-    const confirmationCode = Math.floor(
+    const generatedCode = Math.floor(
       100000 + Math.random() * 900000
-    ).toString(); // Random 6-digit code
-    const message = `Your confirmation code is: ${confirmationCode}`;
+    ).toString();
+    const message = `Your confirmation code is: ${generatedCode}`;
+    setConfirmationCode(generatedCode);
 
-    console.log(confirmationCode);
+    console.log(generatedCode);
 
     try {
       // Send SMS by calling the backend
@@ -113,15 +132,38 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
 
       if (response.ok) {
         console.log("SMS sent successfully:", result);
-        alert("SMS sent successfully!");
+        // alert("SMS sent successfully!");
       } else {
         console.error("Failed to send SMS:", result.message);
-        alert("Failed to send SMS.");
+        // alert("Failed to send SMS.");
       }
     } catch (error) {
       console.error("Error sending SMS:", error);
-      alert("Error sending SMS.");
+      //   alert("Error sending SMS.");
     }
+
+    setIsModalOpen(true);
+  };
+
+  const handleCodeVerification = () => {
+    if (inputCode === confirmationCode) {
+      //   alert("Code verified successfully!");
+      setIsModalOpen(false);
+      setIsPaymentModalOpen(true);
+    } else {
+      setIsErrorModalOpen(true);
+      setErrorMessage("Incorrect code. Please try again.");
+    }
+  };
+
+  const handleCloseErrorModal = () => {
+    setIsErrorModalOpen(false);
+    setIsModalOpen(true); // Reopen the verification dialog
+  };
+
+  const handleClosePaymentModal = () => {
+    setIsPaymentModalOpen(false);
+    setIsModalOpen(true); // Reopen the verification dialog
   };
 
   return (
@@ -298,6 +340,82 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
           apply.
         </p>
       </div>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className=" dark:text-white w-[13em] text-xl pt-4 dark:bg-greyHoverDropDownMenu rounded-md border-none">
+          <DialogHeader>
+            <DialogClose className="absolute right-4 top-4 bg-transparent rounded-full p-0.5">
+              <X size={18} />
+            </DialogClose>
+            <DialogTitle className="text-center text-[1.25rem] font-normal mb-2">
+              We have sent a verification code to {phone}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col gap-4">
+            <Input
+              type="text"
+              placeholder="Verification code *"
+              value={inputCode}
+              onChange={(e) => setInputCode(e.target.value)}
+              className=" text-white dark:bg-transparent border-b border-greyBorder p-2 rounded-none placeholder:font-bold placeholder:text-base"
+            />
+            {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+          </div>
+          <DialogFooter
+            style={{ display: "flex", flexDirection: "column" }}
+            className="  items-center justify-center"
+          >
+            <Button
+              onClick={handleCodeVerification}
+              disabled={inputCode.trim() === ""}
+              className={` dark:bg-greyDarkBg w-[9em] dark:text-white rounded-3xl py-2 text-lg ${
+                inputCode.trim()
+                  ? "cursor-pointer dark:bg-[#006666]"
+                  : "opacity-50 cursor-not-allowed"
+              } block`}
+            >
+              Continue
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => setIsModalOpen(true)}
+              className=" text-gray-400 dark:hover:bg-transparent text-sm hover:text-gray-500 block"
+            >
+              Resend Code
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isErrorModalOpen} onOpenChange={setIsErrorModalOpen}>
+        <DialogContent className="dark:text-white w-[15em] text-xl pt-4 dark:bg-greyHoverDropDownMenu rounded-md border-none text-center">
+          <DialogClose className="absolute right-4 top-4 bg-transparent rounded-full p-0.5">
+            <X size={18} />
+          </DialogClose>
+          <div className="mb-4">
+            <div className="text-4xl text-green-500 mb-4">
+              {/* Add an appropriate icon for the error */}
+              <span>⚠️</span>
+            </div>
+            <h2 className="text-2xl font-bold">Something's Wrong</h2>
+            <p className="text-base mt-2">
+              The code appears to be incorrect or expired. Please try again.
+            </p>
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={handleCloseErrorModal}
+              className="w-full bg-green-500 text-white rounded-lg py-2 text-sm"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <CreditCardDialog
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+      />
     </div>
   );
 };
