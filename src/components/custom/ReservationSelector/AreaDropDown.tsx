@@ -1,4 +1,4 @@
-import { useUserContext } from "@/context/UserContext";
+import { useLocationsContext } from "@/context/LocationsContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +12,7 @@ import { MdMyLocation } from "react-icons/md";
 import { useSearchParams } from "react-router-dom";
 
 function AreaDropDown({ onAddNewAddress }: { onAddNewAddress: () => void }) {
-  const { usersLocation } = useUserContext();
+  const { locationsCoordinates } = useLocationsContext();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const updateSearchParams = (title: string, value: string) => {
@@ -40,10 +40,13 @@ function AreaDropDown({ onAddNewAddress }: { onAddNewAddress: () => void }) {
       >
         <DropdownMenuItem
           className="hover:bg-greyHoverDropDownMenu cursor-pointer px-[0.6em] py-[0.7em]"
-          onClick={() => updateSearchParams("area", "Around me")}
+          onClick={() => updateSearchParams("area", "around me")}
         >
           <DropdownMenuLabel className="font-thin">
-            {usersLocation ? "Around me" : "Actual location unavailable"}
+            {locationsCoordinates.userLocation.lat &&
+            locationsCoordinates.userLocation.lng
+              ? "Around me"
+              : "Actual location unavailable"}
           </DropdownMenuLabel>
         </DropdownMenuItem>
         {[

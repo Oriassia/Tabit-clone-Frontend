@@ -10,7 +10,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { IRestaurantReservation } from "@/types/restaurant";
-import { CiWarning } from "react-icons/ci";
+import WarningIcon from "../svg/WarningIcon";
 
 interface CancelOrderDialogProps {
   reservationInfo: IRestaurantReservation | undefined;
@@ -29,7 +29,7 @@ function CancelReservationDialog({
         </AlertDialogTrigger>
         <AlertDialogContent className=" text-center p-10 flex flex-col items-center w-auto max-w-96 rounded-xl dark:bg-greySelectedRestaurant gap-5">
           <AlertDialogHeader className=" items-center text-white">
-            <CiWarning size={120} className="text-greenButton" />
+            <WarningIcon />
             <AlertDialogTitle className="text-2xl text-center">
               Reservation <br /> Cancellation
             </AlertDialogTitle>
