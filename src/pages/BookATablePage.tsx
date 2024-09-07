@@ -8,7 +8,7 @@ import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/time.services";
 import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 import Spinner from "@/components/custom/Loaders/Spinner"; // Import Spinner
 import { useLocationsContext } from "@/context/LocationsContext";
