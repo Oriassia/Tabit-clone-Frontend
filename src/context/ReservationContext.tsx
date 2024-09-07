@@ -17,6 +17,7 @@ interface ReservationContextType {
     requestedReservationData: IRequestedReservation | null
   ) => void;
 
+  allCategories: string[];
   restaurant: IRestaurant | null;
   setRestaurant: (restaurant: IRestaurant | null) => void;
   restId: string | null;
@@ -62,6 +63,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [positions, setPositions] = useState<any[]>([]); // State for table `positions
   const [searchParams] = useSearchParams();
   const restId = searchParams.get("restId");
+  const [allCategories, setAllCategories] = useState<string[]>([]); // State for all categories
 
   // Fetch restaurant data based on restId
   useEffect(() => {
@@ -77,6 +79,32 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     }
     getRestaurantData();
   }, [restId]);
+
+  useEffect(() => {
+    async function setAllCategoriesFromRests() {
+      try {
+        const { data } = await api.get<IRestaurant[]>("/restaurants");
+        const filtered = data.reduce<string[]>((acc, rest) => {
+          if (rest.category) {
+            const categories = rest.category
+              .split(",")
+              .map((cat) => cat.replace(/\s*\|\s*/g, "").trim()); // Remove "|" and trim spaces
+            categories.forEach((cat) => {
+              if (!acc.includes(cat)) {
+                acc.push(cat);
+              }
+            });
+          }
+          return acc;
+        }, []);
+        setAllCategories(filtered);
+      } catch (error) {
+        console.error("Failed to fetch restaurant data:", error);
+      }
+    }
+
+    setAllCategoriesFromRests();
+  }, []);
 
   // Fetch all tables data
   const getAllTables = async (restIdGiven?: string) => {
@@ -138,6 +166,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <ReservationContext.Provider
       value={{
+        allCategories,
         requestedReservation,
         setRequestedReservation,
         restaurant,
