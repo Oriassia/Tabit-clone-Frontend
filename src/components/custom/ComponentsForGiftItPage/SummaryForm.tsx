@@ -43,6 +43,11 @@ const SummaryForm: React.FC<SummaryFormProps> = ({
   const handleResendCode = () => {
     alert("Code resent.");
   };
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [emailLocal, setEmailLocal] = useState("");
+  const [amount, setAmount] = useState(0); // State for the gift card amount
 
   const isFormValid = () => {
     // If sending via phone, check if the phone number is filled
@@ -289,6 +294,12 @@ const SummaryForm: React.FC<SummaryFormProps> = ({
       <CreditCardDialog
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
+        restaurantId={restaurant?.restId ?? 0} // Pass restaurantId
+        firstName={recipientFirstName} // Make sure firstName is recipientFirstName
+        lastName={recipientLastName} // Make sure lastName is recipientLastName
+        phoneNumber={phoneNumber} // Pass phoneNumber
+        email={email} // Pass email
+        giftCardAmount={giftCardAmount} // Pass gift card amount
       />
     </>
   );

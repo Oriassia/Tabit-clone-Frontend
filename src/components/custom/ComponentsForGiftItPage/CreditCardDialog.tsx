@@ -10,17 +10,30 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SuccessModal from "./SuccessModal"; // Import the success modal
-import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { X } from "lucide-react";
+import api from "@/services/api.services"; // Import your API service
+import { IRestaurant } from "@/types/restaurant";
 
 interface CreditCardDialogProps {
   isOpen: boolean;
   onClose: () => void;
+  restaurantId: number; // Restaurant ID
+  firstName: string; // First name of the recipient
+  lastName: string; // Last name of the recipient
+  phoneNumber: string; // Phone number
+  email: string; // Email address
+  giftCardAmount: number;
 }
 
 const CreditCardDialog: React.FC<CreditCardDialogProps> = ({
   isOpen,
   onClose,
+  restaurantId,
+  firstName,
+  lastName,
+  phoneNumber,
+  email,
+  giftCardAmount,
 }) => {
   const [cardNumber, setCardNumber] = useState("");
   const [fullName, setFullName] = useState("");
@@ -29,7 +42,6 @@ const CreditCardDialog: React.FC<CreditCardDialogProps> = ({
   const [expirationDate, setExpirationDate] = useState("");
 
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false); // New success modal state
-  const navigate = useNavigate(); // Initialize navigate
 
   const [errors, setErrors] = useState({
     cardNumber: "",
@@ -87,13 +99,34 @@ const CreditCardDialog: React.FC<CreditCardDialogProps> = ({
     return !hasErrors;
   };
 
+  const createGiftCard = async () => {
+    try {
+      const requestData = {
+        restId: restaurantId,
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+        balance: giftCardAmount,
+        senderName: fullName,
+      };
+
+      const response = await api.post("/giftcard/create", requestData);
+      console.log("Gift card created successfully:", response.data);
+      setIsSuccessModalOpen(true);
+    } catch (error) {
+      console.error("Error creating gift card:", error);
+      alert("Failed to create gift card.");
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (validateInputs()) {
       // Close the credit card modal
+      createGiftCard();
       onClose();
-
       // Open the success modal
       setIsSuccessModalOpen(true);
     }
