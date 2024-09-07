@@ -8,7 +8,7 @@ interface RestaurantCardProps {
 const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
   return (
     <Link to={`/restaurants/${restaurant.restId}`}>
-      <div className="dark:bg-greyNavbar rounded-lg shadow-md h-fit w-[340px] text-start border dark:border-none border-gray-200">
+      <div className="dark:bg-greyNavbar rounded-lg shadow-md w-[325px] h-[340px] text-start border dark:border-none border-gray-200 ">
         <img
           src={restaurant.mainPhoto}
           alt={restaurant.name}
@@ -32,8 +32,8 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
           <p className="text-slate-300 overflow-y-auto max-h-[1.5em]">
             {restaurant.shortDescription}
           </p>
-          <div className="flex gap-2">
-            <p className="text-greenButton">distance from user-#Elad Help</p>
+          <div className="flex gap-[1.7px]">
+            <p className="text-greenButton">{restaurant.distance_km} Km</p>
             <p className="text-slate-700">|</p>
             <p className="dark:text-zinc-500 text-gray-400">
               {restaurant.address}
