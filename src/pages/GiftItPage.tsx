@@ -149,12 +149,7 @@ function GiftItPage() {
                 </h2>
                 <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyNavbar">
                   {restaurantsByCategory[category].map((restaurant) => (
-                    <GiftCard
-                      key={restaurant.restId}
-                      restaurant={restaurant}
-                      buttonLabel="Get a gift card"
-                      linkLabel="More information"
-                    />
+                    <GiftCard key={restaurant.restId} restaurant={restaurant} />
                   ))}
                 </div>
               </div>
@@ -167,12 +162,7 @@ function GiftItPage() {
                 </h2>
                 <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyNavbar">
                   {restaurantsByCategory[category]?.map((restaurant) => (
-                    <GiftCard
-                      key={restaurant.restId}
-                      restaurant={restaurant}
-                      buttonLabel="Get a gift card"
-                      linkLabel="More information"
-                    />
+                    <GiftCard key={restaurant.restId} restaurant={restaurant} />
                   )) || <p>No restaurants available for {category}</p>}
                 </div>
               </div>

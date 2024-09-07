@@ -16,6 +16,7 @@ interface FriendFormProps {
   setRecipientLastName: React.Dispatch<React.SetStateAction<string>>;
   setGiftCardAmount: React.Dispatch<React.SetStateAction<number>>;
   setPhoneNumber: React.Dispatch<React.SetStateAction<string>>;
+  setEmail: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const FriendForm: React.FC<FriendFormProps> = ({
@@ -28,12 +29,24 @@ const FriendForm: React.FC<FriendFormProps> = ({
   setRecipientLastName,
   setGiftCardAmount,
   setPhoneNumber,
+  setEmail,
 }) => {
+  const [fromFirstName, setFromFirstName] = useState("");
+  const [fromLastName, setFromLastName] = useState("");
   const [placeholder, setPlaceholder] = useState("0");
 
   const handleFocus = () => setPlaceholder("");
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     if (event.target.value === "") setPlaceholder("0");
+  };
+  const isFormValid = () => {
+    // Ensure recipient, sender, and at least one contact (phone or email) is filled
+    const isRecipientFilled = !!fromFirstName && !!fromLastName;
+    const isSenderFilled = !!fromFirstName && !!fromLastName;
+    const isContactFilled =
+      wayToSend === "phone" ? !!setPhoneNumber : !!setEmail;
+
+    return isRecipientFilled && isSenderFilled && isContactFilled;
   };
 
   return (
@@ -73,11 +86,13 @@ const FriendForm: React.FC<FriendFormProps> = ({
             <input
               type="text"
               placeholder="First Name"
+              onChange={(e) => setFromFirstName(e.target.value)}
               className="bg-greyDropDownMenu text-white px-4 py-2 rounded-lg w-full"
             />
             <input
               type="text"
               placeholder="Last Name"
+              onChange={(e) => setFromLastName(e.target.value)}
               className="bg-greyDropDownMenu text-white px-4 py-2 rounded-lg w-full"
             />
           </div>
@@ -134,6 +149,7 @@ const FriendForm: React.FC<FriendFormProps> = ({
                 wayToSend !== "email" ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={wayToSend !== "email"}
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
@@ -158,14 +174,17 @@ const FriendForm: React.FC<FriendFormProps> = ({
           </div>
         </div>
         <button
-          className="rounded-full items-center text-[1.5em] px-[1em] py-2 w-4/5 self-center text-center flex justify-center bg-greyBg bg-opacity-75 text-white flex-grow"
+          className={`rounded-full items-center flex text-[1.5em] px-[1em] py-2 w-4/5 self-center bg-greyBg bg-opacity-75 text-white flex-grow ${
+            isFormValid() ? "cursor-pointer" : "cursor-not-allowed opacity-50"
+          }`}
           onClick={(e) => {
             e.preventDefault(); // Prevent form submission behavior
-            goToSummary(); // Move to the summary page
-          }} // Move to summary page // Move to summary page
+            if (isFormValid()) goToSummary(); // Navigate only if form is valid
+          }}
+          disabled={!isFormValid()} // Disable button if the form is invalid
         >
           <span className="flex-grow text-center text-white">Next</span>
-          <span className="text-white ">
+          <span className="text-white">
             <FaArrowRight />
           </span>
         </button>

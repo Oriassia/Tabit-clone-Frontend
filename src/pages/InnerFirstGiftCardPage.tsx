@@ -28,6 +28,7 @@ const InnerFirstGiftCardPage: React.FC = () => {
   const [recipientLastName, setRecipientLastName] = useState("");
   const [giftCardAmount, setGiftCardAmount] = useState(0);
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [email, setEmail] = useState("");
 
   // Fetch restaurant data when the component mounts
   useEffect(() => {
@@ -169,6 +170,7 @@ const InnerFirstGiftCardPage: React.FC = () => {
           setRecipientLastName={setRecipientLastName}
           setGiftCardAmount={setGiftCardAmount}
           setPhoneNumber={setPhoneNumber}
+          setEmail={setEmail}
         />
       ) : (
         <MyselfForm
@@ -189,6 +191,7 @@ const InnerFirstGiftCardPage: React.FC = () => {
           recipientLastName={recipientLastName}
           giftCardAmount={giftCardAmount}
           phoneNumber={phoneNumber}
+          email={email}
         />
       );
     }
