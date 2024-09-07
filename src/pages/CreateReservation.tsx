@@ -34,8 +34,8 @@ function CreateReservation() {
 
   useEffect(() => {
     console.log("got all tables");
-    console.log("requestedReservation:", requestedReservation), //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
-      getAllTables();
+
+    getAllTables();
   }, []);
 
   useEffect(() => {

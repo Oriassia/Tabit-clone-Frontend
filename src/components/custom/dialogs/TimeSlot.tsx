@@ -27,7 +27,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
   function handleTableSubmit(position: string) {
     setRequestedReservation({
       dateTime: (slot.data && slot.data?.time) || "",
-      guests: searchParams.get("guests") || "",
+      guests: searchParams.get("guests") || "2",
       tableId: slot.data && slot.data[position.toLowerCase()],
       position: position,
     });
