@@ -164,7 +164,7 @@ function BookATablePage() {
         {/* Rests list section */}
         <InfiniteScroll
           height={"100%"}
-          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px]"
+          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px] scrollbar-none"
           dataLength={availableTablesByRest.length}
           next={fetchMoreData}
           hasMore={hasMore}

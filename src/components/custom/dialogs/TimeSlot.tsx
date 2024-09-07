@@ -43,13 +43,13 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
           slot.data?.available === 1
             ? default_triggerClass
             : outline_triggerClass
-        } rounded-[4px] font-medium py-3 px-5`}
+        } rounded-[4px] font-thin py-3 px-5`}
       >
         {slot.data?.time.split("T")[1] || "-"}
       </DialogTrigger>
       <DialogContent className="dark:text-white max-w-80 text-2xl dark:bg-greyNavbar dark:rounded-none">
         <DialogHeader>
-          <DialogTitle className="text-center text-2xl">
+          <DialogTitle className="text-center text-xl">
             Choose Area:
           </DialogTitle>
           <DialogDescription></DialogDescription>
@@ -65,7 +65,7 @@ const TimeSlotDialog = ({ slot, restWithTables }: TimeSlotDialogProps) => {
                 disabled={
                   slot.data && slot.data[position.toLowerCase()] === null
                 }
-                className={`w-full text-left ${
+                className={`text-xl w-full text-left ${
                   slot.data && slot.data[position.toLowerCase()] === 1
                     ? "cursor-not-allowed line-through opacity-50"
                     : ""
