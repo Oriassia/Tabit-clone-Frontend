@@ -140,7 +140,7 @@ function LandingPage() {
         {/* reservation section */}
         <div className="flex border-2 rounded-[1.7rem] font-bold font-rubik text-white border-greenButton min-w-[280px] lg:min-w-[450px] bg-greenBg">
           {/* Date Selection */}
-          <div className="flex flex-col justify-center items-center px-[25px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] max-w-[110px] border-r-2 w-full border-greenButton">
+          <div className="flex flex-col justify-center items-center px-[25px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] lg:max-w-[220px] max-w-[110px] border-r-2 border-greenButton">
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none focus:ring-0 items-center">
                 <p className="text-[1em] font-normal text-center">
@@ -181,7 +181,7 @@ function LandingPage() {
           </div>
 
           {/* Time Selection */}
-          <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 max-w-[90px]  border-greenButton">
+          <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 lg:max-w-[120px] max-w-[90px]  border-greenButton">
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
                 <p className="text-[1em] font-normal">Hour</p>
@@ -212,7 +212,7 @@ function LandingPage() {
           </div>
 
           {/* Guests Selection */}
-          <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em] max-w-[110px] ">
+          <div className="flex flex-col justify-center items-center px-[25px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] lg:max-w-[220px] max-w-[110px] ">
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
                 <p className="text-[1em] font-normal">Guests</p>
