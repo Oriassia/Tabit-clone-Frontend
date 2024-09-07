@@ -7,8 +7,15 @@ import api from "@/services/api.services";
 import { FaCheck } from "react-icons/fa6";
 import { Dialog, DialogContent } from "@/components/ui/dialog"; // Import ShadCN Dialog components
 import WarningIcon from "../svg/WarningIcon";
+import { useToast } from "@/hooks/use-toast";
 
-function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
+function ReservationForm({
+  restPhone,
+  olderReservation,
+}: {
+  restPhone: string | undefined;
+  olderReservation: IReservation | null;
+}) {
   const [userPhone, setUserPhone] = useState<string>("");
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
@@ -18,6 +25,7 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false); // State to manage Dialog visibility
   const [searchParams, setSearchParams] = useSearchParams(); // Correctly initialize searchParams and setSearchParams
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const { requestedReservation, restId, setRequestedReservation } =
     useReservation();
@@ -40,6 +48,7 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
 
     return () => clearInterval(timerInterval); // Clean up interval on component unmount
   }, []);
+
   function goBack() {
     // Create a new instance of URLSearchParams based on current search parameters
     setRequestedReservation(null);
@@ -71,13 +80,19 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
       notes,
       date: requestedReservation.dateTime,
     };
-    console.log(newReservation);
 
     try {
       const { data } = await api.post("/reservations", newReservation);
 
       if (data) {
-        console.log("Reservation created successfully!: ", data);
+        toast({
+          variant: "default",
+          title: `Your resrvation to ${data.restaurant.name} created successfully!`,
+        });
+
+        olderReservation?.reservationId &&
+          cancelReservation(olderReservation?.reservationId);
+
         setRequestedReservation(null);
         navigate(
           `/online-reservations/reservation-details?reservationId=${data.reservationId}`
@@ -87,6 +102,18 @@ function ReservationForm({ restPhone }: { restPhone: string | undefined }) {
       }
     } catch (error) {
       console.error("An error occurred while creating the reservation:", error);
+    }
+  }
+
+  async function cancelReservation(reservationId: number) {
+    try {
+      const { data } = await api.delete(`/reservations/${reservationId}`);
+      toast({
+        variant: "default",
+        title: `Your resrvation to ${data.restaurant_name} canceled successfuly`,
+      });
+    } catch (error: any) {
+      console.error(error);
     }
   }
 

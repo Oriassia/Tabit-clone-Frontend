@@ -1,7 +1,7 @@
 import ReservationFooter from "@/components/custom/ReservationFooter/ReservationFooter";
 import ReservationData from "@/components/custom/ReservationForms/ReservationData";
 import api from "@/services/api.services";
-import { IRestaurant } from "@/types/restaurant";
+import { IRestaurant, IRestaurantReservation } from "@/types/restaurant";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -10,12 +10,22 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import ReservationForm from "@/components/custom/ReservationForms/ReservationForm";
 import { useReservation } from "@/context/ReservationContext";
 import ActionButton from "@/components/custom/buttons/ActionButton";
+import OrangeCalender from "@/components/custom/svg/OrangeCalender";
+import OrangeGuests from "@/components/custom/svg/OrangeGuests";
+import OrangeClock from "@/components/custom/svg/OrangeClock";
+import {
+  computeDateNumber,
+  computeDayName,
+  computeTime,
+} from "@/services/time.services";
 
 function CreateReservation() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
   const restId = searchParams.get("restId");
   const step = searchParams.get("step");
+  const [olderReservation, setOlderReservation] =
+    useState<IRestaurantReservation | null>(null);
 
   const {
     requestedReservation, //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
@@ -33,10 +43,20 @@ function CreateReservation() {
   }, [searchParams]);
 
   useEffect(() => {
-    console.log("got all tables");
-    console.log("requestedReservation:", requestedReservation), //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
-      getAllTables();
+    getAllTables();
+    fetchReservation();
   }, []);
+
+  async function fetchReservation() {
+    try {
+      const reservationId = searchParams.get("reservationId");
+      const { data } = await api.get(`/reservations/${reservationId}`);
+
+      setOlderReservation(data);
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
 
   useEffect(() => {
     async function getRestaurantData() {
@@ -61,13 +81,6 @@ function CreateReservation() {
   }
 
   // Common elements that are shared between both return scenarios
-  const commonElements = (
-    <>
-      <h1 className="text-4xl text-white my-1">{restaurant?.name}</h1>
-      <h3 className="text-xl text-white my-1 mb-3">{restaurant?.address}</h3>
-      <ReservationData />
-    </>
-  );
 
   // Return scenario for the "search" step
   if (step === "search") {
@@ -80,7 +93,56 @@ function CreateReservation() {
             className="h-[15rem]"
           />
           <h2 className="text-3xl text-slate-300 my-1">Reserve a Table</h2>
-          {commonElements}
+          <h1 className="text-4xl text-white my-1">{restaurant?.name}</h1>
+          <h3 className="text-xl text-white my-1 mb-3">
+            {restaurant?.address}
+          </h3>
+          {/*Older reservation data */}
+          {olderReservation && (
+            <>
+              <div className="flex flex-col gap-3 items-center font-rubik">
+                <div className="text-xl font-semibold ">
+                  Your Current Reservation
+                </div>
+                <div title="flex-wrapper" className="flex gap-5 text-lg">
+                  <div
+                    title="flex-item"
+                    className="flex content-center items-center gap-3"
+                  >
+                    <OrangeCalender />
+                    <span>
+                      {computeDayName(olderReservation?.date || "") ||
+                        "unavailable"}{" "}
+                      {computeDateNumber(olderReservation?.date || "") ||
+                        "unavailable"}
+                    </span>
+                  </div>
+                  <div
+                    title="flex-item"
+                    className="flex content-center items-center gap-3"
+                  >
+                    <OrangeClock />
+                    <span>
+                      {computeTime(olderReservation?.date || "") ||
+                        "unavailable"}
+                    </span>
+                  </div>
+                  <div
+                    title="flex-item"
+                    className="flex  content-center items-center gap-3"
+                  >
+                    <OrangeGuests />
+                    <span>{olderReservation?.partySize || "unavailable"}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="text-xl font-semibold my-3">
+                Modify Your Reservation
+              </div>
+            </>
+          )}
+          {/* Modify section */}
+          <ReservationData />
           <h3 className="text-xl text-white my-1">
             To reserve a table at {restaurant?.name}, choose a date, time, and
             number of guests.
@@ -114,8 +176,15 @@ function CreateReservation() {
             >
               {"< Back to Search"}
             </span>
-            {commonElements}
-            <ReservationForm restPhone={restaurant?.phoneNumber} />{" "}
+            <h1 className="text-4xl text-white my-1">{restaurant?.name}</h1>
+            <h3 className="text-xl text-white my-1 mb-3">
+              {restaurant?.address}
+            </h3>
+            <ReservationData />
+            <ReservationForm
+              olderReservation={olderReservation}
+              restPhone={restaurant?.phoneNumber}
+            />{" "}
             <div className="flex gap-4 py-5 justify-center bg-greyDarkBg mt-5">
               <ActionButton
                 icon={<FaPhone className="text-greenButton" />}

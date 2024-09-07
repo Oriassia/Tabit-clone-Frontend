@@ -6,6 +6,7 @@ import { BrowserRouter } from "react-router-dom";
 import { ThemeProvider } from "./components/custom/ThemeProvider/themeProvider.tsx";
 import { LocationsProvider } from "./context/LocationsContext.tsx";
 import { ReservationProvider } from "./context/ReservationContext.tsx";
+import { Toaster } from "@/components/ui/toaster.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
@@ -14,6 +15,7 @@ createRoot(document.getElementById("root")!).render(
         <LocationsProvider>
           <ReservationProvider>
             <App />
+            <Toaster />
           </ReservationProvider>
         </LocationsProvider>
       </BrowserRouter>
