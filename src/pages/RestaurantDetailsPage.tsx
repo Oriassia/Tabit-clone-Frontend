@@ -4,10 +4,8 @@ import LockIcon from "@/components/custom/svg/LockIcon";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useNavigate, useParams } from "react-router";
-
 import BikeIcon from "../components/custom/svg/BikeIcon";
 import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
-import { useSearchParams } from "react-router-dom";
 import PhotosDescriptionMenu from "@/components/custom/ComponentsForDetails/PhotosDescriptionMenu";
 import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
 
@@ -18,10 +16,6 @@ const RestaurantDetailsPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [restaurant, setRestaurant] = useState<IRestaurant | null>(null);
-
-  const [searchParams, setSearchParams] = useSearchParams({
-    area: "Tel Aviv-Jaffa area",
-  });
 
   const navigate = useNavigate();
 
@@ -49,16 +43,13 @@ const RestaurantDetailsPage: React.FC = () => {
         console.error("Failed to fetch restaurant data");
         return null;
       }
+      console.log(response.data[0]);
+
       return response.data[0];
     } catch (error) {
       console.error("Failed to fetch restaurant:", error);
       return null;
     }
-  };
-
-  const updateSearchParams = (key: string, value: string) => {
-    searchParams.set(key, value);
-    setSearchParams(searchParams);
   };
 
   const handleAddNewAddress = () => {
@@ -99,7 +90,7 @@ const RestaurantDetailsPage: React.FC = () => {
             {restaurant?.category?.split(",").map((cat, index, arr) => (
               <span key={index} className="text-[1em]">
                 {cat.trim()}
-                {index < arr.length - 1 && " | "}
+                {index < arr.length - 1 && " "}
               </span>
             ))}
           </p>
@@ -172,11 +163,7 @@ const RestaurantDetailsPage: React.FC = () => {
                 </div>
                 {/* Dropdown */}
                 <div className="flex justify-center  pt-[1.6em]">
-                  <AreaDropDown
-                    searchParams={searchParams}
-                    updateSearchParams={updateSearchParams}
-                    onAddNewAddress={handleAddNewAddress}
-                  />
+                  <AreaDropDown onAddNewAddress={handleAddNewAddress} />
                 </div>
               </div>
 

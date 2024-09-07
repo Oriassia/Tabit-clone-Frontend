@@ -122,8 +122,6 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
             {/* Столбец с часами работы */}
             <div className="flex flex-col flex-grow text-[0.8em]">
               {restaurant.openingHours?.map((hours, index) => {
-                console.log(restaurant.openingHours);
-
                 return (
                   <span
                     key={index}

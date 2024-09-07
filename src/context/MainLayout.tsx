@@ -8,7 +8,7 @@ function MainLayout() {
       <div className="fixed w-full z-50">
         <NavBar />
       </div>
-      <main className="flex-grow">
+      <main className="flex-grow ">
         <Outlet />
       </main>
       <Footer />

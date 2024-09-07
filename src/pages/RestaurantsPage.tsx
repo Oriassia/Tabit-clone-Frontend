@@ -126,7 +126,7 @@ function RestaurantsPage() {
 
         <InfiniteScroll
           height={"100%"}
-          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px]"
+          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px] scrollbar-none"
           dataLength={restaurants.length}
           next={fetchMoreData}
           hasMore={hasMore}
