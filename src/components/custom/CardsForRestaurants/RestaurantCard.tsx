@@ -16,8 +16,22 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
         />
         <div className="px-5 py-6 font-rubik font-normal">
           <h3 className="text-[1.25em] text-white">{restaurant.name}</h3>
-          <p className="text-zinc-500">{restaurant.category}</p>
-          <p className="text-slate-300">{restaurant.shortDescription}</p>
+          <p className="text-zinc-500">
+            {restaurant.category
+              ?.split(",")
+              .map((cat: string, index: number, arr: string[]) => (
+                <span key={index} className="inline-flex items-center">
+                  <span>{cat.trim()}</span>
+                  {/* Add the separator only if it's not the last category */}
+                  {index < arr.length - 1 && (
+                    <span className="text-slate-500 mx-1">|</span>
+                  )}
+                </span>
+              )) || "No categories available"}
+          </p>
+          <p className="text-slate-300 overflow-y-auto max-h-[1.5em]">
+            {restaurant.shortDescription}
+          </p>
           <div className="flex gap-2">
             <p className="text-greenButton">distance from user-#Elad Help</p>
             <p className="text-slate-700">|</p>

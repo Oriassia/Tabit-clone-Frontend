@@ -59,7 +59,7 @@ const PhotosDescriptionMenu: React.FC<RestaurantDetailsProps> = ({
       case "photos":
         return (
           <div className="grid grid-cols-3 gap-2 py-3">
-            {restaurant.photos?.map((photo, index) => (
+            {restaurant?.photos?.map((photo, index) => (
               <img
                 key={index}
                 src={photo}
