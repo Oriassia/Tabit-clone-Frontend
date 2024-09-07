@@ -150,7 +150,7 @@ function BookATablePage() {
           <ReservationSelector />
 
           <Button
-            onClick={() => fetchTables()}
+            onClick={() => fetchTables(true)}
             className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
           >
             Find a table

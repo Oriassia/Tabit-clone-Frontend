@@ -58,7 +58,9 @@ function RestaurantsPage() {
     }
 
     try {
-      const { data } = await api.get("/restaurants", { params });
+      console.log({ params });
+
+      const { data } = await api.get("/restaurants/", { params });
       if (override) {
         setRestaurants(data);
       } else {

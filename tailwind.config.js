@@ -19,7 +19,7 @@ module.exports = {
     extend: {
       colors: {
         greyShadow: "#272727",
-        greyNavbar: "#303030",
+        greyNavbar: "#363636",
         greySelectedRestaurant: "#383838",
         greyBg: "#212121",
         greyDarkBg: "#1f1f1f",
@@ -37,6 +37,7 @@ module.exports = {
         orange: "#F08E74",
         greySelected: "#444444",
         blueBtn: "#00CEBA",
+        greySeparator: "#474A4A",
       },
       fontFamily: {
         sans: ["Roboto", "sans-serif"],
