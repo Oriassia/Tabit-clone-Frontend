@@ -333,12 +333,7 @@ function LandingPage() {
         <div>
           <div className="flex flex-wrap justify-center gap-4">
             {AllRestaurants?.slice(0, 3).map((restaurant) => (
-              <GiftCard
-                key={restaurant.restId}
-                restaurant={restaurant}
-                buttonLabel={"Get a gift card"}
-                linkLabel={"More information"}
-              />
+              <GiftCard key={restaurant.restId} restaurant={restaurant} />
             ))}
           </div>
 

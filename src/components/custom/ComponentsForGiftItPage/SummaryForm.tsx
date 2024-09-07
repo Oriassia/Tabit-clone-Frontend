@@ -16,6 +16,7 @@ interface SummaryFormProps {
   recipientLastName: string;
   giftCardAmount: number;
   phoneNumber: string;
+  email: string;
 }
 
 const SummaryForm: React.FC<SummaryFormProps> = ({
@@ -27,8 +28,8 @@ const SummaryForm: React.FC<SummaryFormProps> = ({
   recipientLastName,
   giftCardAmount,
   phoneNumber,
+  email,
 }) => {
-  const [email, setEmail] = useState(""); // Assuming email can be entered
   const [termsAccepted, setTermsAccepted] = useState(false);
   const isFormValid = () => {
     // If sending via phone, check if the phone number is filled
@@ -161,7 +162,6 @@ const SummaryForm: React.FC<SummaryFormProps> = ({
               type="email"
               placeholder="Email address"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
               disabled={wayToSend !== "email"}
               className={`bg-greyDropDownMenu text-white px-4 py-2 rounded-lg w-full ${
                 wayToSend !== "email" ? "opacity-50 cursor-not-allowed" : ""
