@@ -40,12 +40,12 @@ function AreaDropDown({ onAddNewAddress }: { onAddNewAddress: () => void }) {
       >
         <DropdownMenuItem
           className="hover:bg-greyHoverDropDownMenu cursor-pointer px-[0.6em] py-[0.7em]"
-          onClick={() => updateSearchParams("area", "around me")}
+          onClick={() => updateSearchParams("area", "Around You")}
         >
           <DropdownMenuLabel className="font-thin">
             {locationsCoordinates.userLocation.lat &&
             locationsCoordinates.userLocation.lng
-              ? "Around me"
+              ? "Around You"
               : "Actual location unavailable"}
           </DropdownMenuLabel>
         </DropdownMenuItem>

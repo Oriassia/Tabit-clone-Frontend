@@ -23,6 +23,8 @@ import { MdMyLocation } from "react-icons/md";
 import { FaPlus } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { useLocationsContext } from "@/context/LocationsContext";
+import GoogleSearchbar from "@/components/custom/GoogleSearchbar";
+import ModalComponent from "@/components/SearchbarDialog";
 
 const getRoundedTime = (date: Date) => {
   const minutes = date.getMinutes();
@@ -130,13 +132,14 @@ function LandingPage() {
           boxShadow: "inset 0 0 1rem #000",
         }}
       >
+        {" "}
+        <ModalComponent />
         <h1 className="lg:text-[3.55em] text-[2em] text-white font-rubik font-normal md:pt-14">
           Reserve a table!
         </h1>
         <p className="pb-4  text-white font-rubik px-[1.3em] text-[0.95rem] lg:px-0 lg:text-[1.5em] min-w-[280px] lg:max-w-[450px] text-center">
           Just say when and which restaurant, and the rest is on us
         </p>
-
         {/* reservation section */}
         <div className="flex border-2 rounded-[1.7rem] font-bold font-rubik text-white border-greenButton min-w-[280px] lg:min-w-[450px] bg-greenBg">
           {/* Date Selection */}
@@ -245,7 +248,6 @@ function LandingPage() {
             </DropdownMenu>
           </div>
         </div>
-
         <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[310px] lg:w-[450px] py-6 text-[16px] rounded-full hover:bg-greenButton my-3">
           <Link
             to={`/book-a-table?dayName=${reservationInputData.dayName}&dateDayNumber=${reservationInputData.dateDayNumber}&time=${reservationInputData.time}&guests=${reservationInputData.guests}&area=${reservationInputData.area}`}
@@ -253,7 +255,6 @@ function LandingPage() {
             Find a table
           </Link>
         </Button>
-
         {/* Area Selector */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex items-center gap-2 pb-[2em]">
@@ -278,7 +279,7 @@ function LandingPage() {
                 handleAreaChange(
                   locationsCoordinates.userLocation.lat &&
                     locationsCoordinates.userLocation.lng
-                    ? "Around me"
+                    ? "Around You"
                     : "Actual location unavailable"
                 )
               }
@@ -286,7 +287,7 @@ function LandingPage() {
               <DropdownMenuLabel className="font-thin">
                 {locationsCoordinates.userLocation.lat &&
                 locationsCoordinates.userLocation.lng
-                  ? "Around me"
+                  ? "Around You"
                   : "Actual location unavailable"}
               </DropdownMenuLabel>
             </DropdownMenuItem>

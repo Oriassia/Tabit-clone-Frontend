@@ -1,4 +1,4 @@
-import { ILocationsCoordinates } from "@/types/restaurant";
+import { IAddedLocation, ILocationsCoordinates } from "@/types/restaurant";
 import React, {
   createContext,
   useState,
@@ -18,6 +18,8 @@ interface LocationsContextType {
   setLocationsCoordinates: React.Dispatch<
     React.SetStateAction<ILocationsCoordinates>
   >;
+  addedLocation: IAddedLocation | null; // Initialize with null to avoid any potential errors when rendering
+  setAddedLocation: React.Dispatch<React.SetStateAction<IAddedLocation | null>>;
   getCoordinates: (areaName: string) => Coordinates | undefined; // Define return type here
 }
 
@@ -42,7 +44,9 @@ export const LocationsProvider: React.FC<{ children: ReactNode }> = ({
       north: { lat: 32.96925256257092, lng: 35.54208636594151 },
       south: { lat: 29.556705981052822, lng: 34.95112725113618 },
     });
-
+  const [addedLocation, setAddedLocation] = useState<IAddedLocation | null>(
+    null
+  );
   useEffect(() => {
     const fetchUserLocation = () => {
       if (navigator.geolocation) {
@@ -72,7 +76,7 @@ export const LocationsProvider: React.FC<{ children: ReactNode }> = ({
 
   function getCoordinates(areaName: string) {
     switch (areaName) {
-      case "Around me":
+      case "Around You":
         if (
           locationsCoordinates.userLocation.lat &&
           locationsCoordinates.userLocation.lng
@@ -134,6 +138,8 @@ export const LocationsProvider: React.FC<{ children: ReactNode }> = ({
         locationsCoordinates,
         setLocationsCoordinates,
         getCoordinates,
+        setAddedLocation,
+        addedLocation,
       }}
     >
       {children}

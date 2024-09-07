@@ -2,7 +2,9 @@ export interface ILocation {
   lat: number | null;
   lng: number | null;
 }
-
+export interface IAddedLocation extends ILocation {
+  title: string | null;
+}
 export interface ILocationsCoordinates {
   userLocation: ILocation;
   telAviv: ILocation;
