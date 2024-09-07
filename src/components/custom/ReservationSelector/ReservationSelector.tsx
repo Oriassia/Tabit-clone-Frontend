@@ -1,3 +1,4 @@
+import SearchbarDialog from "@/components/SearchbarDialog";
 import {
   formatDate,
   generate30Days,
@@ -60,7 +61,7 @@ export function ReservationSelector() {
   return (
     <>
       <div className="grid grid-cols-1 w-full border-2 rounded-[35px] font-bold font-rubik text-white border-greenButton bg-greenBg">
-        {/* Date Selection */}
+        {/* Date Selection */}{" "}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center py-[0.5em] lg:text-[19px] text-[15px] border-b  border-greenButton">
             <p className="text-[1em] font-normal">
@@ -96,7 +97,6 @@ export function ReservationSelector() {
             })}
           </DropdownMenuContent>
         </DropdownMenu>
-
         {/* Time Selection */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center lg:text-[19px]  py-[0.5em] border-b  border-greenButton">
@@ -125,7 +125,6 @@ export function ReservationSelector() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-
         {/* Guests Selection */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center justify-center lg:text-[19px]  py-[0.5em]">
