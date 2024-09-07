@@ -8,10 +8,11 @@ import api from "@/services/api.services";
 import { getFormattedDate, getFormattedTime } from "@/services/time.services";
 import { AvailableTablesByRestaurant } from "@/types/restaurant";
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { format } from "date-fns";
 import Spinner from "@/components/custom/Loaders/Spinner"; // Import Spinner
 import { useLocationsContext } from "@/context/LocationsContext";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 function BookATablePage() {
   const currentDate = new Date();
@@ -19,38 +20,40 @@ function BookATablePage() {
     AvailableTablesByRestaurant[]
   >([]);
   const [clickedId, setClickedId] = useState<number | null>(null);
-  const [searchParams, setSearchParams] = useSearchParams({
+  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
+  const [isError, setIsError] = useState<String | null>(null); // Add error state
+  const { getCoordinates } = useLocationsContext();
+  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
+  const [searchParams] = useSearchParams({
     dayName: currentDate.toLocaleDateString("en-GB", { weekday: "long" }),
     dateDayNumber: getFormattedDate(currentDate),
     time: getFormattedTime(currentDate),
     guests: "2",
     area: "Tel Aviv-Jaffa area",
   });
-  const [isLoading, setIsLoading] = useState(false); // Add loading state
-  const [isError, setIsError] = useState(false); // Add error state
-  const { getCoordinates } = useLocationsContext();
-  const listItemRefs = useRef<(HTMLLIElement | null)[]>([]);
+
+  const scrollToRestaurant = (restId: number) => {
+    const targetIndex = availableTablesByRest.findIndex(
+      (restaurant) => restaurant.restId === restId
+    );
+
+    if (targetIndex !== -1 && listItemRefs.current[targetIndex]) {
+      listItemRefs.current[targetIndex]?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+      setClickedId(restId);
+    }
+  };
 
   useEffect(() => {
-    handleSearchSubmit();
-  }, [searchParams]);
+    fetchTables(true);
+  }, [searchParams.get("area")]);
 
-  const updateSearchParams = (key: string, value: string) => {
-    searchParams.set(key, value);
-    setSearchParams(searchParams);
-  };
-
-  const onDateChange = (newDate: Date) => {
-    updateSearchParams(
-      "dayName",
-      newDate.toLocaleDateString("en-GB", { weekday: "long" })
-    );
-    updateSearchParams("dateDayNumber", getFormattedDate(newDate));
-  };
-
-  const handleSearchSubmit = async () => {
-    setIsLoading(true); // Set loading state
-    setIsError(false); // Reset error state
+  const fetchTables = async (override = false) => {
+    setIsLoading(true);
+    setIsError(null);
 
     try {
       const [day, month] = (searchParams.get("dateDayNumber") ?? "")
@@ -82,47 +85,44 @@ function BookATablePage() {
         "yyyy-MM-dd'T'HH:mm"
       );
 
-      const postInputData = {
+      const params = {
         lat: 32.0661,
         lng: 34.7748,
         partySize: searchParams.get("guests") ?? "2",
         date: reservationDateString,
+        page: override ? 1 : Math.floor(availableTablesByRest.length / 25) + 1,
       };
 
       const coordinates = getCoordinates(searchParams.get("area") || "");
       if (coordinates) {
-        postInputData.lat = coordinates.lat;
-        postInputData.lng = coordinates.lng;
+        params.lat = coordinates.lat;
+        params.lng = coordinates.lng;
       }
 
-      const { data } = await api.get("/tables", { params: postInputData });
+      const { data } = await api.get("/tables", { params });
 
-      if (!data.length) {
-        throw new Error("No tables available for the selected criteria.");
+      if (override) {
+        setAvailableTablesByRest(data);
+      } else {
+        setAvailableTablesByRest((prev) => [...prev, ...data]);
       }
+      setHasMore(data.length === 25);
 
-      setAvailableTablesByRest(data);
-      scrollToRestaurant(data[0].restId);
-      setClickedId(data[0].restId);
+      if (data.length > 0) {
+        scrollToRestaurant(data[0].restId);
+        setClickedId(data[0].restId);
+      }
     } catch (error: any) {
       console.error(error);
-      setIsError(true); // Set error state
+      setIsError(error);
     } finally {
       setIsLoading(false); // Reset loading state
     }
   };
 
-  const scrollToRestaurant = (restId: number) => {
-    const targetIndex = availableTablesByRest.findIndex(
-      (restaurant) => restaurant.restId === restId
-    );
-
-    if (targetIndex !== -1 && listItemRefs.current[targetIndex]) {
-      listItemRefs.current[targetIndex]?.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
-      setClickedId(restId);
+  const fetchMoreData = () => {
+    if (hasMore) {
+      fetchTables();
     }
   };
 
@@ -147,14 +147,10 @@ function BookATablePage() {
             </div>
           </div>
 
-          <ReservationSelector
-            onDateChange={onDateChange}
-            updateSearchParams={updateSearchParams}
-            searchParams={searchParams}
-          />
+          <ReservationSelector />
 
           <Button
-            onClick={handleSearchSubmit}
+            onClick={() => fetchTables()}
             className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
           >
             Find a table
@@ -166,36 +162,37 @@ function BookATablePage() {
         </div>
 
         {/* Rests list section */}
-        <div className="dark:bg-greyNavbar flex flex-col md:w-[300px] xl:w-[420px] flex-shrink-0">
-          {isLoading ? (
-            <div className="text-white flex flex-col gap-4 items-center mt-10 h-full">
+        <InfiniteScroll
+          height={"100%"}
+          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px]"
+          dataLength={availableTablesByRest.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={
+            <div className="dark:text-white h-20 content-center text-center container">
               <Spinner />
             </div>
-          ) : isError ? (
-            <div className="text-center py-4">
-              There was an error. Please try again.
+          }
+          endMessage={
+            <div className="dark:text-white h-20 content-center text-center container">
+              No more results...
             </div>
-          ) : availableTablesByRest.length > 0 ? (
-            <ul className="flex flex-col h-full overflow-auto custom-scrollbar">
-              {availableTablesByRest.map((restWithTables, index) => (
-                <li
-                  key={restWithTables.restId}
-                  ref={(el) => (listItemRefs.current[index] = el)}
-                >
-                  <RestaurantsListItem
-                    restWithTables={restWithTables}
-                    isClicked={clickedId === restWithTables.restId}
-                  />
-                </li>
-              ))}
-              <li className="dark:text-white min-h-20 h-full content-center text-center container">
-                No more results...
+          }
+        >
+          <ul className="">
+            {availableTablesByRest.map((restWithTables, index) => (
+              <li
+                key={restWithTables.restId}
+                ref={(el) => (listItemRefs.current[index] = el)}
+              >
+                <RestaurantsListItem
+                  restWithTables={restWithTables}
+                  isClicked={clickedId === restWithTables.restId}
+                />
               </li>
-            </ul>
-          ) : (
-            <div className="text-center py-4">No restaurants available</div>
-          )}
-        </div>
+            ))}
+          </ul>
+        </InfiniteScroll>
 
         {/* MAP section */}
         <div title="map section" className="hidden sm:block flex-grow">
