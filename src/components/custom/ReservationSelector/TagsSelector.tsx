@@ -1,3 +1,4 @@
+import { useReservation } from "@/context/ReservationContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,21 +9,7 @@ import { useSearchParams } from "react-router-dom";
 
 function TagsSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const categories = [
-    "Middle Eastern",
-    "Bar",
-    "Mediterranean",
-    "Hotel",
-    "Restaurant",
-    "Grill",
-    "Seafood",
-    "Greek",
-    "French",
-    "Bistro",
-    "Contemporary",
-    "Fusion",
-    "Asian",
-  ];
+  const { allCategories } = useReservation();
 
   // Update search params for a category
   const updateSearchParams = (title: string, value: string) => {
@@ -54,7 +41,7 @@ function TagsSelector() {
         >
           Clear Tags
         </DropdownMenuItem>
-        {categories.map((category) => (
+        {allCategories.map((category) => (
           <DropdownMenuItem
             key={category}
             className={`hover:bg-greyHoverDropDownMenu focus:outline-none focus:ring-0 hover:border-none rounded-none cursor-pointer px-4 py-3 font-normal ${
