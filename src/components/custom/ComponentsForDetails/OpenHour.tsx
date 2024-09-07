@@ -21,7 +21,7 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
 
   // Получаем текущий день недели
   const today = new Date()
-    .toLocaleDateString("en-GB", { weekday: "long" })
+    .toLocaleDateString("en-US", { weekday: "long" })
     .toLowerCase() as keyof IOpeningHours;
 
   // Получаем текущую дату и время
@@ -35,9 +35,17 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
 
   // Функция для проверки, открыт ли ресторан в данный момент
   const isCurrentlyOpen = (hours: string) => {
+    if (!hours || hours === "Closed") {
+      return false; // Если ресторан закрыт или часы не указаны, возвращаем false
+    }
+
     const [openTimeStr, closeTimeStr] = hours
       .split("-")
       .map((time) => time.trim());
+
+    if (!openTimeStr || !closeTimeStr) {
+      return false; // Защита от ошибок, если формат данных не правильный
+    }
 
     const [openHour, openMinute] = openTimeStr.split(":").map(Number);
     const [closeHour, closeMinute] = closeTimeStr.split(":").map(Number);
@@ -114,6 +122,8 @@ const OpeningHours: React.FC<OpeningHoursProps> = ({ restaurant }) => {
             {/* Столбец с часами работы */}
             <div className="flex flex-col flex-grow text-[0.8em]">
               {restaurant.openingHours?.map((hours, index) => {
+                console.log(restaurant.openingHours);
+
                 return (
                   <span
                     key={index}
