@@ -45,6 +45,7 @@ function CreateReservation() {
   useEffect(() => {
     getAllTables();
     fetchReservation();
+    console.log("got all tables");
   }, []);
 
   async function fetchReservation() {

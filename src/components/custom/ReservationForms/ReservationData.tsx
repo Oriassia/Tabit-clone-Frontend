@@ -38,6 +38,7 @@ const ReservationData: React.FC = () => {
     setRequestedReservation,
     requestedReservation,
   } = useReservation();
+
   const getLikeTables = useGetLikeTables();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [type, setType] = useState<
@@ -82,7 +83,7 @@ const ReservationData: React.FC = () => {
         })
       );
     }
-  }, []);
+  }, [requestedReservation]);
 
   useEffect(() => {
     if (currentInitials) {
@@ -99,7 +100,7 @@ const ReservationData: React.FC = () => {
 
   useEffect(() => {
     if (requestedReservation && allTables.length > 0) {
-      getLikeTables(currentInitials, stringDate);
+      getLikeTables(requestedReservation, stringDate);
     }
   }, [requestedReservation, allTables]);
 
@@ -165,6 +166,7 @@ const ReservationData: React.FC = () => {
         ...currentInitials,
         tableId: availableTable.TableId,
       });
+
       searchParams.set("step", "customer-details");
       setSearchParams(searchParams);
     } else {
@@ -244,7 +246,9 @@ const ReservationData: React.FC = () => {
             <OrangeClock />
           </div>
           <div className="text-center">
-            {currentInitials?.dateTime.split("T")[1] || filteredHours[0]}
+            {currentInitials?.dateTime.split("T")[1] ||
+              requestedReservation?.dateTime.split("T")[1] ||
+              filteredHours[0]}
           </div>
         </div>
 
