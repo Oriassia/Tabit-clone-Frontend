@@ -8,7 +8,7 @@ interface RestaurantCardProps {
 const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
   return (
     <Link to={`/restaurants/${restaurant.restId}`}>
-      <div className="dark:bg-greyNavbar rounded-lg shadow-md w-[340px] h-[340px] text-start border dark:border-none border-gray-200">
+      <div className="dark:bg-greyNavbar rounded-lg shadow-md w-[325px] h-[340px] text-start border dark:border-none border-gray-200 ">
         <img
           src={restaurant.mainPhoto}
           alt={restaurant.name}
@@ -16,7 +16,7 @@ const RestaurantCard = ({ restaurant }: RestaurantCardProps) => {
         />
         <div className="px-5 py-6 font-rubik font-normal">
           <h3 className="text-[1.25em] text-white">{restaurant.name}</h3>
-          <p className="text-zinc-500">{restaurant.category}</p>
+          <p className="text-zinc-500 truncate">{restaurant.category}</p>
           <p className="text-slate-300 truncate ">
             {restaurant.shortDescription}
           </p>

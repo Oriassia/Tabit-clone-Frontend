@@ -202,3 +202,12 @@ export function generateNext7Days(): string[] {
   }
   return days;
 }
+export function formatDateString(input: string) {
+  // Split the input string by '/'
+  const [day, month] = input.split("/");
+
+  // Convert to numbers to remove leading zeros, then join them with ' / '
+  const formattedDate = `${parseInt(day)} / ${parseInt(month)}`;
+
+  return formattedDate;
+}

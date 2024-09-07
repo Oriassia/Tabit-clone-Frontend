@@ -13,7 +13,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { formatDate, getAvailableHours } from "@/services/time.services";
+import {
+  formatDate,
+  formatDateString,
+  getAvailableHours,
+} from "@/services/time.services";
 import { GoDotFill } from "react-icons/go";
 import { MdMyLocation } from "react-icons/md";
 import { FaPlus } from "react-icons/fa6";
@@ -126,26 +130,28 @@ function LandingPage() {
           boxShadow: "inset 0 0 1rem #000",
         }}
       >
-        <h1 className="lg:text-[3.55em] text-[2.7em] text-white font-rubik font-normal pt-14">
+        <h1 className="lg:text-[3.55em] text-[2em] text-white font-rubik font-normal md:pt-14">
           Reserve a table!
         </h1>
-        <p className="pb-4 text-white font-rubik px-[2.8em] lg:px-0 lg:text-[1.5em] min-w-[350px] lg:max-w-[450px] text-center">
+        <p className="pb-4  text-white font-rubik px-[1.3em] text-[0.95rem] lg:px-0 lg:text-[1.5em] min-w-[280px] lg:max-w-[450px] text-center">
           Just say when and which restaurant, and the rest is on us
         </p>
 
         {/* reservation section */}
-        <div className="flex border-2 rounded-full font-bold font-rubik text-white border-greenButton min-w-[350px] lg:min-w-[450px] bg-greenBg ">
+        <div className="flex border-2 rounded-[1.7rem] font-bold font-rubik text-white border-greenButton min-w-[280px] lg:min-w-[450px] bg-greenBg">
           {/* Date Selection */}
-          <div className="flex flex-col justify-center items-center px-[30px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] border-r-2 border-greenButton">
+          <div className="flex flex-col justify-center items-center px-[25px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] max-w-[110px] border-r-2 w-full border-greenButton">
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none focus:ring-0 items-center">
-                <p className="text-[1em] font-normal">
+                <p className="text-[1em] font-normal text-center">
                   {reservationInputData.dayName}
                 </p>
-                <p className="">{reservationInputData.dateDayNumber}</p>
+                <p className="">
+                  {formatDateString(reservationInputData.dateDayNumber)}
+                </p>
               </DropdownMenuTrigger>
               <DropdownMenuContent
-                className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[180px] max-h-48 overflow-y-auto"
+                className="bg-greyDropDownMenu border-none text-white p-0 rounded-[1%] font-rubik min-w-[100px] max-h-48 overflow-y-auto"
                 style={{
                   scrollbarWidth: "none", // Firefox
                   msOverflowStyle: "none", // Internet Explorer and Edge
@@ -175,7 +181,7 @@ function LandingPage() {
           </div>
 
           {/* Time Selection */}
-          <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 border-greenButton">
+          <div className="flex flex-col items-center lg:text-[19px] px-[30px] lg:px-[45px] py-[0.5em] border-r-2 max-w-[90px]  border-greenButton">
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
                 <p className="text-[1em] font-normal">Hour</p>
@@ -206,7 +212,7 @@ function LandingPage() {
           </div>
 
           {/* Guests Selection */}
-          <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em]">
+          <div className="flex flex-col items-center justify-center lg:text-[19px] px-[30px] lg:px-[40px] py-[0.5em] max-w-[110px] ">
             <DropdownMenu>
               <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
                 <p className="text-[1em] font-normal">Guests</p>
@@ -240,7 +246,7 @@ function LandingPage() {
           </div>
         </div>
 
-        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[350px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
+        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[310px] lg:w-[450px] py-6 text-[16px] rounded-full hover:bg-greenButton my-3">
           <Link
             to={`/book-a-table?dayName=${reservationInputData.dayName}&dateDayNumber=${reservationInputData.dateDayNumber}&time=${reservationInputData.time}&guests=${reservationInputData.guests}&area=${reservationInputData.area}`}
           >
@@ -314,9 +320,9 @@ function LandingPage() {
       </section>
 
       {/*GIVE THE GIFT OF GOOD FOOD PART*/}
-      <div className="dark:bg-black bg-white">
-        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className=" col-start-2 py-7 text-[2.5em] font-rubik dark:text-white font-medium text-center md:flex-grow">
+      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[2em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner mt-0 border-0">
+        <div className="grid grid-cols-[20%_60%_20%] items-center pb-10 border-0">
+          <h2 className=" col-span-3  text-[2.5em] font-rubik dark:text-white font-medium text-center md:flex-grow border-0">
             Give the gift of good food
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
@@ -343,10 +349,10 @@ function LandingPage() {
       </div>
 
       {/* TAKEOUT OR DELIVERY PART */}
-      <div className="dark:bg-black bg-white">
-        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full  col-start-2 py-7 md:w-auto text-[2.25em] font-rubik dark:text-white font-normal text-center md:flex-grow">
-            Takeout or Delivery{" "}
+      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[0] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner">
+        <div className="grid grid-cols-[20%_60%_20%] items-center py-10 ">
+          <h2 className="w-full  col-span-3 py-7 pt-0 md:w-auto text-[2.2em] font-rubik dark:text-white font-bold text-center md:flex-grow">
+            Takeout or Delivery
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
             <ShowMore />
@@ -367,7 +373,7 @@ function LandingPage() {
       </div>
 
       {/* NEW RESTAURANTS AT TABIT PART */}
-      <div className="dark:bg-black bg-white">
+      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[6em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
           <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.25em] font-rubik dark:text-white font-normal text-center md:flex-grow">
             New Restaurants at Tabit
@@ -391,7 +397,7 @@ function LandingPage() {
       </div>
 
       {/* NEAR ME PART */}
-      <div className="dark:bg-black bg-white pb-12">
+      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[6em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
           <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.25em] font-rubik dark:text-white font-normal text-center md:flex-grow">
             Near Me{" "}

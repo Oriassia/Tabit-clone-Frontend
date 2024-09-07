@@ -38,6 +38,7 @@ module.exports = {
         greySelected: "#444444",
         blueBtn: "#00CEBA",
         greySeparator: "#474A4A",
+        greyBorder: "#9E9E9E",
       },
       fontFamily: {
         sans: ["Roboto", "sans-serif"],
