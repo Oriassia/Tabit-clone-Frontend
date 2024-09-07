@@ -5,6 +5,9 @@ import { MdLaptop } from "react-icons/md";
 import { FaHouse } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 import { IRestaurant } from "@/types/restaurant";
+import CreditCardDialog from "./CreditCardDialog";
+import ErrorModal from "./ErrorModal";
+import VerificationCodeDialog from "./VerificationCodeDialog";
 
 interface MyselfFormProps {
   handlePreviousStep: () => void;
@@ -19,6 +22,12 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
   handleWayChange,
   restaurant,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false); // For error modal
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [confirmationCode, setConfirmationCode] = useState("");
+  const [inputCode, setInputCode] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const [placeholder, setPlaceholder] = useState("0");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -30,6 +39,10 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
   const handleFocus = () => setPlaceholder("");
   const handleBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     if (event.target.value === "") setPlaceholder("0");
+  };
+
+  const handleResendCode = () => {
+    alert("Code resent.");
   };
 
   const handleNameChange =
@@ -86,12 +99,13 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
     e.preventDefault();
 
     // Assuming you want to send a confirmation code as SMS
-    const confirmationCode = Math.floor(
+    const generatedCode = Math.floor(
       100000 + Math.random() * 900000
-    ).toString(); // Random 6-digit code
-    const message = `Your confirmation code is: ${confirmationCode}`;
+    ).toString();
+    const message = `Your confirmation code is: ${generatedCode}`;
+    setConfirmationCode(generatedCode);
 
-    console.log(confirmationCode);
+    console.log(generatedCode);
 
     try {
       // Send SMS by calling the backend
@@ -113,14 +127,27 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
 
       if (response.ok) {
         console.log("SMS sent successfully:", result);
-        alert("SMS sent successfully!");
+        // alert("SMS sent successfully!");
       } else {
         console.error("Failed to send SMS:", result.message);
-        alert("Failed to send SMS.");
+        // alert("Failed to send SMS.");
       }
     } catch (error) {
       console.error("Error sending SMS:", error);
-      alert("Error sending SMS.");
+      //   alert("Error sending SMS.");
+    }
+
+    setIsModalOpen(true);
+  };
+
+  const handleCodeVerification = () => {
+    if (inputCode === confirmationCode) {
+      //   alert("Code verified successfully!");
+      setIsModalOpen(false);
+      setIsPaymentModalOpen(true);
+    } else {
+      setIsErrorModalOpen(true);
+      setErrorMessage("Incorrect code. Please try again.");
     }
   };
 
@@ -298,6 +325,27 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
           apply.
         </p>
       </div>
+
+      <VerificationCodeDialog
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        phone={phone}
+        inputCode={inputCode}
+        setInputCode={setInputCode}
+        errorMessage={errorMessage}
+        handleCodeVerification={handleCodeVerification}
+        handleResendCode={handleResendCode}
+      />
+
+      <ErrorModal
+        isOpen={isErrorModalOpen}
+        onClose={() => setIsErrorModalOpen(false)}
+      />
+
+      <CreditCardDialog
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+      />
     </div>
   );
 };
