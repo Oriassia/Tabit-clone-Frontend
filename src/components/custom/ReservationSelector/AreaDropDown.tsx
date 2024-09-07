@@ -15,8 +15,6 @@ import { useSearchParams } from "react-router-dom";
 
 function AreaDropDown() {
   const {
-    locationsCoordinates,
-    setAddedLocation,
     addedLocation,
     setLocationsCoordinates,
     getCoordinates, // Added getCoordinates to use context
