@@ -153,7 +153,7 @@ const ReservationDetailsPage = () => {
               <button
                 onClick={() =>
                   navigate(
-                    `/online-reservations/modify-reservation?reservationId=200&step=search`
+                    `/online-reservations?restId=${reservationInfo.restId}&reservationId=200&step=search`
                   )
                 }
                 className="border-opacity-60 bg-black border border-greenButton hover:bg-gray-800 text-white font-bold py-3 px-2 rounded-md transition duration-150"
