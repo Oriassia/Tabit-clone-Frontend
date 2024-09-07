@@ -324,7 +324,7 @@ function LandingPage() {
             Give the gift of good food
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/gift-it" />
           </div>
         </div>
 
@@ -336,7 +336,7 @@ function LandingPage() {
           </div>
 
           <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/gift-it" />
           </div>
         </div>
       </div>
@@ -348,7 +348,7 @@ function LandingPage() {
             Takeout or Delivery
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/deliveries" />
           </div>
         </div>
 
@@ -360,7 +360,7 @@ function LandingPage() {
           </div>
 
           <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/deliveries" />
           </div>
         </div>
       </div>
@@ -372,7 +372,7 @@ function LandingPage() {
             New Restaurants at Tabit
           </h2>
           <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/newRestaurants" />
           </div>
         </div>
 
@@ -384,7 +384,7 @@ function LandingPage() {
           </div>
 
           <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/newRestaurants" />
           </div>
         </div>
       </div>
@@ -396,7 +396,7 @@ function LandingPage() {
             Near Me{" "}
           </h2>
           <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/nearRestaurants" />
           </div>
         </div>
 
@@ -408,7 +408,7 @@ function LandingPage() {
           </div>
 
           <div className=" lg:hidden flex justify-center items-center py-4 md:mt-0">
-            <ShowMore />
+            <ShowMore to="/nearRestaurants" />
           </div>
         </div>
       </div>

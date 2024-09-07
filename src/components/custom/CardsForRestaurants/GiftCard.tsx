@@ -23,7 +23,8 @@ const GiftCard = ({ restaurant }: GiftCardProps) => {
       <div className="w-[268px]">
         <Link
           className="block content-center w-full bg-greenButton hover:bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton dark:text-white text-black h-8 rounded"
-          to={`/gift-cards/create-card/${restaurant.restId}`} // Notice the leading '/'
+          to={`/gift-cards/create-card/${restaurant.restId}`}
+          target="_blank" // Notice the leading '/'
         >
           Get a gift card
         </Link>
