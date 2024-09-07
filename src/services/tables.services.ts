@@ -8,6 +8,8 @@ export const useGetLikeTables = () => {
     currentInitials: ICurrentInitial,
     stringDate: string
   ) => {
+    console.log("currentInitials: ", currentInitials);
+
     // Check if all fields are filled
     if (
       !currentInitials.dateTime ||
@@ -23,13 +25,22 @@ export const useGetLikeTables = () => {
     // Parse date and time from currentInitials
     const datePart = stringDate.split(", ")[1];
     const [day, month] = datePart.split("/").map(Number); // Corrected to use dd/mm format
-    const [hours, minutes] = currentInitials.dateTime
-      .split("T")[1]
+    console.log(currentInitials.dateTime);
+
+    let [hours, minutes] = currentInitials.dateTime
+      .split(" ")[1]
       .split(":")
       .map(Number);
+    if (isNaN(minutes) || isNaN(hours)) {
+      [hours, minutes] = currentInitials.dateTime
+        .split("T")[1]
+        .split(":")
+        .map(Number);
+    }
 
     // Construct selectedDateTime and nextDayDateTime
     const selectedDateTime = new Date(2024, month - 1, day, hours, minutes); // Manually set year to 2024
+
     const nextDayDateTime = new Date(2024, month - 1, day + 1, hours, minutes); // Manually add 1 day
     // Convert selectedGuests to a number for comparison
     const guestsCount = parseInt(currentInitials.guests, 10);
@@ -37,9 +48,17 @@ export const useGetLikeTables = () => {
     // 1.5 hours window in milliseconds
     const timeWindowMs = 1.5 * 3600000;
 
+    // Helper function to format DateTime consistently
+    const formatDateTime = (dateTime: string) => {
+      if (dateTime.includes(" ")) {
+        return new Date(dateTime.replace(" ", "T")); // Replace space with "T" for consistency
+      }
+      return new Date(dateTime);
+    };
+
     // Filter likeWantedTables based on criteria
     const filteredTables = allTables.filter((table) => {
-      const tableDateTime = new Date(table.DateTime); // Convert table.DateTime to a Date object
+      const tableDateTime = formatDateTime(table.DateTime); // Convert table.DateTime to a Date object
       const tableDate = tableDateTime.toDateString(); // Get the date part as a string
       const tableTime = tableDateTime.getTime(); // Get time in milliseconds
 
@@ -55,11 +74,13 @@ export const useGetLikeTables = () => {
       const isNextDay = tableDate === nextDayDateStr;
       const isCapacitySufficient = parseInt(table.Capacity, 10) >= guestsCount; // Check capacity
 
+      const tableHour = tableDateTime.toISOString().slice(11, 16); // Extract hour:minute from ISO format
+      const selectedHour = selectedDateTime.toISOString().slice(11, 16); // Same for selectedDateTime
+
       // Rule 1: Same Date, Same Hour, Different Position, Capacity sufficient
       if (
         isSameDate &&
-        currentInitials.dateTime.split("T")[1] ===
-          table.DateTime.split(" ")[1] &&
+        tableHour === selectedHour &&
         table.Position !== currentInitials.position &&
         isCapacitySufficient
       ) {
@@ -109,8 +130,7 @@ export const useGetLikeTables = () => {
       // Rule 6: Next Day, Same Hour, Same Position, Capacity sufficient
       if (
         isNextDay &&
-        currentInitials.dateTime.split("T")[1] ===
-          table.DateTime.split(" ")[1] &&
+        tableHour === selectedHour &&
         table.Position === currentInitials.position &&
         isCapacitySufficient
       ) {
@@ -120,8 +140,7 @@ export const useGetLikeTables = () => {
       // Rule 7: Next Day, Same Hour, Different Position, Capacity sufficient
       if (
         isNextDay &&
-        currentInitials.dateTime.split("T")[1] ===
-          table.DateTime.split(" ")[1] &&
+        tableHour === selectedHour &&
         table.Position !== currentInitials.position &&
         isCapacitySufficient
       ) {
@@ -144,7 +163,9 @@ export const useGetLikeTables = () => {
       const removeDuplicateHours = (tables: any[]) => {
         const uniqueByHour: { [key: string]: any } = {};
         tables.forEach((table) => {
-          const hour = new Date(table.DateTime).toTimeString().split(" ")[0]; // Get the hour part of DateTime
+          const hour = formatDateTime(table.DateTime)
+            .toISOString()
+            .slice(11, 16); // Get the hour part of DateTime
           if (!uniqueByHour[`${table.Position}-${hour}`]) {
             // Ensure unique by position and hour
             uniqueByHour[`${table.Position}-${hour}`] = table;
@@ -161,9 +182,11 @@ export const useGetLikeTables = () => {
             .sort(
               (a: any, b: any) =>
                 Math.abs(
-                  new Date(a.DateTime).getTime() - targetDate.getTime()
+                  formatDateTime(a.DateTime).getTime() - targetDate.getTime()
                 ) -
-                Math.abs(new Date(b.DateTime).getTime() - targetDate.getTime())
+                Math.abs(
+                  formatDateTime(b.DateTime).getTime() - targetDate.getTime()
+                )
             )
             .slice(0, 5); // Limit to 5 tables
         }
@@ -176,7 +199,7 @@ export const useGetLikeTables = () => {
     const top5ForCurrentDay = getTop5ClosestTables(
       filteredTables.filter(
         (table) =>
-          new Date(table.DateTime).toDateString() ===
+          formatDateTime(table.DateTime).toDateString() ===
           selectedDateTime.toDateString()
       ),
       selectedDateTime
@@ -185,7 +208,7 @@ export const useGetLikeTables = () => {
     const top5ForNextDay = getTop5ClosestTables(
       filteredTables.filter(
         (table) =>
-          new Date(table.DateTime).toDateString() ===
+          formatDateTime(table.DateTime).toDateString() ===
           nextDayDateTime.toDateString()
       ),
       nextDayDateTime
@@ -198,10 +221,15 @@ export const useGetLikeTables = () => {
     combinedTopTables.sort((a, b) => {
       if (a.Position !== b.Position)
         return a.Position.localeCompare(b.Position);
-      if (a.DateTime.split(" ")[1] !== b.DateTime.split(" ")[1]) {
-        return a.DateTime.split(" ")[1].localeCompare(b.DateTime.split(" ")[1]);
+      const timeA = formatDateTime(a.DateTime).toISOString().slice(11, 16);
+      const timeB = formatDateTime(b.DateTime).toISOString().slice(11, 16);
+      if (timeA !== timeB) {
+        return timeA.localeCompare(timeB);
       }
-      return new Date(a.DateTime).getTime() - new Date(b.DateTime).getTime();
+      return (
+        formatDateTime(a.DateTime).getTime() -
+        formatDateTime(b.DateTime).getTime()
+      );
     });
 
     setLikeWantedTables(combinedTopTables); // Update state with the filtered like tables
