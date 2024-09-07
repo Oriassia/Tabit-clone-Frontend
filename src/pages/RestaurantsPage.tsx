@@ -88,8 +88,6 @@ function RestaurantsPage() {
     }
   };
 
-  const isClicked = (restId: number) => clickedId === restId;
-
   if (error) {
     return <div className="text-center text-red-500">{error}</div>;
   }
@@ -150,7 +148,7 @@ function RestaurantsPage() {
                 <Link to={`/restaurants/${restaurant.restId}`}>
                   <RestaurantsListItem
                     restaurant={restaurant}
-                    isClicked={isClicked(restaurant.restId)}
+                    isClicked={clickedId === restaurant.restId}
                   />
                 </Link>
               </li>
@@ -159,10 +157,7 @@ function RestaurantsPage() {
         </InfiniteScroll>
 
         <div title="map section" className="hidden sm:block sm:flex-grow">
-          <Map
-            restaurants={restaurants}
-            onClickFun={(restId) => setClickedId(restId)}
-          />
+          <Map restaurants={restaurants} onClickFun={scrollToRestaurant} />
         </div>
       </div>
     </div>
