@@ -209,7 +209,7 @@ const FriendForm: React.FC<FriendFormProps> = ({
               onFocus={handleFocus}
               onBlur={handleBlur}
               onChange={handleAmountChange}
-              className="bg-transparent text-greenButton text-2xl text-center self-center justify-center w-[8em] items-center border-b border-greenButton no-arrows placeholder-greenButton focus:outline-none focus:ring-0"
+              className="bg-transparent text-greenButton text-2xl text-center self-center justify-center w-[8em] items-center border-b border-greenButton no-arrows placeholder-greenButton focus:outline-none nos focus:ring-0"
             />
           </div>
         </div>
