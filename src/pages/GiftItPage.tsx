@@ -84,22 +84,22 @@ function GiftItPage() {
   return (
     <div className="dark:bg-greyBg bg-white px-[3em]">
       <div className="pt-24 dark:text-white flex flex-col justify-center items-center">
-        <h2 className="pt-[0.6em] text-[2.5em] font-rubik font-medium">
+        <h2 className="pt-[0.3em] text-[2.8em] font-rubik font-medium">
           Tabit Gift It
         </h2>
-        <p className="font-normal">
+        <p className="font-normal text-lg">
           Give the gift of good food with a gift card!
         </p>
       </div>
 
-      <div className="flex items-center sticky top-[5.7em] z-50 justify-between border-b border-greyNavbar py-[1em] bg-greyBg">
-        <div className="relative">
+      <div className="flex items-center sticky top-[5.7em] z-50 justify-between border-b-2 border-greyNavbar px-[1em] py-[1em] bg-greyBg">
+        <div className="relative lg:w-[20em]">
           <Label>
-            <RxMagnifyingGlass className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white" />
+            <RxMagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-[1.5em]" />
           </Label>
           <Input
             placeholder="Search by business/city"
-            className="pl-10 placeholder:text-white text-white bg-transparent"
+            className="pl-14 py-6 w-full placeholder:text-white placeholder:text-lg text-white bg-transparent"
             value={searchParams.get("search-value") || ""}
             onChange={(ev) =>
               setSearchParams((prev) => {
@@ -160,7 +160,7 @@ function GiftItPage() {
                 <h2 className="text-white text-2xl font-bold sticky top-[6.5em] bg-greyBg py-2 z-10">
                   {category}
                 </h2>
-                <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyNavbar">
+                <div className="flex flex-wrap  gap-4 mt-4 pb-3 border-b border-greyNavbar">
                   {restaurantsByCategory[category].map((restaurant) => (
                     <GiftCard key={restaurant.restId} restaurant={restaurant} />
                   ))}
