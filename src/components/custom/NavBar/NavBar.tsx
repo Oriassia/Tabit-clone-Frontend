@@ -176,7 +176,7 @@ function NavBar() {
                     placeholder="Restaurant search"
                     value={searchParams.get("filterRestName") || ""}
                     onChange={handleSearchNameChange}
-                    className={`bg-transparent border-none outline-none text-white font-normal placeholder-gray-400 ${
+                    className={`bg-transparent border-none outline-none text-white font-normal placeholder-gray-400 input-transition ${
                       searchParams.get("filterRestName") ? "w-28" : "w-44"
                     }`}
                     autoFocus

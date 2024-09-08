@@ -122,7 +122,7 @@ function LandingPage() {
           backgroundImage: `
           linear-gradient(to bottom, 
             rgba(0, 0, 0, 0.7), 
-            rgba(0, 0, 0, 0.5) 70%, 
+            rgba(0, 0, 0, 0.5) 75%, 
             rgba(0, 200, 200, 1) 100%
           ),
           url('https://tabitisrael.co.il/assets/images/dashboard-desktop.jpg?v=4_11_1')
@@ -130,13 +130,13 @@ function LandingPage() {
           boxShadow: "inset 0 0 1rem #000",
         }}
       >
-        {" "}
-        <h1 className="lg:text-[3.55em] text-[2em] text-white font-rubik font-normal md:pt-14">
+        <h1 className="lg:text-[3.55em] text-[2em] text-white font-rubik font-normal md:pt-20">
           Reserve a table!
         </h1>
         <p className="pb-4  text-white font-rubik px-[1.3em] text-[0.95rem] lg:px-0 lg:text-[1.5em] min-w-[280px] lg:max-w-[450px] text-center">
           Just say when and which restaurant, and the rest is on us
         </p>
+
         {/* reservation section */}
         <div className="flex border-2 rounded-[1.7rem] font-bold font-rubik text-white border-greenButton min-w-[280px] lg:min-w-[450px] bg-greenBg">
           {/* Date Selection */}
@@ -214,7 +214,7 @@ function LandingPage() {
           {/* Guests Selection */}
           <div className="flex flex-col justify-center items-center px-[25px] lg:px-[40px] py-[0.5em] lg:text-[19px] text-[15px] lg:max-w-[220px] max-w-[110px] ">
             <DropdownMenu>
-              <DropdownMenuTrigger className="focus:outline-none focus:ring-0">
+              <DropdownMenuTrigger className="focus:outline-none focus:ring-0 ">
                 <p className="text-[1em] font-normal">Guests</p>
                 <p>{reservationInputData.guests}</p>
               </DropdownMenuTrigger>
@@ -245,17 +245,19 @@ function LandingPage() {
             </DropdownMenu>
           </div>
         </div>
-        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[310px] lg:w-[450px] py-6 text-[16px] rounded-full hover:bg-greenButton my-3">
+
+        <Button className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold min-w-[310px] lg:w-[450px] py-7 text-[19px] rounded-full hover:bg-greenButton my-3">
           <Link
             to={`/book-a-table?dayName=${reservationInputData.dayName}&dateDayNumber=${reservationInputData.dateDayNumber}&time=${reservationInputData.time}&guests=${reservationInputData.guests}&area=${reservationInputData.area}`}
           >
             Find a table
           </Link>
         </Button>
+
         {/* Area Selector */}
         <DropdownMenu>
           <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex items-center gap-2 pb-[2em]">
-            <GoDotFill className="text-greenButton items-center text-[19px]" />
+            <GoDotFill className="text-gray-400 items-center text-[19px]" />
             <span className="font-bold font-rubik text-white text-[19px]">
               {reservationInputData.area}
             </span>
@@ -276,7 +278,7 @@ function LandingPage() {
                 handleAreaChange(
                   locationsCoordinates.userLocation.lat &&
                     locationsCoordinates.userLocation.lng
-                    ? "Around You"
+                    ? "Around me"
                     : "Actual location unavailable"
                 )
               }
@@ -284,7 +286,7 @@ function LandingPage() {
               <DropdownMenuLabel className="font-thin">
                 {locationsCoordinates.userLocation.lat &&
                 locationsCoordinates.userLocation.lng
-                  ? "Around You"
+                  ? "Around me"
                   : "Actual location unavailable"}
               </DropdownMenuLabel>
             </DropdownMenuItem>
@@ -318,9 +320,9 @@ function LandingPage() {
       </section>
 
       {/*GIVE THE GIFT OF GOOD FOOD PART*/}
-      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[2em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner mt-0 border-0">
+      <div className="dark:bg-black bg-white items-center py-[3em] min-w-[350px] lg:min-w-[450px] ">
         <div className="grid grid-cols-[20%_60%_20%] items-center pb-10 border-0">
-          <h2 className=" col-span-3  text-[2.5em] font-rubik dark:text-white font-medium text-center md:flex-grow border-0">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[3em] font-rubik text-white font-normal text-center md:flex-grow">
             Give the gift of good food
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
@@ -342,9 +344,9 @@ function LandingPage() {
       </div>
 
       {/* TAKEOUT OR DELIVERY PART */}
-      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[0] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner">
+      <div className="dark:bg-black bg-white items-center py-[3em] min-w-[350px] lg:min-w-[450px] ">
         <div className="grid grid-cols-[20%_60%_20%] items-center py-10 ">
-          <h2 className="w-full  col-span-3 py-7 pt-0 md:w-auto text-[2.2em] font-rubik dark:text-white font-bold text-center md:flex-grow">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[3em] font-rubik text-white font-normal text-center md:flex-grow">
             Takeout or Delivery
           </h2>
           <div className="hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
@@ -366,9 +368,9 @@ function LandingPage() {
       </div>
 
       {/* NEW RESTAURANTS AT TABIT PART */}
-      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[6em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner">
-        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.25em] font-rubik dark:text-white font-normal text-center md:flex-grow">
+      <div className="dark:bg-black bg-white items-center py-[3em] min-w-[350px] lg:min-w-[450px] ">
+        <div className="grid grid-cols-[20%_60%_20%] items-center py-10 ">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[3em] font-rubik text-white font-normal text-center md:flex-grow">
             New Restaurants at Tabit
           </h2>
           <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
@@ -390,9 +392,9 @@ function LandingPage() {
       </div>
 
       {/* NEAR ME PART */}
-      <div className="dark:bg-black bg-white  relative flex flex-col items-center pt-[6em] min-w-[350px] lg:min-w-[450px] bg-cover bg-center shadow-inner">
-        <div className="grid grid-cols-[20%_60%_20%] items-center py-10">
-          <h2 className="w-full col-start-2 py-7 md:w-auto text-[2.25em] font-rubik dark:text-white font-normal text-center md:flex-grow">
+      <div className="dark:bg-black bg-white items-center py-[3em] min-w-[350px] lg:min-w-[450px] ">
+        <div className="grid grid-cols-[20%_60%_20%] items-center py-10 ">
+          <h2 className="w-full col-start-2 py-7 md:w-auto text-[3em] font-rubik text-white font-normal text-center md:flex-grow">
             Near Me{" "}
           </h2>
           <div className=" hidden w-full md:w-auto lg:flex items-center mt-4 md:mt-0">
