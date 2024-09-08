@@ -8,7 +8,7 @@ import GiftItPage from "./pages/GiftItPage";
 import RestaurantDetailsPage from "./pages/RestaurantDetailsPage";
 import CreateReservation from "./pages/CreateReservation";
 import ReservationDetailsPage from "./pages/ReservationDetailsPage";
-import ModifyReservation from "./pages/ModifyReservation";
+
 import InnerFirstGiftCardPage from "./pages/InnerFirstGiftCardPage";
 import NewRestaurants from "./pages/NewRestaurantsPage";
 import NearRestaurants from "./pages/NearRestaurants";

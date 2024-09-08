@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import api from "@/services/api.services";
 import { BsUniversalAccessCircle } from "react-icons/bs";
 import { MdLaptop } from "react-icons/md";
@@ -27,7 +27,6 @@ function CardDetails() {
   const [cardData, setCardData] = useState<IGiftCard | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true); // Loading state
   const cardId = searchParams.get("cardId");
-  const navigate = useNavigate();
 
   async function getGiftCard() {
     if (cardId) {
@@ -56,29 +55,7 @@ function CardDetails() {
     );
   }
 
-  async function redeemCard() {
-    if (cardId) {
-      try {
-        await api.delete(`/card/${cardId}`);
-        console.log("Card redeemed!");
-        navigate(`/`);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  }
-
   // Create a URL or a unique string to encode in the QR code
-  const qrValue = `redeem-card://${cardData?.cardId}`; // This string will be scanned and trigger the redeemCard function
-
-  const handleScan = (scannedData: string) => {
-    // Check if the scanned data matches our encoded string
-    if (scannedData === qrValue) {
-      redeemCard(); // Call the function to redeem the card
-    } else {
-      alert("Scanned data does not match.");
-    }
-  };
 
   return (
     <section

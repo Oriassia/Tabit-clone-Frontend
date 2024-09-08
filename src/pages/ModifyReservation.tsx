@@ -7,7 +7,7 @@ import OrangeGuests from "@/components/custom/svg/OrangeGuests";
 import { useReservation } from "@/context/ReservationContext";
 import api from "@/services/api.services";
 import { IReservation, IRestaurantReservation } from "@/types/restaurant";
-import { table } from "console";
+
 import { useEffect, useState } from "react";
 import { FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { MdSearch } from "react-icons/md";
