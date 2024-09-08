@@ -8,6 +8,7 @@ import OpenHours from "./OpenHour";
 import { IRestaurant } from "../../../types/restaurant";
 import InstagramIcon from "../svg/InstagramIcon";
 import FacebookIcon from "../svg/FacebookIcon";
+import { Phone } from "lucide-react";
 
 interface RestaurantDetailsProps {
   restaurant: IRestaurant;
@@ -23,14 +24,18 @@ const RestaurantDetails: React.FC<RestaurantDetailsProps> = ({
 
   return (
     <div className="flex flex-col space-y-4 px-5">
-      <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
-        <Location />
-        <span>{restaurant.address}</span>
-      </div>
-      <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
-        <CallIcon />
-        <span>{restaurant.phoneNumber}</span>
-      </div>
+      {restaurant.address && (
+        <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
+          <Location />
+          <span>{restaurant.address}</span>
+        </div>
+      )}
+      {restaurant.phoneNumber && (
+        <div className="flex items-center gap-6 border-b border-greyBorder pb-3">
+          <CallIcon />
+          <span>{restaurant.phoneNumber}</span>
+        </div>
+      )}
       {/* Pass the restaurant prop to OpeningHours */}
       <OpenHours restaurant={restaurant} />
 

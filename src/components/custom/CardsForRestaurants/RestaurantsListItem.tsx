@@ -29,18 +29,18 @@ function RestaurantsListItem({
 
   return (
     <div
-      className={`border-b border-slate-600 flex gap-3 py-4 px-4 ${
+      className={`border-b border-greyNavbar flex gap-3 py-4 px-4 ${
         isClicked ? "dark:bg-greySelectedRestaurant" : ""
       }`}
     >
       <img
         src={mainPhoto}
         alt={name}
-        className="rounded-md max-h-14 w-14 object-cover"
+        className="rounded-md h-20 w-20 object-cover"
       />
       <div className="font-rubik font-normal flex flex-col gap-1">
-        <div className="text-xl font-medium text-white">{name}</div>
-        <div className="text-slate-300">{address}</div>
+        <div className="text-2xl font-medium text-white">{name}</div>
+        <div className="text-greyBorder">{address}</div>
 
         {restWithTables && (
           <div className="flex gap-1">

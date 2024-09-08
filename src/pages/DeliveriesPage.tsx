@@ -99,28 +99,29 @@ function DeliveriesPage() {
       <NavBar />
       <div
         title="content-wrapper"
-        className="flex flex-col sm:flex-row h-full sm:overflow-hidden"
+        className="flex flex-col sm:flex-row  h-full sm:overflow-hidden"
       >
         {/* Reserve a table section */}
         <div
           title="reserve-a-table-section"
-          className="flex flex-col gap-5 px-10 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
+          className="flex flex-col gap-5 px-14 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
         >
           <div>
-            <div className="text-4xl text-white font-rubik font-normal pt-14">
-              Reserve a table!
+            <div className="text-4xl text-white font-rubik  font-normal pt-10">
+              Where do you want to hang out?
             </div>
             <div className="font-medium text-lg text-white font-rubik w-full text-center">
-              Search for a table at Tabit restaurants
+              Reserve a table quickly and easily at one of the country's best
+              restaurants{" "}
             </div>
           </div>
 
           <DeliveriesSelector />
           <Button
             onClick={() => fetchRestaurants(true)}
-            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full h-14 rounded-full hover:bg-greenButton"
+            className="bg-greenButton dark:bg-greenButton dark:hover:bg-greenButton text-black font-rubik font-bold text-[19px] w-full py-7 rounded-full hover:bg-greenButton"
           >
-            Find a table
+            Search
           </Button>
 
           <AreaDropDown
@@ -130,7 +131,7 @@ function DeliveriesPage() {
 
         <InfiniteScroll
           height={"100%"}
-          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px] scrollbar-none"
+          className=" dark:bg-greyBg md:w-[300px] xl:w-[420px] scrollbar-none"
           dataLength={restaurants.length}
           next={fetchMoreData}
           hasMore={hasMore}

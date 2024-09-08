@@ -138,7 +138,7 @@ function BookATablePage() {
         {/* Reserve a table section */}
         <div
           title="reserve-a-table-section"
-          className="flex flex-col gap-5 px-10 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
+          className="flex flex-col gap-5 px-16 sm:w-[470px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
         >
           <div>
             <div className="text-4xl text-white font-rubik font-normal pt-14">
@@ -163,7 +163,7 @@ function BookATablePage() {
         {/* Rests list section */}
         <InfiniteScroll
           height={"100%"}
-          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px] scrollbar-none"
+          className=" dark:bg-greyBg md:w-[300px] xl:w-[420px] scrollbar-none"
           dataLength={availableTablesByRest.length}
           next={fetchMoreData}
           hasMore={hasMore}
