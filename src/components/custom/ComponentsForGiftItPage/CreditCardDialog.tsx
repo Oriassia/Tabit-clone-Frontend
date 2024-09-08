@@ -23,9 +23,11 @@ interface CreditCardDialogProps {
   phoneNumber: string; // Phone number
   email: string; // Email address
   giftCardAmount: number;
+  restaurantName?: string;
 }
 
 const CreditCardDialog: React.FC<CreditCardDialogProps> = ({
+  restaurantName,
   isOpen,
   onClose,
   restaurantId,
@@ -109,6 +111,7 @@ const CreditCardDialog: React.FC<CreditCardDialogProps> = ({
         email,
         balance: giftCardAmount,
         senderName: fullName,
+        restaurantName,
       };
 
       const response = await api.post("/giftcard/create", requestData);
