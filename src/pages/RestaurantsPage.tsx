@@ -101,7 +101,7 @@ function RestaurantsPage() {
       >
         <div
           title="reserve-a-table-section"
-          className="flex flex-col gap-5 px-10 sm:w-[370px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
+          className="flex flex-col gap-5 px-10 sm:w-[370px] lg:w-[450px] text-center items-center justify-center bg-cover bg-center shadow-inner reserve-section"
         >
           <div className="text-4xl text-white font-rubik font-normal pt-14">
             Where do you want to hang out?
@@ -110,7 +110,7 @@ function RestaurantsPage() {
             Reserve a table quickly and easily at one of the country's best
             restaurants{" "}
           </div>
-          <div className="flex flex-col gap-3">
+          <div className="flex lg:w-[400px]  flex-col items-center gap-3">
             <TagsSelector />
             <Button
               onClick={() => fetchRestaurants(true)}
@@ -125,7 +125,7 @@ function RestaurantsPage() {
 
         <InfiniteScroll
           height={"100%"}
-          className=" dark:bg-greyNavbar md:w-[300px] xl:w-[420px] scrollbar-none"
+          className=" dark:bg-greyBg md:w-[300px] xl:w-[420px] scrollbar-none"
           dataLength={restaurants.length}
           next={fetchMoreData}
           hasMore={hasMore}

@@ -76,51 +76,61 @@ const PhotosDescriptionMenu: React.FC<RestaurantDetailsProps> = ({
 
   return (
     <div className="text-white relative lg:pb-[5em]">
-      <div className="flex justify-start border-b border-greyBorder relative">
-        <div
-          className={`absolute bottom-0 left-0 h-0.5 bg-greenButton transition-all duration-300 ease-in-out`}
-          style={{
-            width: `${
-              activeSection === "menus"
-                ? "80px"
-                : activeSection === "about"
-                ? "160px"
-                : "100px"
-            }`,
-            transform: `translateX(${
-              activeSection === "menus"
-                ? "0"
-                : activeSection === "about"
-                ? "80px"
-                : "240px"
-            })`,
-          }}
-        />
-        <button
-          className={`py-3 px-4 relative ${
-            activeSection === "menus" ? "text-greenButton" : ""
-          }`}
-          onClick={() => setActiveSection("menus")}
-        >
-          Menus
-        </button>
-        <button
-          className={`py-3 px-4 relative ${
-            activeSection === "about" ? "text-greenButton" : ""
-          }`}
-          onClick={() => setActiveSection("about")}
-        >
-          About restaurant
-        </button>
-        <button
-          className={`py-3 px-4 relative ${
-            activeSection === "photos" ? "text-greenButton" : ""
-          }`}
-          onClick={() => setActiveSection("photos")}
-        >
-          Photos
-        </button>
-      </div>
+      {(restaurant.menus?.length > 0 ||
+        restaurant.longDescription ||
+        restaurant.photos?.length > 0) && (
+        <div className="flex justify-start border-b border-greyBorder relative">
+          {restaurant.menus?.length > 0 && (
+            <button
+              className={`py-3 px-4 relative ${
+                activeSection === "menus" ? "text-greenButton" : ""
+              }`}
+              onClick={() => setActiveSection("menus")}
+            >
+              Menus
+            </button>
+          )}
+          {restaurant.longDescription && (
+            <button
+              className={`py-3 px-4 relative ${
+                activeSection === "about" ? "text-greenButton" : ""
+              }`}
+              onClick={() => setActiveSection("about")}
+            >
+              About restaurant
+            </button>
+          )}
+          {restaurant.photos?.length > 0 && (
+            <button
+              className={`py-3 px-4 relative ${
+                activeSection === "photos" ? "text-greenButton" : ""
+              }`}
+              onClick={() => setActiveSection("photos")}
+            >
+              Photos
+            </button>
+          )}
+          <div
+            className={`absolute bottom-0 left-0 h-0.5 bg-greenButton transition-all duration-300 ease-in-out`}
+            style={{
+              width: `${
+                activeSection === "menus"
+                  ? "80px"
+                  : activeSection === "about"
+                  ? "160px"
+                  : "100px"
+              }`,
+              transform: `translateX(${
+                activeSection === "menus"
+                  ? "0"
+                  : activeSection === "about"
+                  ? "80px"
+                  : "240px"
+              })`,
+            }}
+          />
+        </div>
+      )}
 
       <div className="p-4">
         <AnimatePresence mode="wait">

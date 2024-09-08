@@ -28,9 +28,9 @@ function DeliveriesSelector() {
       <div className="grid grid-cols-1 w-full border-2 rounded-[35px] font-bold font-rubik text-white border-greenButton bg-greenBg">
         {/* deliveries Selector */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center py-[0.5em] lg:text-[19px] text-[15px] border-b  border-greenButton">
-            <div className="font-thin">Service</div>
-            <div>{searchParams.get("service") || "Service"}</div>
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center py-[0.7em] lg:text-[19px] text-[15px] border-b-2  border-greenButton">
+            <div className="font-normal">Service</div>
+            <div>{searchParams.get("service") || "Delivery"}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="bg-greyDropDownMenu border-none text-white rounded-[1%] w-[250px] font-rubik max-h-48 overflow-y-auto"
@@ -59,7 +59,7 @@ function DeliveriesSelector() {
 
         {/* Tags Selector */}
         <DropdownMenu>
-          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center py-[0.5em] lg:text-[19px] text-[15px] border-greenButton">
+          <DropdownMenuTrigger className="focus:outline-none focus:ring-0 flex flex-col items-center py-[0.5em] font-normal lg:text-[19px] text-[15px] border-greenButton">
             <div>{searchParams.get("category") || "Tags"}</div>
           </DropdownMenuTrigger>
           <DropdownMenuContent
