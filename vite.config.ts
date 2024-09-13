@@ -10,7 +10,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: "../Tabit-clone-Backend/public",
+    outDir: "./dist",
     emptyOutDir: true,
     chunkSizeWarningLimit: 1000, // Set the limit to a higher value (in kB)
   },
