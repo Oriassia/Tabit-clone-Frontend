@@ -343,6 +343,7 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
       />
 
       <CreditCardDialog
+        restaurantName={restaurant?.name}
         isOpen={isPaymentModalOpen}
         onClose={() => setIsPaymentModalOpen(false)}
         restaurantId={restaurant?.restId ?? 0} // Pass restaurantId
