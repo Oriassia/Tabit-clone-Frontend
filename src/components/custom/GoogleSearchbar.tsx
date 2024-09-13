@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { GoogleApi } from "../../../config";
 import usePlacesService from "react-google-autocomplete/lib/usePlacesAutocompleteService";
 import { Input } from "@/components/ui/input"; // Import ShadCN Input
 import { useLocationsContext } from "@/context/LocationsContext";
@@ -32,7 +31,7 @@ export default function PlacesAutocomplete({
     getPlacePredictions,
     isPlacePredictionsLoading,
   } = usePlacesService({
-    apiKey: GoogleApi,
+    apiKey: import.meta.env.VITE_GOOGLE_API,
   });
 
   useEffect(() => {
