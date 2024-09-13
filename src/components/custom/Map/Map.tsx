@@ -1,7 +1,6 @@
 import { AvailableTablesByRestaurant, IRestaurant } from "@/types/restaurant";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
-import { GoogleApi } from "../../../../config";
 import { useSearchParams } from "react-router-dom";
 import { useLocationsContext } from "@/context/LocationsContext";
 
@@ -22,7 +21,7 @@ function Map({ restaurants, onClickFun }: IProps) {
   const [searchParams] = useSearchParams();
   const [clickedId, setClickedId] = useState<number | null>(null);
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: GoogleApi, // Replace with your actual Google Maps API key
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_API, // Replace with your actual Google Maps API key
     libraries,
   });
 
