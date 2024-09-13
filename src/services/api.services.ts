@@ -1,8 +1,8 @@
 import axios from "axios";
-axios.defaults.withCredentials = true;
 
 const api = axios.create({
-  baseURL: "https://tabit-clone-api.vercel.app/api",
+  baseURL: import.meta.env.VITE_API_BASE_URL, // Use Vite's `import.meta.env`
+  withCredentials: true,
 });
 
 export default api;
