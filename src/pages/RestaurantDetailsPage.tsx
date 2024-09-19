@@ -40,6 +40,8 @@ const RestaurantDetailsPage: React.FC = () => {
     try {
       const response = await api.get(`/restaurants/${restaurantId}`);
       if (response.status !== 200) {
+        console.log(4);
+
         console.error("Failed to fetch restaurant data");
         return null;
       }
@@ -163,7 +165,7 @@ const RestaurantDetailsPage: React.FC = () => {
                 </div>
                 {/* Dropdown */}
                 <div className="flex justify-center  pt-[1.6em]">
-                  <AreaDropDown onAddNewAddress={handleAddNewAddress} />
+                  <AreaDropDown />
                 </div>
               </div>
 

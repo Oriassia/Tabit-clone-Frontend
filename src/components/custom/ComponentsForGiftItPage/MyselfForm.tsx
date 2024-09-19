@@ -8,6 +8,7 @@ import { IRestaurant } from "@/types/restaurant";
 import CreditCardDialog from "./CreditCardDialog";
 import ErrorModal from "./ErrorModal";
 import VerificationCodeDialog from "./VerificationCodeDialog";
+import api from "@/services/api.services";
 
 interface MyselfFormProps {
   handlePreviousStep: () => void;
@@ -97,49 +98,38 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (phone) {
+      // Assuming you want to send a confirmation code as SMS
+      const generatedCode = Math.floor(
+        100000 + Math.random() * 900000
+      ).toString();
+      const message = `Your confirmation code is: ${generatedCode}`;
+      setConfirmationCode(generatedCode);
 
-    // Assuming you want to send a confirmation code as SMS
-    const generatedCode = Math.floor(
-      100000 + Math.random() * 900000
-    ).toString();
-    const message = `Your confirmation code is: ${generatedCode}`;
-    setConfirmationCode(generatedCode);
+      console.log(generatedCode);
 
-    console.log(generatedCode);
+      try {
+        const { data } = await api.post("/giftcard/send-sms", {
+          phone: phone, // Pass phone number from state
+          message: message, // Pass the generated message
+        });
 
-    try {
-      // Send SMS by calling the backend
-      const response = await fetch(
-        "http://localhost:3000/api/giftcard/send-sms",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            phone: phone, // Pass phone number from state
-            message: message, // Pass the generated message
-          }),
+        if (data) {
+          console.log("SMS sent successfully:", data);
+        } else {
+          console.error("Failed to send SMS:", data);
+          // alert("Failed to send SMS.");
         }
-      );
-
-      const result = await response.json();
-
-      if (response.ok) {
-        console.log("SMS sent successfully:", result);
-        // alert("SMS sent successfully!");
-      } else {
-        console.error("Failed to send SMS:", result.message);
-        // alert("Failed to send SMS.");
+      } catch (error) {
+        console.error("Error sending SMS:", error);
+        //   alert("Error sending SMS.");
       }
-    } catch (error) {
-      console.error("Error sending SMS:", error);
-      //   alert("Error sending SMS.");
+
+      setIsModalOpen(true);
+    } else {
+      setIsPaymentModalOpen(true);
     }
-
-    setIsModalOpen(true);
   };
-
   const handleCodeVerification = () => {
     if (inputCode === confirmationCode) {
       //   alert("Code verified successfully!");
