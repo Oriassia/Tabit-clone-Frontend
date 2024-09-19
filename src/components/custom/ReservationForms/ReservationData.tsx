@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { useReservation } from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
 
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   formatDateToYYYYMMDD,
   formatNowToCustomDateTime,
@@ -49,7 +49,7 @@ const ReservationData: React.FC = () => {
   const [likeWantedOpen, setLikeWantedOpen] = useState<boolean>(false);
   const [filteredHours, setFilteredHours] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+
   const step = searchParams.get("step");
 
   const [currentInitials, setCurrentInitials] = useState<ICurrentInitial>({

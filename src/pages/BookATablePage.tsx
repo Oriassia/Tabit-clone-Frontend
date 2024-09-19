@@ -83,7 +83,7 @@ function BookATablePage() {
 
       const reservationDateString = format(
         reservationDate,
-        "yyyy-MM-dd'T'HH:mm"
+        "dd-MM-yyyy'T'HH:mm"
       );
 
       const params = {

@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { Link, NavLink, useNavigate, useSearchParams } from "react-router-dom";
 import SideMenu from "./SideMenu";
 import { useState } from "react";
-import { BsGlobe2 } from "react-icons/bs";
+
 import { MdSearch } from "react-icons/md";
 import LanguagesDropDown from "../DropDownMenus/LanguagesDropDown";
 
