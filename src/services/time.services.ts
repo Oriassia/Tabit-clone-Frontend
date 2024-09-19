@@ -118,11 +118,34 @@ export function generate30Days() {
   }
   return dates;
 }
+
 export function getHourFromString(dateString: string): string {
-  const date = new Date(dateString); // Convert the string to a Date object
+  const date = formatDateTime(dateString); // Convert the string to a Date object
   const hours = date.getHours(); // Get the hours part
   return hours.toString().padStart(2, "0"); // Convert the hour to a string and pad with a leading zero if necessary
 }
+
+// Adjusted formatDateTime function
+export const formatDateTime = (dateTime: string | Date) => {
+  // Check if `dateTime` is a Date object
+  if (dateTime instanceof Date) {
+    // Convert the Date object to the format 'DD-MM-YYYYTHH:MM'
+    const year = dateTime.getFullYear();
+    const month = String(dateTime.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+    const day = String(dateTime.getDate()).padStart(2, "0");
+    const hours = String(dateTime.getHours()).padStart(2, "0");
+    const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+    dateTime = `${day}-${month}-${year}T${hours}:${minutes}`;
+  }
+
+  const [datePart, timePart] = dateTime.split("T");
+
+  const [day, month, year] = datePart.split("-").map(Number);
+
+  const [hours, minutes] = timePart.split(":").map(Number);
+
+  return new Date(year, month - 1, day, hours, minutes);
+};
 
 export const formatNowToCustomDateTime = () => {
   const now = new Date();
@@ -137,11 +160,10 @@ export const formatNowToCustomDateTime = () => {
   const formattedTime = getFormattedTime(now); // "HH:MM"
 
   // Combine date and time to "DD-MM-YYYYTHH:MM"
-  return `2024-${formattedDateWithDashes}T${formattedTime}`;
+  return `${formattedDateWithDashes}-2024T${formattedTime}`;
 };
 
 // Example usage
-
 export function generate30DaysAsStrings(): string[] {
   const today = new Date();
   const dates: string[] = [];
@@ -165,19 +187,52 @@ export function generate30DaysAsStrings(): string[] {
   return dates;
 }
 
-export const formatTo24HourClock = (dateTime: string): string => {
-  const timePart = dateTime.split(" ")[1]; // Extract the time part from the dateTime string
-  if (!timePart) return ""; // Return empty string if no time part is found
+export const formatTo24HourClock = (
+  dateTime: string | Date | undefined
+): string => {
+  if (!dateTime) {
+    console.error("Error: dateTime is undefined or null");
+    return "";
+  }
 
-  const [hours, minutes] = timePart.split(":"); // Split the time into hours and minutes
-  const formattedHour = parseInt(hours).toString().padStart(2, "0"); // Format hours with leading zero if needed
-  const formattedMinutes = minutes.padStart(2, "0"); // Ensure minutes have two digits
+  if (dateTime instanceof Date) {
+    const hours = String(dateTime.getHours()).padStart(2, "0");
+    const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
+  } else if (typeof dateTime === "string") {
+    if (!dateTime.includes("T")) {
+      console.error("Error: dateTime string does not contain 'T' separator");
+      return "";
+    }
 
-  return `${formattedHour}:${formattedMinutes}`; // Return formatted time in "HH:MM" format
+    const timePart = dateTime.split("T")[1];
+
+    if (!timePart) {
+      console.error(
+        "Error: Time part is undefined or null after splitting by 'T'"
+      );
+      return "";
+    }
+
+    const [hours, minutes] = timePart.split(":");
+    if (!hours || !minutes) {
+      console.error("Error: Invalid time format in dateTime string");
+      return "";
+    }
+
+    const formattedHour = parseInt(hours).toString().padStart(2, "0");
+    const formattedMinutes = minutes.padStart(2, "0");
+
+    return `${formattedHour}:${formattedMinutes}`;
+  }
+
+  console.error("Error: dateTime is not a recognized type");
+  return "";
 };
 
 export function formatDateToYYYYMMDD(dateStr: string | undefined): string {
   if (!dateStr) return "";
+
   const [_, datePart] = dateStr.split(", ");
   if (!datePart) return "";
   const [day, month] = datePart.split("/").map(Number);
@@ -203,7 +258,6 @@ export function generateNext7Days(): string[] {
   return days;
 }
 export function formatDateString(input: string) {
-  // Split the input string by '/'
   const [day, month] = input.split("/");
 
   // Convert to numbers to remove leading zeros, then join them with ' / '
@@ -214,7 +268,7 @@ export function formatDateString(input: string) {
 
 export function computeDayName(dateStr: string) {
   try {
-    const date = new Date(dateStr);
+    const date = formatDateTime(dateStr);
     return new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date);
   } catch (error) {
     return null;
@@ -223,7 +277,7 @@ export function computeDayName(dateStr: string) {
 
 export function computeDateNumber(dateStr: string) {
   try {
-    const date = new Date(dateStr);
+    const date = formatDateTime(dateStr);
     const dayNumber = date.getDate().toString().padStart(2, "0");
     const monthNumber = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
     return `${dayNumber}/${monthNumber}`;
@@ -234,7 +288,7 @@ export function computeDateNumber(dateStr: string) {
 
 export function computeTime(dateStr: string) {
   try {
-    const date = new Date(dateStr);
+    const date = formatDateTime(dateStr);
     return date.toTimeString().substring(0, 5);
   } catch (error) {
     return null;

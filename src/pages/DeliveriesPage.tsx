@@ -124,9 +124,7 @@ function DeliveriesPage() {
             Search
           </Button>
 
-          <AreaDropDown
-            onAddNewAddress={() => console.log("Add a new address clicked")}
-          />
+          <AreaDropDown />
         </div>
 
         <InfiniteScroll

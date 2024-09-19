@@ -37,7 +37,7 @@ function ReservationForm({
         if (prevTime <= 1) {
           clearInterval(timerInterval); // Stop the timer
           setIsDialogOpen(true); // Open Dialog when timer ends
-          console.log("open");
+
           console.log(isDialogOpen);
 
           return 0; // Set time to 0
@@ -122,7 +122,7 @@ function ReservationForm({
   //   const targetYear = 2024;
   //   const [_, dateString] = datePart.split(", ").map((part) => part.trim());
   //   const [month, day] = dateString.split("/").map(Number);
-  //   const [time] = timePart.split(" ");
+
   //   let [hours, minutes] = time.split(":").map(Number);
 
   //   const formattedDate = new Date(targetYear, month - 1, day, hours, minutes);

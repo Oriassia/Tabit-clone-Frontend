@@ -32,7 +32,7 @@ function CardDetails() {
     if (cardId) {
       try {
         const { data } = await api.get(`/giftcard/${cardId}`);
-        console.log(data); // Log the data to verify
+
         setCardData(data);
       } catch (err) {
         console.log(err);

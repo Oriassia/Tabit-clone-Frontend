@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useSearchParams } from "react-router-dom";
+import { formatDateTime } from "@/services/time.services"; // Import utility function for date-time formatting
 
 export interface IRequestedReservation {
   dateTime: string;
@@ -60,7 +61,7 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   const [tableId, setTableId] = useState<string>("0");
   const [likeWantedTables, setLikeWantedTables] = useState<any[]>([]);
   const [allTables, setAllTables] = useState<any[]>([]); // State for all tables
-  const [positions, setPositions] = useState<any[]>([]); // State for table `positions
+  const [positions, setPositions] = useState<any[]>([]); // State for table `positions`
   const [searchParams] = useSearchParams();
   const restId = searchParams.get("restId");
   const [allCategories, setAllCategories] = useState<string[]>([]); // State for all categories
@@ -109,16 +110,28 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
   // Fetch all tables data
   const getAllTables = async (restIdGiven?: string) => {
     if (restIdGiven) {
+      console.log(restIdGiven);
+
       try {
         const { data } = await api.get(`/tables/${restIdGiven}`);
-        setAllTables(data);
+        setAllTables(
+          data.map((table: any) => ({
+            ...table,
+            DateTime: formatDateTime(table.DateTime), // Ensure all tables have formatted date-time
+          }))
+        );
       } catch (error) {
         console.error("Failed to fetch tables:", error);
       }
     } else if (restId) {
       try {
         const { data } = await api.get(`/tables/${restId}`);
-        setAllTables(data);
+        setAllTables(
+          data.map((table: any) => ({
+            ...table,
+            DateTime: formatDateTime(table.DateTime), // Ensure all tables have formatted date-time
+          }))
+        );
       } catch (error) {
         console.error("Failed to fetch tables:", error);
       }
@@ -140,8 +153,6 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     }
   };
-
-  // Function to get like tables
 
   // Function to reset all states to initial values
   const resetReservation = () => {

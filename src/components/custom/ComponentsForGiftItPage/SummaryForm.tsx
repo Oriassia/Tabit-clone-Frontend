@@ -75,7 +75,7 @@ const SummaryForm: React.FC<SummaryFormProps> = ({
     try {
       // Send SMS by calling the backend
       const response = await fetch(
-        "http://localhost:3000/api/giftcard/send-sms",
+        "https://tabit-clone-back-elad.vercel.app/api/giftcard/send-sms",
         {
           method: "POST",
           headers: {

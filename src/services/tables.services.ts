@@ -8,8 +8,6 @@ export const useGetLikeTables = () => {
     currentInitials: ICurrentInitial,
     stringDate: string
   ) => {
-    console.log("currentInitials: ", currentInitials);
-
     // Check if all fields are filled
     if (
       !currentInitials.dateTime ||
@@ -21,27 +19,33 @@ export const useGetLikeTables = () => {
       );
       return;
     }
+    console.log("getliketables stringdate: " + stringDate);
 
-    // Parse date and time from currentInitials
     const datePart = stringDate.split(", ")[1];
+    console.log("getliketables datepart: " + datePart);
     const [day, month] = datePart.split("/").map(Number); // Corrected to use dd/mm format
-    console.log(currentInitials.dateTime);
+    console.log("getliketables currentinitial: " + currentInitials.dateTime);
+    let [hours, minutes] = currentInitials.dateTime.split("T")[1].split(":");
 
-    let [hours, minutes] = currentInitials.dateTime
-      .split(" ")[1]
-      .split(":")
-      .map(Number);
-    if (isNaN(minutes) || isNaN(hours)) {
-      [hours, minutes] = currentInitials.dateTime
-        .split("T")[1]
-        .split(":")
-        .map(Number);
-    }
+    let hoursInt = parseInt(hours);
+    let minutesInt = parseInt(minutes);
 
     // Construct selectedDateTime and nextDayDateTime
-    const selectedDateTime = new Date(2024, month - 1, day, hours, minutes); // Manually set year to 2024
+    const selectedDateTime = new Date(
+      2024,
+      month - 1,
+      day,
+      hoursInt,
+      minutesInt
+    ); // Manually set year to 2024
 
-    const nextDayDateTime = new Date(2024, month - 1, day + 1, hours, minutes); // Manually add 1 day
+    const nextDayDateTime = new Date(
+      2024,
+      month - 1,
+      day + 1,
+      hoursInt,
+      minutesInt
+    ); // Manually add 1 day
     // Convert selectedGuests to a number for comparison
     const guestsCount = parseInt(currentInitials.guests, 10);
 
@@ -49,11 +53,25 @@ export const useGetLikeTables = () => {
     const timeWindowMs = 1.5 * 3600000;
 
     // Helper function to format DateTime consistently
-    const formatDateTime = (dateTime: string) => {
-      if (dateTime.includes(" ")) {
-        return new Date(dateTime.replace(" ", "T")); // Replace space with "T" for consistency
+    const formatDateTime = (dateTime: string | Date) => {
+      // If `dateTime` is already a Date object, convert it to the correct format
+      if (dateTime instanceof Date) {
+        const year = dateTime.getFullYear();
+        const month = String(dateTime.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+        const day = String(dateTime.getDate()).padStart(2, "0");
+        const hours = String(dateTime.getHours()).padStart(2, "0");
+        const minutes = String(dateTime.getMinutes()).padStart(2, "0");
+        dateTime = `${day}-${month}-${year}T${hours}:${minutes}`;
       }
-      return new Date(dateTime);
+
+      // Now we can safely split the dateTime string
+      const [datePart, timePart] = dateTime.split("T");
+
+      const [day, month, year] = datePart.split("-").map(Number);
+
+      const [hours, minutes] = timePart.split(":").map(Number);
+
+      return new Date(year, month - 1, day, hours, minutes);
     };
 
     // Filter likeWantedTables based on criteria

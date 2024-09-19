@@ -45,16 +45,20 @@ function CreateReservation() {
 
   useEffect(() => {
     getAllTables();
-    fetchReservation();
     console.log("got all tables");
+    if (searchParams.get("reservationId")) {
+      fetchReservation();
+    }
   }, []);
 
   async function fetchReservation() {
     try {
       const reservationId = searchParams.get("reservationId");
-      const { data } = await api.get(`/reservations/${reservationId}`);
+      if (reservationId) {
+        const { data } = await api.get(`/reservations/${reservationId}`);
 
-      setOlderReservation(data);
+        setOlderReservation(data);
+      }
     } catch (error: any) {
       console.error(error);
     }
@@ -67,6 +71,8 @@ function CreateReservation() {
           const { data } = await api.get(`/restaurants/${restId}`);
           setRestaurant(data[0]); // Set the fetched restaurant data
         } catch (error) {
+          console.log(3);
+
           console.error("Failed to fetch restaurant data:", error); // Error handling
         }
       }

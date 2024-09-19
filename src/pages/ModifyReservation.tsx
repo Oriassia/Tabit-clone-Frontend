@@ -74,7 +74,7 @@ function ModifyReservation() {
       console.log("date fetched: ", data);
       setReservationInfo(data);
       setRequestedReservation({
-        dateTime: data.date.split(":")[0] + ":" + data.date.split(":")[1],
+        dateTime: data.date,
         tableId: data.tableId,
         position: data.position,
         guests: data.partySize,

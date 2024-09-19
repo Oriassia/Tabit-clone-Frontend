@@ -8,11 +8,12 @@ import { Separator } from "@/components/ui/separator";
 import { useReservation } from "@/context/ReservationContext";
 import ReserveBtn from "./ReserveBtn";
 
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import {
   formatDateToYYYYMMDD,
   formatNowToCustomDateTime,
   formatTo24HourClock,
+  formatDateTime,
   generateNext7Days,
   getAvailableHours,
 } from "@/services/time.services";
@@ -24,6 +25,7 @@ interface IAvaliableTable {
   Position: string;
   Capacity: string;
 }
+
 export interface ICurrentInitial {
   dateTime: string;
   guests: string;
@@ -47,7 +49,7 @@ const ReservationData: React.FC = () => {
   const [likeWantedOpen, setLikeWantedOpen] = useState<boolean>(false);
   const [filteredHours, setFilteredHours] = useState<string[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const navigate = useNavigate();
+
   const step = searchParams.get("step");
 
   const [currentInitials, setCurrentInitials] = useState<ICurrentInitial>({
@@ -76,7 +78,9 @@ const ReservationData: React.FC = () => {
       });
 
       setStringDate(
-        new Date(requestedReservation.dateTime).toLocaleDateString("en-GB", {
+        new Date(
+          formatDateTime(requestedReservation.dateTime)
+        ).toLocaleDateString("en-GB", {
           weekday: "short",
           month: "numeric",
           day: "numeric",
@@ -89,10 +93,13 @@ const ReservationData: React.FC = () => {
     if (currentInitials) {
       setFilteredHours(
         getAvailableHours(
-          new Date(currentInitials.dateTime).toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-          })
+          new Date(formatDateTime(currentInitials.dateTime)).toLocaleDateString(
+            "en-GB",
+            {
+              day: "2-digit",
+              month: "2-digit",
+            }
+          )
         )
       );
     }
@@ -106,9 +113,10 @@ const ReservationData: React.FC = () => {
 
   const handleDateSelection = (date: string) => {
     setStringDate(date);
+    const newDateTime = currentInitials.dateTime.split("T")[1];
     setCurrentInitials((prev) => ({
       ...prev, // Correctly spreading the previous state
-      dateTime: `${formatDateToYYYYMMDD(date)}T${prev.dateTime.split("T")[1]}`, // Concatenating the date with the new hour
+      dateTime: `${formatDateToYYYYMMDD(date)}T${newDateTime}`, // Concatenating the date with the new hour
     }));
 
     setType("hour");
@@ -116,9 +124,10 @@ const ReservationData: React.FC = () => {
   };
 
   const handleHourSelection = (hour: string) => {
+    const newDateTime = currentInitials.dateTime.split("T")[0];
     setCurrentInitials((prev) => ({
       ...prev, // Correctly spreading the previous state
-      dateTime: `${prev.dateTime.split("T")[0]}T${hour}`, // Concatenating the date with the new hour
+      dateTime: `${newDateTime}T${hour}`, // Concatenating the date with the new hour
     }));
     setType("guests");
     setIsOpen(true);
@@ -149,19 +158,35 @@ const ReservationData: React.FC = () => {
   };
 
   async function reserveATable() {
-    const formattedDateTime = currentInitials.dateTime.replace("T", " ");
+    console.log("User Input DateTime:", currentInitials.dateTime);
 
     const availableTable = allTables?.find((table: IAvaliableTable) => {
-      const tableDateTime = table.DateTime.slice(0, 16); // Extract date and time up to minutes
+      const tableDateTime = table.DateTime; // Already in the correct format
+
+      console.log("Checking Table:", {
+        tableDateTime,
+        tableCapacity: table.Capacity,
+        tablePosition: table.Position.trim().toLowerCase(),
+        userGuests: currentInitials.guests,
+        userPosition: currentInitials.position.trim().toLowerCase(),
+        dateTimeMatch: currentInitials.dateTime === tableDateTime, // Check if date times match
+        capacityCheck: table.Capacity >= currentInitials.guests, // Check if capacity is sufficient
+        positionCheck:
+          table.Position.trim().toLowerCase() ===
+          currentInitials.position.trim().toLowerCase(), // Check if position matches
+      });
 
       return (
-        table.Capacity >= currentInitials.guests && // Ensure type consistency
-        table.Position == currentInitials.position &&
-        formattedDateTime == tableDateTime // Compare formatted date-time
+        table.Capacity >= currentInitials.guests && // Ensure capacity is sufficient
+        table.Position.trim().toLowerCase() ===
+          currentInitials.position.trim().toLowerCase() && // Match position with case insensitive comparison
+        currentInitials.dateTime === tableDateTime // Compare formatted date-time
       );
     });
 
     if (availableTable) {
+      console.log("Found Available Table:", availableTable);
+
       setRequestedReservation({
         ...currentInitials,
         tableId: availableTable.TableId,
@@ -170,6 +195,7 @@ const ReservationData: React.FC = () => {
       searchParams.set("step", "customer-details");
       setSearchParams(searchParams);
     } else {
+      console.log("No Exact Match Found. Looking for Similar Tables.");
       getLikeTables(currentInitials, stringDate);
       setLikeWantedOpen(true);
     }
@@ -182,14 +208,9 @@ const ReservationData: React.FC = () => {
       tableId: table.TableId,
       guests: currentInitials.guests,
     });
-    // Update the search parameters in the URL
-    searchParams.set("step", "customer-details"); // This creates a new URLSearchParams object, but does not update the URL itself
-    setSearchParams(searchParams); // This will update the URL with the modified searchParams
-    // navigate(
-    //   `/online-reservations?restId=${
-    //     searchParams.get("restId") || "0"
-    //   }&step=customer-details`
-    // );
+
+    searchParams.set("step", "customer-details");
+    setSearchParams(searchParams);
   }
 
   return (
@@ -395,14 +416,13 @@ const ReservationData: React.FC = () => {
             .map((date, index) => {
               // Filter tables for the current date
               const tablesForDate = likeWantedTables.filter((table) => {
-                const tableDate = new Date(table.DateTime).toLocaleDateString(
-                  "en-GB",
-                  {
-                    weekday: "short",
-                    month: "numeric",
-                    day: "numeric",
-                  }
-                );
+                const tableDate = new Date(
+                  formatDateTime(table.DateTime)
+                ).toLocaleDateString("en-GB", {
+                  weekday: "short",
+                  month: "numeric",
+                  day: "numeric",
+                });
                 return tableDate === date;
               });
 
@@ -417,7 +437,7 @@ const ReservationData: React.FC = () => {
                   className="mb-4 border-b-[1px] border-white pb-5 w-3/5 mx-auto"
                 >
                   <div className="mx-auto text-white text-center text-xl font-bold p-3 ">
-                    {new Date(formatDateToYYYYMMDD(date)).toLocaleDateString(
+                    {new Date(formatDateTime(date)).toLocaleDateString(
                       "en-GB",
                       {
                         weekday: "long",
