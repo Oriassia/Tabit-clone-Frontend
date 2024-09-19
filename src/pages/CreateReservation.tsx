@@ -18,6 +18,7 @@ import {
   computeDayName,
   computeTime,
 } from "@/services/time.services";
+import Spinner from "@/components/custom/Loaders/Spinner";
 
 function CreateReservation() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -84,7 +85,11 @@ function CreateReservation() {
   }
 
   if (!restaurant) {
-    return <div>Loading...</div>; // Loading state while data is being fetched
+    return (
+      <div className="bg-greyBg w-full h-screen py-56">
+        <Spinner />
+      </div>
+    ); // Loading state while data is being fetched
   }
 
   // Common elements that are shared between both return scenarios

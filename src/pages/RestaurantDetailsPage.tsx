@@ -8,6 +8,7 @@ import BikeIcon from "../components/custom/svg/BikeIcon";
 import RestaurantDetails from "../components/custom/ComponentsForDetails/RestaurantDetails";
 import PhotosDescriptionMenu from "@/components/custom/ComponentsForDetails/PhotosDescriptionMenu";
 import AreaDropDown from "@/components/custom/ReservationSelector/AreaDropDown";
+import Spinner from "@/components/custom/Loaders/Spinner";
 
 const RestaurantDetailsPage: React.FC = () => {
   const { restaurantId } = useParams<{ restaurantId: string }>();
@@ -54,11 +55,6 @@ const RestaurantDetailsPage: React.FC = () => {
     }
   };
 
-  const handleAddNewAddress = () => {
-    // Handle adding a new address (you can customize this function as needed)
-    console.log("Add a new address clicked");
-  };
-
   return (
     <div className="bg-greyBg font-rubik text-white min-h-screen lg:pt-20 pt-[4.2em] ">
       <div
@@ -73,57 +69,72 @@ const RestaurantDetailsPage: React.FC = () => {
         <div className="flex gap-1">
           <p className="underline">Restaurants</p>
           <p className="">&gt;</p>
-          <p className="underline">{restaurant?.name}</p>
+          <p className="underline">
+            {!restaurant ? "Loading..." : restaurant.name}
+          </p>
         </div>
       </div>
       {/* Мобильная версия */}
-      <div className="lg:hidden md:hidden block">
-        {/* Изображение */}
-        <div>
-          <img
-            src={restaurant?.mainPhoto}
-            alt="Restaurant"
-            className="w-full h-auto object-cover"
-          />
+      {!restaurant ? (
+        <div className="my-20">
+          <Spinner />
         </div>
-        <div className="px-3 py-5" style={{ background: "#303030" }}>
-          <h1 className="text-5xl font-medium ">{restaurant?.name}</h1>
-          <p className="text-lg text-gray-400 py-3">
-            {restaurant?.category?.split(",").map((cat, index, arr) => (
-              <span key={index} className="text-[1em]">
-                {cat.trim()}
-                {index < arr.length - 1 && " "}
-              </span>
-            ))}
-          </p>
-          <p className="text-[1em] py-1">{restaurant?.shortDescription}</p>
-        </div>
-      </div>
+      ) : (
+        <>
+          <div className="lg:hidden md:hidden block">
+            {/* Изображение */}
+            <div>
+              <img
+                src={restaurant?.mainPhoto}
+                alt="Restaurant"
+                className="w-full h-auto object-cover"
+              />
+            </div>
+            <div className="px-3 py-5" style={{ background: "#303030" }}>
+              <h1 className="text-5xl font-medium ">{restaurant?.name}</h1>
+              <p className="text-lg text-gray-400 py-3">
+                {restaurant?.category?.split(",").map((cat, index, arr) => (
+                  <span key={index} className="text-[1em]">
+                    {cat.trim()}
+                    {index < arr.length - 1 && " "}
+                  </span>
+                ))}
+              </p>
+              <p className="text-[1em] py-1">{restaurant?.shortDescription}</p>
+            </div>
+          </div>
+          {/* Версия для планшетов и десктопов */}
+          <div className="hidden lg:flex md:flex ">
+            <div
+              className="flex w-full px-[3em]"
+              style={{ background: "#303030" }}
+            >
+              <div className="w-1/2  py-5">
+                <h1 className="text-5xl font-medium ">{restaurant?.name}</h1>
+                <p className="text-lg text-gray-400 py-3">
+                  {restaurant?.category?.split(",").map((cat, index, arr) => (
+                    <span key={index} className="text-[1em]">
+                      {cat.trim()}
+                      {index < arr.length - 1 && " | "}
+                    </span>
+                  ))}
+                </p>
+                <p className="text-[1em] py-1">
+                  {restaurant?.shortDescription}
+                </p>
+              </div>
+              <div className="w-1/2">
+                <img
+                  src={restaurant?.mainPhoto}
+                  alt="Restaurant"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
-      {/* Версия для планшетов и десктопов */}
-      <div className="hidden lg:flex md:flex ">
-        <div className="flex w-full px-[3em]" style={{ background: "#303030" }}>
-          <div className="w-1/2  py-5">
-            <h1 className="text-5xl font-medium ">{restaurant?.name}</h1>
-            <p className="text-lg text-gray-400 py-3">
-              {restaurant?.category?.split(",").map((cat, index, arr) => (
-                <span key={index} className="text-[1em]">
-                  {cat.trim()}
-                  {index < arr.length - 1 && " | "}
-                </span>
-              ))}
-            </p>
-            <p className="text-[1em] py-1">{restaurant?.shortDescription}</p>
-          </div>
-          <div className="w-1/2">
-            <img
-              src={restaurant?.mainPhoto}
-              alt="Restaurant"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
-      </div>
       {/* Bottom Section */}
       <div className="bg-greyBg text-white py-8 px-[3em]">
         <div className="flex flex-col lg:flex-row  justify-evenly">

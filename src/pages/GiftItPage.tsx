@@ -13,9 +13,12 @@ import { RxMagnifyingGlass } from "react-icons/rx";
 import GiftCard from "@/components/custom/CardsForRestaurants/GiftCard";
 import { Label } from "@/components/ui/label";
 import { useSearchParams } from "react-router-dom";
+import Spinner from "@/components/custom/Loaders/Spinner";
 
 function GiftItPage() {
-  const [allRestaurants, setAllRestaurants] = useState<IRestaurant[]>([]);
+  const [allRestaurants, setAllRestaurants] = useState<IRestaurant[] | null>(
+    null
+  );
   const [restaurantsByCategory, setRestaurantsByCategory] = useState<{
     [category: string]: IRestaurant[];
   }>({});
@@ -27,13 +30,16 @@ function GiftItPage() {
   }, []);
 
   useEffect(() => {
-    groupRestaurantsByCategory(
-      allRestaurants.filter(
-        (restaurant) =>
-          restaurant.name &&
-          restaurant.name.includes(searchParams.get("search-value") || "")
-      )
-    );
+    {
+      allRestaurants &&
+        groupRestaurantsByCategory(
+          allRestaurants.filter(
+            (restaurant) =>
+              restaurant.name &&
+              restaurant.name.includes(searchParams.get("search-value") || "")
+          )
+        );
+    }
   }, [searchParams]);
 
   async function fetchAllRests() {
@@ -154,38 +160,41 @@ function GiftItPage() {
       </div>
 
       <div className="flex flex-col mt-4">
-        {selectedCategories.length === 0
-          ? Object.keys(restaurantsByCategory).map((category) => (
-              <div key={category} className="mb-8">
-                <h2 className="text-white text-2xl font-bold sticky top-[6.5em] bg-greyBg py-2 z-10">
-                  {category}
-                </h2>
-                <div className="flex flex-wrap  gap-4 mt-4 pb-3 border-b border-greyNavbar">
-                  {restaurantsByCategory[category].map((restaurant) => (
+        {!allRestaurants ? (
+          <div className="my-20">
+            <Spinner />
+          </div>
+        ) : selectedCategories.length === 0 ? (
+          Object.keys(restaurantsByCategory).map((category) => (
+            <div key={category} className="mb-8">
+              <h2 className="text-white text-2xl font-bold sticky top-[6.5em] bg-greyBg py-2 z-10">
+                {category}
+              </h2>
+              <div className="flex flex-wrap  gap-4 mt-4 pb-3 border-b border-greyNavbar">
+                {restaurantsByCategory[category].map((restaurant) => (
+                  <GiftCard key={restaurant.restId} restaurant={restaurant} />
+                ))}
+              </div>
+            </div>
+          ))
+        ) : (
+          selectedCategories.map((category) => (
+            <div key={category} className="mb-8">
+              <h2 className="text-white text-2xl font-bold sticky top-[6.2em] bg-greyBg py-2 z-10">
+                {category}
+              </h2>
+              <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyNavbar">
+                {restaurantsByCategory[category]?.length > 0 ? (
+                  restaurantsByCategory[category].map((restaurant) => (
                     <GiftCard key={restaurant.restId} restaurant={restaurant} />
-                  ))}
-                </div>
+                  ))
+                ) : (
+                  <p>No restaurants available for {category}</p>
+                )}
               </div>
-            ))
-          : selectedCategories.map((category) => (
-              <div key={category} className="mb-8">
-                <h2 className="text-white text-2xl font-bold sticky top-[6.2em] bg-greyBg py-2 z-10">
-                  {category}
-                </h2>
-                <div className="flex flex-wrap gap-4 mt-4 pb-3 border-b border-greyNavbar">
-                  {restaurantsByCategory[category]?.length > 0 ? (
-                    restaurantsByCategory[category].map((restaurant) => (
-                      <GiftCard
-                        key={restaurant.restId}
-                        restaurant={restaurant}
-                      />
-                    ))
-                  ) : (
-                    <p>No restaurants available for {category}</p>
-                  )}
-                </div>
-              </div>
-            ))}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
