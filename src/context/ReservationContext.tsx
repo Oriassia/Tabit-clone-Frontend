@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useSearchParams } from "react-router-dom";
-import { formatDateTime, parseISOToDate } from "@/services/time.services"; // Import utility function for date-time formatting
+import { parseISOToDate } from "@/services/time.services"; // Import utility function for date-time formatting
 
 export interface IRequestedReservation {
   dateTime: string;
