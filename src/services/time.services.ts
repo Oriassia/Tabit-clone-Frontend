@@ -43,7 +43,7 @@ export const getFormattedTime = (date: Date) => {
 };
 
 export function calculateTimeSlots(searchedTime: string): string[] {
-  const [hours, minutes] = searchedTime.split(":").map(Number);
+  const [hours, minutes] = searchedTime?.split(":").map(Number);
 
   const createDateTime = (h: number, m: number) =>
     new Date().setHours(h, m, 0, 0);
@@ -127,7 +127,8 @@ export function getHourFromString(dateString: string): string {
 
 // Adjusted formatDateTime function
 export const formatDateTime = (dateTime: string | Date) => {
-  // Check if `dateTime` is a Date object
+  // Check if dateTime is a string that contains a comma
+
   if (dateTime instanceof Date) {
     // Convert the Date object to the format 'DD-MM-YYYYTHH:MM'
     const year = dateTime.getFullYear();
@@ -138,13 +139,22 @@ export const formatDateTime = (dateTime: string | Date) => {
     dateTime = `${day}-${month}-${year}T${hours}:${minutes}`;
   }
 
-  const [datePart, timePart] = dateTime.split("T");
-
-  const [day, month, year] = datePart.split("-").map(Number);
-
-  const [hours, minutes] = timePart.split(":").map(Number);
+  const [datePart, timePart] = dateTime?.split("T");
+  const [day, month, year] = datePart?.split("-").map(Number);
+  const [hours, minutes] = timePart?.split(":").map(Number);
 
   return new Date(year, month - 1, day, hours, minutes);
+};
+export const parseISOToDate = (isoString: string) => {
+  if (
+    typeof isoString === "string" &&
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(isoString)
+  ) {
+    return new Date(isoString);
+  } else {
+    console.error("Invalid ISO format:", isoString);
+    return null; // Return null if the format is invalid
+  }
 };
 
 export const formatNowToCustomDateTime = () => {
@@ -205,7 +215,7 @@ export const formatTo24HourClock = (
       return "";
     }
 
-    const timePart = dateTime.split("T")[1];
+    const timePart = dateTime?.split("T")[1];
 
     if (!timePart) {
       console.error(
@@ -214,7 +224,7 @@ export const formatTo24HourClock = (
       return "";
     }
 
-    const [hours, minutes] = timePart.split(":");
+    const [hours, minutes] = timePart?.split(":");
     if (!hours || !minutes) {
       console.error("Error: Invalid time format in dateTime string");
       return "";
@@ -233,9 +243,9 @@ export const formatTo24HourClock = (
 export function formatDateToYYYYMMDD(dateStr: string | undefined): string {
   if (!dateStr) return "";
 
-  const [_, datePart] = dateStr.split(", ");
+  const [_, datePart] = dateStr?.split(", ");
   if (!datePart) return "";
-  const [day, month] = datePart.split("/").map(Number);
+  const [day, month] = datePart?.split("/").map(Number);
   const year = 2024;
   return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
     2,
@@ -258,7 +268,7 @@ export function generateNext7Days(): string[] {
   return days;
 }
 export function formatDateString(input: string) {
-  const [day, month] = input.split("/");
+  const [day, month] = input?.split("/");
 
   // Convert to numbers to remove leading zeros, then join them with ' / '
   const formattedDate = `${parseInt(day)} / ${parseInt(month)}`;

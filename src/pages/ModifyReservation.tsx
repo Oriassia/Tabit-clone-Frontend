@@ -44,7 +44,6 @@ function ModifyReservation() {
       notes: reservationInfo.notes,
       date: requestedReservation.dateTime,
     };
-    console.log(newReservation);
 
     try {
       const { data } = await api.put("/reservations", {
@@ -71,7 +70,7 @@ function ModifyReservation() {
     const reservationId = searchParams.get("reservationId") || "101";
     try {
       const { data } = await api.get(`/reservations/${reservationId}`);
-      console.log("date fetched: ", data);
+
       setReservationInfo(data);
       setRequestedReservation({
         dateTime: data.date,

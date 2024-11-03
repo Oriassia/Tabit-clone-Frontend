@@ -42,6 +42,7 @@ const FriendForm: React.FC<FriendFormProps> = ({
   const handleBlur = () => {
     // Set placeholder to "0" if empty when focus is lost
     if (amount === "" || amount === 0) {
+      s;
       setAmount("0");
     }
   };
@@ -53,13 +54,6 @@ const FriendForm: React.FC<FriendFormProps> = ({
       (wayToSend === "phone" && phoneNumber.trim() !== "") ||
       (wayToSend === "email" && email.trim() !== "");
     const isGiftCardAmountFilled = Number(amount) > 0;
-
-    console.log({
-      isRecipientFilled,
-      isSenderFilled,
-      isContactFilled,
-      isGiftCardAmountFilled,
-    });
 
     return (
       isRecipientFilled &&
