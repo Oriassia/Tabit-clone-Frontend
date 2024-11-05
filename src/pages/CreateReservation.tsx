@@ -28,11 +28,8 @@ function CreateReservation() {
   const [olderReservation, setOlderReservation] =
     useState<IRestaurantReservation | null>(null);
 
-  const {
-    requestedReservation, //@@@@@@@@@@@@@@@ NEW FOR ELLLAAAADDDDDDDDDDDDDDDD
-    getAllTables,
-    setRequestedReservation,
-  } = useReservation();
+  const { requestedReservation, getAllTables, setRequestedReservation } =
+    useReservation();
 
   useEffect(() => {
     if (requestedReservation && requestedReservation.tableId) {
