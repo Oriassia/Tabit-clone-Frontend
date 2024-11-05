@@ -24,7 +24,14 @@ export const useGetLikeTables = () => {
     const datePart = stringDate.split(", ")[1];
     // console.log("getliketables datepart: " + datePart);
     const [day, month] = datePart.split("/").map(Number); // Corrected to use dd/mm format
-    // console.log("getliketables currentinitial: " + currentInitials.dateTime);
+    console.log("getliketables currentinitial: " + currentInitials.dateTime);
+    if (
+      typeof currentInitials.dateTime === "string" &&
+      currentInitials.dateTime.indexOf("T") == -1 &&
+      currentInitials.dateTime.indexOf(" ") != -1
+    ) {
+      currentInitials.dateTime = currentInitials.dateTime.replace(" ", "T");
+    }
     let [hours, minutes] = currentInitials.dateTime
       .toString()
       .split("T")[1]

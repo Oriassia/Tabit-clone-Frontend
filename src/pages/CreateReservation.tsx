@@ -56,6 +56,7 @@ function CreateReservation() {
       const reservationId = searchParams.get("reservationId");
       if (reservationId) {
         const { data } = await api.get(`/reservations/${reservationId}`);
+        console.log("data: ", data);
 
         setOlderReservation(data);
       }
@@ -123,9 +124,8 @@ function CreateReservation() {
                   >
                     <OrangeCalender />
                     <span>
-                      {computeDayName(olderReservation?.date || "") ||
-                        "unavailable"}{" "}
-                      {computeDateNumber(olderReservation?.date || "") ||
+                      {computeDayName(olderReservation?.date) || "unavailable"}{" "}
+                      {computeDateNumber(olderReservation?.date) ||
                         "unavailable"}
                     </span>
                   </div>
