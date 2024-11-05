@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { IRestaurant } from "@/types/restaurant";
 import api from "@/services/api.services";
 import { useSearchParams } from "react-router-dom";
-import { formatDateTime } from "@/services/time.services"; // Import utility function for date-time formatting
+import { parseISOToDate } from "@/services/time.services"; // Import utility function for date-time formatting
 
 export interface IRequestedReservation {
   dateTime: string;
@@ -114,10 +114,11 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
 
       try {
         const { data } = await api.get(`/tables/${restIdGiven}`);
+
         setAllTables(
           data.map((table: any) => ({
             ...table,
-            DateTime: formatDateTime(table.DateTime), // Ensure all tables have formatted date-time
+            DateTime: parseISOToDate(table.DateTime), // Ensure all tables have formatted date-time
           }))
         );
       } catch (error) {
@@ -126,10 +127,12 @@ export const ReservationProvider: React.FC<{ children: React.ReactNode }> = ({
     } else if (restId) {
       try {
         const { data } = await api.get(`/tables/${restId}`);
+        console.log(data);
+
         setAllTables(
           data.map((table: any) => ({
             ...table,
-            DateTime: formatDateTime(table.DateTime), // Ensure all tables have formatted date-time
+            DateTime: parseISOToDate(table.DateTime), // Ensure all tables have formatted date-time
           }))
         );
       } catch (error) {

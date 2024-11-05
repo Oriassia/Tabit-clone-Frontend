@@ -76,6 +76,7 @@ const ReservationData: React.FC = () => {
         position: requestedReservation.position,
         guests: requestedReservation.guests,
       });
+      console.log(requestedReservation.dateTime.toString());
 
       setStringDate(
         new Date(
@@ -162,25 +163,39 @@ const ReservationData: React.FC = () => {
 
     const availableTable = allTables?.find((table: IAvaliableTable) => {
       const tableDateTime = table.DateTime; // Already in the correct format
+      console.log(table);
 
-      console.log("Checking Table:", {
-        tableDateTime,
-        tableCapacity: table.Capacity,
-        tablePosition: table.Position.trim().toLowerCase(),
-        userGuests: currentInitials.guests,
-        userPosition: currentInitials.position.trim().toLowerCase(),
-        dateTimeMatch: currentInitials.dateTime === tableDateTime, // Check if date times match
-        capacityCheck: table.Capacity >= currentInitials.guests, // Check if capacity is sufficient
-        positionCheck:
-          table.Position.trim().toLowerCase() ===
-          currentInitials.position.trim().toLowerCase(), // Check if position matches
-      });
+      // Ensure both dates are in the correct format for comparison
+      const formattedTableDateTime = formatDateTime(tableDateTime); // Should format to "DD-MM-YYYYTHH:MM"
+      const formattedCurrentInitialDateTime = formatDateTime(
+        currentInitials.dateTime
+      );
+
+      console.log(
+        "tableDateTime: ",
+        formattedTableDateTime,
+        " currentInitialDateTime: ",
+        formattedCurrentInitialDateTime
+      );
+
+      // console.log("Checking Table:", {
+      //   tableDateTime,
+      //   tableCapacity: table.Capacity,
+      //   tablePosition: table.Position.trim().toLowerCase(),
+      //   userGuests: currentInitials.guests,
+      //   userPosition: currentInitials.position.trim().toLowerCase(),
+      //   dateTimeMatch: currentInitials.dateTime === tableDateTime, // Check if date times match
+      //   capacityCheck: table.Capacity >= currentInitials.guests, // Check if capacity is sufficient
+      //   positionCheck:
+      //     table.Position.trim().toLowerCase() ===
+      //     currentInitials.position.trim().toLowerCase(), // Check if position matches
+      // });
 
       return (
         table.Capacity >= currentInitials.guests && // Ensure capacity is sufficient
         table.Position.trim().toLowerCase() ===
           currentInitials.position.trim().toLowerCase() && // Match position with case insensitive comparison
-        currentInitials.dateTime === tableDateTime // Compare formatted date-time
+        formattedTableDateTime === formattedCurrentInitialDateTime // Compare formatted date-time
       );
     });
 
@@ -267,9 +282,16 @@ const ReservationData: React.FC = () => {
             <OrangeClock />
           </div>
           <div className="text-center">
-            {currentInitials?.dateTime.split("T")[1] ||
-              requestedReservation?.dateTime.split("T")[1] ||
-              filteredHours[0]}
+            {typeof currentInitials.dateTime === "string"
+              ? currentInitials?.dateTime.split("T")[1] ||
+                requestedReservation?.dateTime.split("T")[1] ||
+                filteredHours[0]
+              : new Date(currentInitials?.dateTime).getHours().toString() +
+                ":" +
+                new Date(currentInitials?.dateTime)
+                  .getMinutes()
+                  .toString()
+                  .padStart(2, "0")}
           </div>
         </div>
 
@@ -406,23 +428,20 @@ const ReservationData: React.FC = () => {
             stringDate &&
               new Date(
                 new Date(formatDateToYYYYMMDD(stringDate)).getTime() + 86400000
-              ).toLocaleDateString("en-GB", {
-                weekday: "short",
-                month: "numeric",
-                day: "numeric",
-              }),
+              ),
           ]
             .filter(Boolean)
             .map((date, index) => {
               // Filter tables for the current date
               const tablesForDate = likeWantedTables.filter((table) => {
-                const tableDate = new Date(
-                  formatDateTime(table.DateTime)
-                ).toLocaleDateString("en-GB", {
-                  weekday: "short",
-                  month: "numeric",
-                  day: "numeric",
-                });
+                const tableDate = new Date(table.DateTime).toLocaleDateString(
+                  "en-GB",
+                  {
+                    weekday: "short",
+                    month: "numeric",
+                    day: "numeric",
+                  }
+                );
                 return tableDate === date;
               });
 
@@ -436,16 +455,14 @@ const ReservationData: React.FC = () => {
                   key={index}
                   className="mb-4 border-b-[1px] border-white pb-5 w-3/5 mx-auto"
                 >
-                  <div className="mx-auto text-white text-center text-xl font-bold p-3 ">
-                    {new Date(formatDateTime(date)).toLocaleDateString(
-                      "en-GB",
-                      {
-                        weekday: "long",
-                        month: "short",
-                        day: "numeric",
-                      }
-                    )}
+                  <div className="mx-auto text-white text-center text-xl font-bold p-3">
+                    {new Date(date).toLocaleDateString("en-GB", {
+                      weekday: "long",
+                      month: "short",
+                      day: "numeric",
+                    })}
                   </div>
+
                   {positions.map((positionObj, posIndex) => {
                     // Filter tables for the current position
                     const filteredTables = tablesForDate.filter(
