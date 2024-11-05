@@ -26,18 +26,16 @@ const ReservationDetailsPage = () => {
 
   async function fetchReservation() {
     const reservationId = searchParams.get("reservationId") || "101";
-    console.log(reservationId);
     try {
       const { data } = await api.get(`/reservations/${reservationId}`);
-      console.log(data);
 
       setReservationInfo(data);
-      setRequestedReservation({
-        dateTime: data.date,
-        tableId: data.tableId,
-        position: data.position,
-        guests: data.partySize,
-      });
+      // setRequestedReservation({
+      //   dateTime: data.date,
+      //   tableId: data.tableId,
+      //   position: data.position,
+      //   guests: data.partySize,
+      // });
     } catch (error: any) {
       console.error(error);
     }
