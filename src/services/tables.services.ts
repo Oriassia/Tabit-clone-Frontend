@@ -19,14 +19,16 @@ export const useGetLikeTables = () => {
       );
       return;
     }
-    console.log("getliketables stringdate: " + stringDate);
+    // console.log("getliketables stringdate: " + stringDate);
 
     const datePart = stringDate.split(", ")[1];
-    console.log("getliketables datepart: " + datePart);
+    // console.log("getliketables datepart: " + datePart);
     const [day, month] = datePart.split("/").map(Number); // Corrected to use dd/mm format
-    console.log("getliketables currentinitial: " + currentInitials.dateTime);
-    let [hours, minutes] = currentInitials.dateTime.split("T")[1].split(":");
-
+    // console.log("getliketables currentinitial: " + currentInitials.dateTime);
+    let [hours, minutes] = currentInitials.dateTime
+      .toString()
+      .split("T")[1]
+      .split(":");
     let hoursInt = parseInt(hours);
     let minutesInt = parseInt(minutes);
 
@@ -77,6 +79,7 @@ export const useGetLikeTables = () => {
     // Filter likeWantedTables based on criteria
     const filteredTables = allTables.filter((table) => {
       const tableDateTime = formatDateTime(table.DateTime); // Convert table.DateTime to a Date object
+
       const tableDate = tableDateTime.toDateString(); // Get the date part as a string
       const tableTime = tableDateTime.getTime(); // Get time in milliseconds
 
@@ -92,8 +95,8 @@ export const useGetLikeTables = () => {
       const isNextDay = tableDate === nextDayDateStr;
       const isCapacitySufficient = parseInt(table.Capacity, 10) >= guestsCount; // Check capacity
 
-      const tableHour = tableDateTime.toISOString().slice(11, 16); // Extract hour:minute from ISO format
-      const selectedHour = selectedDateTime.toISOString().slice(11, 16); // Same for selectedDateTime
+      const tableHour = tableDateTime.getHours().toString(); // Extract hour:minute from ISO format
+      const selectedHour = selectedDateTime.getHours().toString(); // Same for selectedDateTime
 
       // Rule 1: Same Date, Same Hour, Different Position, Capacity sufficient
       if (
@@ -193,9 +196,11 @@ export const useGetLikeTables = () => {
       };
 
       // Get top 5 closest tables for each position without duplicate hours
+
       const topTables = Object.values(groupedByPosition).flatMap(
         (tables: any) => {
           const uniqueTables = removeDuplicateHours(tables);
+
           return uniqueTables
             .sort(
               (a: any, b: any) =>
