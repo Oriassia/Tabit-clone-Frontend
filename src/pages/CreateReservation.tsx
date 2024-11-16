@@ -3,7 +3,7 @@ import ReservationData from "@/components/custom/ReservationForms/ReservationDat
 import api from "@/services/api.services";
 import { IRestaurant, IRestaurantReservation } from "@/types/restaurant";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { FaPhone } from "react-icons/fa6";
 import { FaMapMarkerAlt } from "react-icons/fa";
@@ -27,6 +27,7 @@ function CreateReservation() {
   const step = searchParams.get("step");
   const [olderReservation, setOlderReservation] =
     useState<IRestaurantReservation | null>(null);
+  const navigate = useNavigate();
 
   const { requestedReservation, getAllTables, setRequestedReservation } =
     useReservation();
@@ -96,6 +97,12 @@ function CreateReservation() {
   if (step === "search") {
     return (
       <>
+        <span
+          className="absolute top-5 left-80 px-4 py-2 cursor-pointer text-white"
+          onClick={() => navigate("/")}
+        >
+          {"< Back to Search"}
+        </span>
         <div className="w-full min-h-dvh flex flex-col items-center bg-greyBg text-white">
           <img
             src={restaurant?.mainPhoto}
