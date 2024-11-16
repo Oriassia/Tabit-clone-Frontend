@@ -9,18 +9,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { IRestaurantReservation } from "@/types/restaurant";
 import WarningIcon from "../svg/WarningIcon";
 
 interface CancelOrderDialogProps {
-  reservationInfo: IRestaurantReservation | undefined;
-  cancelReservation: (id: number) => void;
+  onClickCancel: any;
 }
 
-function CancelReservationDialog({
-  reservationInfo,
-  cancelReservation,
-}: CancelOrderDialogProps) {
+function CancelReservationDialog({ onClickCancel }: CancelOrderDialogProps) {
   return (
     <>
       <AlertDialog>
@@ -44,13 +39,7 @@ function CancelReservationDialog({
               <div className="dark:bg-white py-2 w-full text-center rounded-full ">
                 <AlertDialogAction
                   className="text-black text-xl dark:bg-white "
-                  onClick={() =>
-                    cancelReservation(
-                      reservationInfo?.reservationId
-                        ? reservationInfo.reservationId
-                        : -1
-                    )
-                  }
+                  onClick={onClickCancel}
                 >
                   Cancel Reservation
                 </AlertDialogAction>

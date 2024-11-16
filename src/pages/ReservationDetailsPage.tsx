@@ -169,8 +169,9 @@ const ReservationDetailsPage = () => {
                 Modify Reservation
               </button>
               <CancelReservationDialog
-                reservationInfo={reservationInfo}
-                cancelReservation={cancelReservation}
+                onClickCancel={() =>
+                  cancelReservation(reservationInfo.reservationId)
+                }
               />
             </div>
           )}
