@@ -158,7 +158,6 @@ export const formatDateTime = (dateTime: string | Date) => {
   }
 
   const [datePart, timePart] = dateTime?.split("T");
-  console.log(dateTime);
 
   const [day, month, year] = datePart?.split("-").map(Number); // Use the correct order here
   const [hours, minutes] = timePart?.split(":").map(Number);
@@ -300,7 +299,6 @@ export function formatDateString(input: string) {
 export function computeDayName(dateStr: string) {
   try {
     const date = formatDateTime(dateStr);
-    console.log("date:: " + date);
 
     return new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date);
   } catch (error) {
