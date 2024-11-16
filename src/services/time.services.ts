@@ -127,12 +127,30 @@ export function getHourFromString(dateString: string): string {
 
 // Adjusted formatDateTime function
 export const formatDateTime = (dateTime: string | Date) => {
-  // Check if dateTime is a string that contains a comma
+  // Helper function to detect and rearrange date format
+  const convertToDDMMYYYY = (dateStr: string) => {
+    // Check if the date is in YYYY-MM-DD format
+    const yyyymmddRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$/;
+    if (yyyymmddRegex.test(dateStr)) {
+      const [datePart, timePart] = dateStr.split("T");
+      const [year, month, day] = datePart.split("-");
+      return `${day}-${month}-${year}T${timePart}`; // Convert to DD-MM-YYYYTHH:MM:SS
+    }
+    return dateStr; // Return unchanged if already in DD-MM-YYYY format
+  };
+
+  // Convert string if needed
+  if (typeof dateTime === "string") {
+    if (dateTime.indexOf("T") == -1 && dateTime.indexOf(" ") != -1) {
+      dateTime = dateTime.replace(" ", "T");
+    }
+    dateTime = convertToDDMMYYYY(dateTime);
+  }
 
   if (dateTime instanceof Date) {
     // Convert the Date object to the format 'DD-MM-YYYYTHH:MM'
     const year = dateTime.getFullYear();
-    const month = String(dateTime.getMonth() + 1).padStart(2, "0"); // Month is zero-based
+    const month = String(dateTime.getMonth() + 1).padStart(2, "0");
     const day = String(dateTime.getDate()).padStart(2, "0");
     const hours = String(dateTime.getHours()).padStart(2, "0");
     const minutes = String(dateTime.getMinutes()).padStart(2, "0");
@@ -140,11 +158,14 @@ export const formatDateTime = (dateTime: string | Date) => {
   }
 
   const [datePart, timePart] = dateTime?.split("T");
-  const [day, month, year] = datePart?.split("-").map(Number);
+  console.log(dateTime);
+
+  const [day, month, year] = datePart?.split("-").map(Number); // Use the correct order here
   const [hours, minutes] = timePart?.split(":").map(Number);
 
   return new Date(year, month - 1, day, hours, minutes);
 };
+
 export const parseISOToDate = (isoString: string) => {
   if (
     typeof isoString === "string" &&
@@ -279,6 +300,8 @@ export function formatDateString(input: string) {
 export function computeDayName(dateStr: string) {
   try {
     const date = formatDateTime(dateStr);
+    console.log("date:: " + date);
+
     return new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date);
   } catch (error) {
     return null;

@@ -28,6 +28,7 @@ const ReservationDetailsPage = () => {
     const reservationId = searchParams.get("reservationId") || "101";
     try {
       const { data } = await api.get(`/reservations/${reservationId}`);
+      console.log(data);
 
       setReservationInfo(data);
       // setRequestedReservation({
@@ -158,11 +159,11 @@ const ReservationDetailsPage = () => {
           {reservationInfo && (
             <div className="flex justify-center space-x-2 py-5">
               <button
-                onClick={() =>
+                onClick={() => {
                   navigate(
-                    `/online-reservations?restId=${reservationInfo.restId}&reservationId=200&step=search`
-                  )
-                }
+                    `/online-reservations?restId=${reservationInfo.restId}&reservationId=${reservationInfo.reservationId}&step=search`
+                  );
+                }}
                 className="border-opacity-60 bg-black border border-greenButton hover:bg-gray-800 text-white font-bold py-3 px-2 rounded-md transition duration-150"
               >
                 Modify Reservation
