@@ -159,23 +159,13 @@ const ReservationData: React.FC = () => {
   };
 
   async function reserveATable() {
-    console.log("User Input DateTime:", currentInitials.dateTime);
-
     const availableTable = allTables?.find((table: IAvaliableTable) => {
       const tableDateTime = table.DateTime; // Already in the correct format
-      console.log(table);
 
       // Ensure both dates are in the correct format for comparison
       const formattedTableDateTime = formatDateTime(tableDateTime); // Should format to "DD-MM-YYYYTHH:MM"
       const formattedCurrentInitialDateTime = formatDateTime(
         currentInitials.dateTime
-      );
-
-      console.log(
-        "tableDateTime: ",
-        formattedTableDateTime,
-        " currentInitialDateTime: ",
-        formattedCurrentInitialDateTime
       );
 
       // console.log("Checking Table:", {
@@ -200,7 +190,7 @@ const ReservationData: React.FC = () => {
     });
 
     if (availableTable) {
-      console.log("Found Available Table:", availableTable);
+      // console.log("Found Available Table:", availableTable);
 
       setRequestedReservation({
         ...currentInitials,
@@ -428,7 +418,11 @@ const ReservationData: React.FC = () => {
             stringDate &&
               new Date(
                 new Date(formatDateToYYYYMMDD(stringDate)).getTime() + 86400000
-              ),
+              ).toLocaleDateString("en-GB", {
+                weekday: "short",
+                month: "numeric",
+                day: "numeric",
+              }),
           ]
             .filter(Boolean)
             .map((date, index) => {
@@ -456,11 +450,7 @@ const ReservationData: React.FC = () => {
                   className="mb-4 border-b-[1px] border-white pb-5 w-3/5 mx-auto"
                 >
                   <div className="mx-auto text-white text-center text-xl font-bold p-3">
-                    {new Date(date).toLocaleDateString("en-GB", {
-                      weekday: "long",
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {date}
                   </div>
 
                   {positions.map((positionObj, posIndex) => {

@@ -82,8 +82,6 @@ function ReservationForm({
     };
 
     try {
-      console.log(newReservation);
-
       const { data } = await api.post("/reservations", newReservation);
 
       if (data) {
