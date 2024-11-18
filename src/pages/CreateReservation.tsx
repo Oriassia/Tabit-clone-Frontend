@@ -28,6 +28,7 @@ function CreateReservation() {
   const [olderReservation, setOlderReservation] =
     useState<IRestaurantReservation | null>(null);
   const navigate = useNavigate();
+  const reservationId = searchParams.get("reservationId");
 
   const { requestedReservation, getAllTables, setRequestedReservation } =
     useReservation();
@@ -44,20 +45,23 @@ function CreateReservation() {
   useEffect(() => {
     getAllTables();
     console.log("got all tables");
-    if (searchParams.get("reservationId")) {
+  }, []);
+
+  useEffect(() => {
+    if (reservationId) {
+      console.log(
+        "[create-reservation]-reservationId from URL : ",
+        reservationId
+      );
       fetchReservation();
     }
   }, []);
 
   async function fetchReservation() {
     try {
-      const reservationId = searchParams.get("reservationId");
-      if (reservationId) {
-        const { data } = await api.get(`/reservations/${reservationId}`);
-        console.log("data: ", data);
-
-        setOlderReservation(data);
-      }
+      const { data } = await api.get(`/reservations/${reservationId}`);
+      console.log("[create-reservation]-older reservation data: ", data);
+      setOlderReservation(data);
     } catch (error: any) {
       console.error(error);
     }
