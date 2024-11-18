@@ -48,11 +48,11 @@ const ReservationDetailsPage = () => {
   async function cancelReservation(reservationId: number) {
     try {
       await api.delete(`/reservations/${reservationId}`);
+      navigate("/");
       toast({
         variant: "default",
         title: `Your resrvation canceld successfully`,
       });
-      navigate("/");
     } catch (error: any) {
       console.error(error);
     }
