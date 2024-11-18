@@ -82,8 +82,10 @@ function ReservationForm({
     };
 
     try {
-      const { data } = await api.post("/reservations", newReservation);
+      const response = await api.post("/reservations", newReservation);
+      console.log(response);
 
+      const { data } = response;
       if (data) {
         toast({
           variant: "default",
