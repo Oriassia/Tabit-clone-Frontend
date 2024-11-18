@@ -65,7 +65,12 @@ const ReservationDetailsPage = () => {
 
   function getTime(dateStr: string) {
     const date = new Date(dateStr);
-    return date.toTimeString().substring(0, 5);
+    const options: any = {
+      timeZone: "Asia/Jerusalem",
+      hour: "2-digit",
+      minute: "2-digit",
+    };
+    return new Intl.DateTimeFormat("en-GB", options).format(date);
   }
 
   return (
