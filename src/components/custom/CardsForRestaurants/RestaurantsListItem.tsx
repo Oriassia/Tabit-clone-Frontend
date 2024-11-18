@@ -4,6 +4,7 @@ import {
   TimeSlot,
 } from "@/types/restaurant";
 import TimeSlotDialog from "../dialogs/TimeSlot";
+import tabitLogo from "/tabit_logo.png";
 
 interface RestaurantItemProps {
   searchedTime?: string;
@@ -27,6 +28,8 @@ function RestaurantsListItem({
     { label: "Half Hour After", data: restWithTables?.half_hour_after },
   ];
 
+  console.log("[restaurantItem]-name&image:", { name, mainPhoto });
+
   return (
     <div
       className={`border-b border-greyNavbar flex gap-3 py-4 px-4 ${
@@ -35,8 +38,12 @@ function RestaurantsListItem({
     >
       <img
         src={mainPhoto}
-        alt={name}
+        alt="Restaurant logo"
         className="rounded-md h-20 w-20 object-cover"
+        onError={(e: any) => {
+          e.target.onerror = null; // Prevents infinite loop in case `tabitLogo` also fails to load
+          e.target.src = tabitLogo;
+        }}
       />
       <div className="font-rubik font-normal flex flex-col gap-1">
         <div className="text-2xl font-medium text-white">{name}</div>

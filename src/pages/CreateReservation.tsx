@@ -13,11 +13,6 @@ import ActionButton from "@/components/custom/buttons/ActionButton";
 import OrangeCalender from "@/components/custom/svg/OrangeCalender";
 import OrangeGuests from "@/components/custom/svg/OrangeGuests";
 import OrangeClock from "@/components/custom/svg/OrangeClock";
-import {
-  computeDateNumber,
-  computeDayName,
-  computeTime,
-} from "@/services/time.services";
 import Spinner from "@/components/custom/Loaders/Spinner";
 
 function CreateReservation() {
@@ -56,6 +51,26 @@ function CreateReservation() {
       fetchReservation();
     }
   }, []);
+
+  function getDayNameFromString(dateStr: string) {
+    const date = new Date(dateStr);
+    const options = { weekday: "short" } as const;
+    return new Intl.DateTimeFormat("en-US", options).format(date);
+  }
+
+  function getDateNumber(dateStr: string) {
+    const date = new Date(dateStr);
+    const dayNumber = date.getDate().toString().padStart(2, "0");
+    const monthNumber = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are zero-based
+    return `${dayNumber}/${monthNumber}`;
+  }
+
+  function getTime(dateStr: string) {
+    const date = new Date(dateStr);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+  }
 
   async function fetchReservation() {
     try {
@@ -132,9 +147,9 @@ function CreateReservation() {
                   >
                     <OrangeCalender />
                     <span>
-                      {computeDayName(olderReservation?.date) || "unavailable"}{" "}
-                      {computeDateNumber(olderReservation?.date) ||
-                        "unavailable"}
+                      {getDayNameFromString(olderReservation?.date) ||
+                        "unavailable"}{" "}
+                      {getDateNumber(olderReservation?.date) || "unavailable"}
                     </span>
                   </div>
                   <div
@@ -143,8 +158,7 @@ function CreateReservation() {
                   >
                     <OrangeClock />
                     <span>
-                      {computeTime(olderReservation?.date || "") ||
-                        "unavailable"}
+                      {getTime(olderReservation?.date || "") || "unavailable"}
                     </span>
                   </div>
                   <div

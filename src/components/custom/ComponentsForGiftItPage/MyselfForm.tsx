@@ -142,7 +142,7 @@ const MyselfForm: React.FC<MyselfFormProps> = ({
   };
 
   return (
-    <div className="bg-black bg-opacity-75 max-w-[650px] rounded-3xl px-[6em] py-[4em] font-rubik">
+    <div className="bg-black bg-opacity-90 max-w-[650px] rounded-3xl px-[6em] py-[2em] font-rubik">
       <div className="relative flex items-center justify-between text-white pb-[3em]">
         <button onClick={handlePreviousStep} className="mr-2 text-[1.5em]">
           <IoIosArrowBack />

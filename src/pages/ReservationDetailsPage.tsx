@@ -39,6 +39,7 @@ const ReservationDetailsPage = () => {
       //   guests: data.partySize,
       // });
     } catch (error: any) {
+      navigate("/not-found");
       console.error(error);
     }
   }
