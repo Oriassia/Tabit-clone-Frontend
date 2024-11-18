@@ -26,17 +26,18 @@ const RedeemCardPage = () => {
   const { cardId } = useParams();
   const navigate = useNavigate();
   const [cardData, setCardData] = useState<IGiftCard | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function redeemCard() {
       if (cardId) {
+        setIsLoading(true);
         try {
           // Fetch the gift card details before redeeming
           const { data } = await api.get(`/giftcard/${cardId}`);
           setCardData(data); // Store the card data
 
-          await api.delete(`/card/${cardId}`); // Redeem the card
+          await api.delete(`/giftcard/redeem/${cardId}`); // Redeem the card
           console.log("Card redeemed!");
         } catch (err) {
           console.log(err);
@@ -53,6 +54,13 @@ const RedeemCardPage = () => {
     return (
       <div className="flex justify-center items-center h-screen">
         Loading...
+      </div>
+    );
+  }
+  if (!cardData) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <h1 className="text-3xl font-bold">404 - Page Not Found</h1>
       </div>
     );
   }
