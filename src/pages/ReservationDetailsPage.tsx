@@ -6,6 +6,7 @@ import OrangeClock from "@/components/custom/svg/OrangeClock";
 import OrangeGuests from "@/components/custom/svg/OrangeGuests";
 import OrangeTablesIcon from "@/components/custom/svg/OrangeTablesIcon";
 import { useReservation } from "@/context/ReservationContext";
+import { useToast } from "@/hooks/use-toast";
 
 import api from "@/services/api.services";
 import { IRestaurantReservation } from "@/types/restaurant";
@@ -19,7 +20,9 @@ const ReservationDetailsPage = () => {
   const navigate = useNavigate();
   const [reservationInfo, setReservationInfo] =
     useState<IRestaurantReservation>();
+  const { toast } = useToast();
   const { setRequestedReservation } = useReservation();
+
   useEffect(() => {
     fetchReservation();
   }, []);
@@ -28,7 +31,7 @@ const ReservationDetailsPage = () => {
     const reservationId = searchParams.get("reservationId") || "101";
     try {
       const { data } = await api.get(`/reservations/${reservationId}`);
-      console.log(data);
+      console.log("[reservation-details-page]-fetched reservation:", data);
 
       setReservationInfo(data);
       // setRequestedReservation({
@@ -45,15 +48,20 @@ const ReservationDetailsPage = () => {
   async function cancelReservation(reservationId: number) {
     try {
       await api.delete(`/reservations/${reservationId}`);
+      toast({
+        variant: "default",
+        title: `Your resrvation canceld successfully`,
+      });
       navigate("/");
     } catch (error: any) {
       console.error(error);
     }
   }
 
-  function getDayName(dateStr: string) {
+  function getDayNameFromString(dateStr: string) {
     const date = new Date(dateStr);
-    return new Intl.DateTimeFormat("en-GB", { weekday: "short" }).format(date);
+    const options = { weekday: "short" } as const;
+    return new Intl.DateTimeFormat("en-US", options).format(date);
   }
 
   function getDateNumber(dateStr: string) {
@@ -65,12 +73,9 @@ const ReservationDetailsPage = () => {
 
   function getTime(dateStr: string) {
     const date = new Date(dateStr);
-    const options: any = {
-      timeZone: "UTC",
-      hour: "2-digit",
-      minute: "2-digit",
-    };
-    return new Intl.DateTimeFormat("en-GB", options).format(date);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
   }
 
   return (
@@ -104,9 +109,9 @@ const ReservationDetailsPage = () => {
               <OrangeCalender />
               <div className="text-center">
                 {reservationInfo?.date
-                  ? `${getDayName(reservationInfo.date)} ${getDateNumber(
+                  ? `${getDayNameFromString(
                       reservationInfo.date
-                    )}`
+                    )} ${getDateNumber(reservationInfo.date)}`
                   : "Date not available"}
               </div>
             </div>
