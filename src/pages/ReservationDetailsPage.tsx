@@ -66,7 +66,7 @@ const ReservationDetailsPage = () => {
   function getTime(dateStr: string) {
     const date = new Date(dateStr);
     const options: any = {
-      timeZone: "Asia/Jerusalem",
+      timeZone: "UTC",
       hour: "2-digit",
       minute: "2-digit",
     };
