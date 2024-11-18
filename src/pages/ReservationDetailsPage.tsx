@@ -5,7 +5,6 @@ import OrangeCalender from "@/components/custom/svg/OrangeCalender";
 import OrangeClock from "@/components/custom/svg/OrangeClock";
 import OrangeGuests from "@/components/custom/svg/OrangeGuests";
 import OrangeTablesIcon from "@/components/custom/svg/OrangeTablesIcon";
-import { useReservation } from "@/context/ReservationContext";
 import { useToast } from "@/hooks/use-toast";
 
 import api from "@/services/api.services";
@@ -21,7 +20,6 @@ const ReservationDetailsPage = () => {
   const [reservationInfo, setReservationInfo] =
     useState<IRestaurantReservation>();
   const { toast } = useToast();
-  const { setRequestedReservation } = useReservation();
 
   useEffect(() => {
     fetchReservation();
@@ -41,6 +39,7 @@ const ReservationDetailsPage = () => {
       //   guests: data.partySize,
       // });
     } catch (error: any) {
+      navigate("/not-found");
       console.error(error);
     }
   }

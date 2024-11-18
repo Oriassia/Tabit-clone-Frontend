@@ -73,9 +73,9 @@ const InnerFirstGiftCardPage: React.FC = () => {
   const renderContent = () => {
     if (activeSection === "chooseForWhom") {
       return (
-        <div className="bg-black bg-opacity-65 rounded-3xl px-[4em] pb-[6em] font-rubik">
+        <div className="bg-black bg-opacity-90 rounded-3xl px-[4em] py-[2em] font-rubik">
           <div className="text-center flex flex-col justify-center items-center max-w-[650px] text-white">
-            <p className="pt-[2.5em] pb-4 border-b-2 text-center w-fit border-greenButton justify-self-center text-white text-[1.5em]">
+            <p className="pb-4 border-b-2 text-center w-fit border-greenButton justify-self-center text-white text-[1.5em]">
               Send Gift Card to...?
             </p>
             <div className="flex justify-center items-center gap-4 py-[2.5em] text-white text-[1.4em]">
@@ -200,7 +200,7 @@ const InnerFirstGiftCardPage: React.FC = () => {
   // Section with animation
   return (
     <section
-      className="relative flex flex-col  items-center pt-[6em] bg-cover bg-center shadow-inner"
+      className="relative h-screen flex flex-col items-center justify-center overflow-auto bg-cover bg-center shadow-inner"
       style={{
         backgroundImage: `url('${restaurant?.mainPhoto}')`,
         boxShadow: "inset 0 0 1rem #000",
