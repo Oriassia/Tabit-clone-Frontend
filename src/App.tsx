@@ -12,8 +12,8 @@ import ReservationDetailsPage from "./pages/ReservationDetailsPage";
 import InnerFirstGiftCardPage from "./pages/InnerFirstGiftCardPage";
 import NewRestaurants from "./pages/NewRestaurantsPage";
 import NearRestaurants from "./pages/NearRestaurants";
-import RedeemGiftCard from "./pages/CardDetails";
 import CardDetails from "./pages/CardDetails";
+import RedeemCardPage from "./pages/RedeemGiftCard";
 
 function App() {
   return (
@@ -42,7 +42,7 @@ function App() {
               element={<InnerFirstGiftCardPage />}
             />
             <Route path="card-details" element={<CardDetails />} />
-            <Route path="redeem-card" element={<RedeemGiftCard />} />
+            <Route path="redeem-card/:cardId" element={<RedeemCardPage />} />
           </Route>
         </Route>
 
